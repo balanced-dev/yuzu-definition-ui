@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <tree-menu></tree-menu>
+    <selected-item></selected-item>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import TreeMenu from "./components/TreeMenu.vue";
+import SelectedItem from "./components/SelectedItem.vue";
 
 export default {
-  name: "app",
+  name: "yuzu-def-ui",
   components: {
-    HelloWorld
+    TreeMenu,
+    SelectedItem
   }
 };
 </script>
