@@ -6,14 +6,32 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     items: {},
-    selectedItem: {}
+    selectedItem: {},
+    selectedBlockState: {},
+    blockData: {},
+    navItems: [
+      'Blocks',
+      'States',
+      'Data'
+    ],
+    navContext: 'States'
   },
   mutations: {
     loadItems: function(state, items) {
       state.items = items;
     },
+    loadBlockData: function(state, blockData) {
+      state.blockData = blockData;
+    },
     selectItem: function(state, item) {
       state.selectedItem = item;
+    },
+    setBlockState: function(state, blockState) {
+      state.selectedBlockState = blockState;
+    },
+    setNavContext: function(state, navContext)
+    {
+      state.navContext = navContext;
     }
   }
 });

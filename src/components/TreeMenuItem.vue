@@ -1,7 +1,7 @@
 <template>
   <li :style="indent">
     <span v-if="isFolder(value)">
-      <span @click="toggleChildren">+ {{ propertyname }}</span>
+      <a @click="toggleChildren">+ {{ propertyname }}</a>
 
       <span v-if="showChildren">
         <ul v-for="(value, propertyname) in value" v-bind:key="propertyname">
@@ -40,11 +40,12 @@ export default {
       this.showChildren = !this.showChildren;
     },
     selectItem(name, value) {
-      var item = {
+      var payload = {
         name: name,
-        value: value
+        states: value
       };
-      this.$store.commit("selectItem", item);
+      this.$store.commit("selectItem", payload);
+      this.$store.commit("setNavContext", 'States');
     }
   },
   computed: {
@@ -56,4 +57,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+a {
+  cursor: pointer;
+}
+</style>

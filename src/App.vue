@@ -1,19 +1,27 @@
 <template>
   <div id="app">
-    <tree-menu></tree-menu>
-    <selected-item></selected-item>
+
+    <tabs></tabs>
+
   </div>
 </template>
 
 <script>
-import TreeMenu from "./components/TreeMenu.vue";
-import SelectedItem from "./components/SelectedItem.vue";
+import axios from "axios";
+import bootstrap from "./bootstrap";
+import Tabs from "./components/Tabs.vue";
 
 export default {
   name: "yuzu-def-ui",
+  mounted() {
+    axios.get("/_templates/templates.json").then(response => {
+      this.$store.commit("loadItems", response.data);
+      var route = bootstrap.getRoute();
+      bootstrap.findCurrentBlockAndState(response.data, route, this.$store);
+    });
+  },
   components: {
-    TreeMenu,
-    SelectedItem
+    Tabs
   }
 };
 </script>

@@ -1,1 +1,24 @@
-{"pages":{"content":{"content.html":"pages/content/content.html","content_new-state.html":"pages/content/content_new-state.html"}},"blocks":{"pageHeader":{"parPageHeader.html":"blocks/pageHeader/parPageHeader.html","parPageHeader_new-state.html":"blocks/pageHeader/parPageHeader_new-state.html"},"_gridItems":{"team":{"parTeam.html":"blocks/_gridItems/team/parTeam.html","parTeam_new-state.html":"blocks/_gridItems/team/parTeam_new-state.html"},"features":{"parFeatures.html":"blocks/_gridItems/features/parFeatures.html","parFeatures_new-state.html":"blocks/_gridItems/features/parFeatures_new-state.html"}}}}
+{
+    "pages": {
+        "content": {
+            "content.html": "pages/content/content.html",
+            "content_new-state.html": "pages/content/content_new-state.html"
+        }
+    },
+    "blocks": {
+        "pageHeader": {
+            "parPageHeader.html": "blocks/pageHeader/parPageHeader.html",
+            "parPageHeader_new-state.html": "blocks/pageHeader/parPageHeader_new-state.html"
+        },
+        "_gridItems": {
+            "team": {
+                "parTeam.html": "blocks/_gridItems/team/parTeam.html",
+                "parTeam_new-state.html": "blocks/_gridItems/team/parTeam_new-state.html"
+            },
+            "features": {
+                "parFeatures.html": "blocks/_gridItems/features/parFeatures.html",
+                "parFeatures_new-state.html": "blocks/_gridItems/features/parFeatures_new-state.html"
+            }
+        }
+    }
+}
