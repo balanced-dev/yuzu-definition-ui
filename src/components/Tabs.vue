@@ -1,23 +1,24 @@
 <template>
-  <div>
-    <nav>
+  <div class="tabs">
+    <nav class="tabs__nav">
       <a
+        class="tabs__nav__item"
         v-for="(name) in navItems"
         v-bind:key="name"
         @click="setNavContext(name)"
-        :class="isInContext(navContext, name)"
+        :class="{'is-active': isInContext(navContext, name)}"
       >
         {{ name }}
       </a>
     </nav>
 
-    <section v-if="navContext === navItems[0]">
-      <tree-menu></tree-menu>
+    <section class="tabs__section" v-if="navContext === navItems[0]">
+      <tree-menu class="test"></tree-menu>
     </section>
-    <section v-if="navContext === navItems[1]">
+    <section class="tabs__section" v-if="navContext === navItems[1]">
       <states></states>
     </section>
-    <section v-if="navContext === navItems[2]">
+    <section class="tabs__section" v-if="navContext === navItems[2]">
       <json-data-editor></json-data-editor>
     </section>
   </div>
@@ -40,7 +41,7 @@ export default {
   },
   methods: {
     isInContext: (navContext, state) => {
-      return navContext === state ? 'active': '';
+      return navContext === state;
     },
     setNavContext: function(navContext) {
       this.$store.commit("setNavContext", navContext);
@@ -55,10 +56,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.active {
-  font-weight: bold;
-}
-a {
-  cursor: pointer;
+
+.tabs {
+  &__nav {
+    display: flex;
+
+    &__item {
+      cursor: pointer;
+      display: block;
+      flex: 1 1 auto;
+      text-align: center;
+
+      &.is-active {
+        font-weight: bold;
+      }
+    }
+  }  
 }
 </style>

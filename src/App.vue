@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-
     <tabs></tabs>
-
   </div>
 </template>
 
@@ -18,6 +16,7 @@ export default {
       this.$store.commit("loadItems", response.data);
       var route = bootstrap.getRoute();
       bootstrap.findCurrentBlockAndState(response.data, route, this.$store);
+      console.log(route);
     });
   },
   components: {
@@ -27,12 +26,22 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import './scss/main.scss';
+  #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+    min-height: 100vh;
+  }
+  .feather-sprite {
+    @include u-visually-hide;
+  }
+  .feather {
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
 </style>

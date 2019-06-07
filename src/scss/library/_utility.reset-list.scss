@@ -1,0 +1,16 @@
+//*------------------------------------
+//  Utility : Reset List
+//  ------------------------------------*/
+
+////
+/// @group -Library-
+////
+
+///
+/// Returns <ul> <ol> lists to an unstyled state
+///
+@mixin u-reset-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

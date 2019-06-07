@@ -1,0 +1,20 @@
+//*------------------------------------
+//  Utility : Reset Button
+//  ------------------------------------*/
+
+////
+/// @group -Library-
+////
+
+///
+/// Returns <button> or <input type="button"> etc. to a basic state
+///
+@mixin u-reset-button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+}

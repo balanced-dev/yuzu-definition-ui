@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <ul v-for="(value, propertyname, index) in items" v-bind:key="propertyname">
+  <div class="tree-menu">
+    <ul class="tree-menu__list" v-for="(value, propertyname, index) in items" v-bind:key="propertyname">
       <tree-menu-item
+        class="test2"
         :value="value"
         :propertyname="propertyname"
         :index="index"
@@ -27,4 +28,16 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  @import '../scss/main';
+  .tree-menu {
+    &__title {
+      
+    }
+
+    &__list {
+      @include u-reset-list;
+      
+    }
+  }
+</style>
