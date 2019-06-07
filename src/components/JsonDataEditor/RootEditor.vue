@@ -1,11 +1,17 @@
 <template>
-  <div v-if="data">
-    {{ data }}
+  <div v-if="data" class="wrapper">
+    <json-data-editor-property 
+      :item="data"
+      :depth="0"
+      :isArrayItem="false"
+    >
+    </json-data-editor-property>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import JsonDataEditorProperty from "./PropertyEditor.vue";
 
 export default {
   name: "json-data-editor",
@@ -24,12 +30,17 @@ export default {
         this.$store.commit("loadBlockData", response.data);
       });
     }
-
   },
-  methods: {
-    
+  components: {
+    JsonDataEditorProperty
   }
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .wrapper {
+    width: 100%;
+    height: 90vh;
+    overflow-y:scroll;
+  }
+</style>

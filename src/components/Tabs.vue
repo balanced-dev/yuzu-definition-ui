@@ -27,7 +27,7 @@
 <script>
 import TreeMenu from "./TreeMenu.vue";
 import States from "./States.vue";
-import JsonDataEditor from "./JsonDataEditor";
+import JsonDataEditor from "./JsonDataEditor/RootEditor.vue";
 
 export default {
   name: "tabs",
