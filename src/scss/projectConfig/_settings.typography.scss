@@ -1,0 +1,126 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '_settings.media-queries';
+
+////
+/// @group -Project-
+////
+
+//*------------------------------------
+//  @const font-sizes
+//  ------------------------------------*/
+$font-size-xxxsmall: 'xxxsmall';
+$font-size-xxsmall: 'xxsmall';
+$font-size-xsmall: 'xsmall';
+$font-size-small: 'small';
+$font-size-medium: 'medium';
+$font-size-medium-large: 'medium-large';
+$font-size-large: 'large';
+$font-size-xlarge: 'xlarge';
+$font-size-xxlarge: 'xxlarge';
+$font-size-pageheader: 'pageheader';
+
+///
+/// Open Sans font declaration. Do not use directly
+///
+/// @param {Number} $weight [400] - Font weight
+/// @access private
+///
+@mixin inconsolata ($weight: 400) {
+  font-family: 'Inconsolata', monospace;
+  font-weight: #{$weight};
+}
+
+///
+/// Light default font
+///
+@mixin light-font {
+  @include inconsolata(300);
+}
+
+///
+/// Regular default font
+///
+@mixin default-font {
+  @include inconsolata;
+}
+
+///
+/// Bold default font
+///
+@mixin bold-font {
+  @include inconsolata(700);
+}
+
+///
+/// Extrabold default font
+///
+@mixin extrabold-font {
+  @include inconsolata(800);
+}
+
+///
+/// Typographic scale map for use in the "font-size" mixin.<br>
+/// Default/breakpoint variable should be used at the top level as keys.<br>
+/// Default= font styles which will not be wrapped in a media query. <br>
+/// If breakpoint variables as a key it makes the font the styles responsive (applied when >= the breakpoint).<br>
+///
+/// @example Example typographic scale map
+///   $typographic-scale: (
+///       'default' : (
+///           $font-size-xxxsmall: (
+///               'font-size': size(11),
+///               'line-height': (20/11)
+///           ),
+///           $font-size-xxsmall: (
+///               'font-size': size(12),
+///               'line-height': (20/12)
+///           )
+///       ),
+///       $media-query-xsmall : (
+///           $font-size-xxxsmall: (
+///               'font-size': size(11),
+///               'line-height': (20/11)
+///           )
+///       )
+///   )
+///
+$typographic-scale: (
+  'default' : (
+    $font-size-xxxsmall: (
+      'font-size': size(11),
+      'line-height': (20/11)
+    ),
+    $font-size-xxsmall: (
+      'font-size': size(12),
+      'line-height': (20/12)
+    ),
+    $font-size-xsmall: (
+      'font-size': size(13),
+      'line-height': (20/13)
+    ),
+    $font-size-small: (
+      'font-size': size(15),
+      'line-height': (25/15)
+    ),
+    $font-size-medium: (
+      'font-size': size(17),
+      'line-height': (25/17)
+    ),
+    $font-size-medium-large: (
+      'font-size': size(21),
+      'line-height': (25/21)
+    ),
+    $font-size-large: (
+      'font-size': size(24),
+      'line-height': (30/24)
+    ),
+    $font-size-xlarge: (
+      'font-size': size(32),
+      'line-height': (35/32)
+    ),
+    $font-size-xxlarge: (
+      'font-size': size(36),
+      'line-height': (40/36)
+    )
+  )
+) !default;

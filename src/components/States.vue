@@ -11,7 +11,7 @@
           class="states__list__link"
           target="_top"
           :href="href(state)"
-          :class="isSelectedState(currentState, state)"
+          :class="{'is-active': isSelectedState(currentState, state)}"
         >
         {{ propertyname }}</a>
       </li>
@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     isSelectedState: (currentState, state) => {
-      return currentState === state ? 'active': '';
+      return currentState === state;
     },
     href: state => {
       return "/_templates/html/" + state;
@@ -43,25 +43,41 @@ export default {
 
 <style scoped lang="scss">
   @import '../scss/main';
-  .states {
 
+  .states {
+    
     &__title {
-      
+      @include column-gutters;
+      @include default-font;
+      @include font-size($font-size-small);
+      background-color: $colour-grey-light;
+      text-transform: uppercase;
     }
 
     &__list {
       @include u-reset-list;
       
       &__item {
-  
+        
       }
 
       &__link {
-  
+        @include column-gutters;  
+        color: inherit;
+        display: block;
+        padding-bottom: $column-gutter-default / 4;
+        padding-top: $column-gutter-default / 4;
+        text-decoration: none;
+
+        &:hover {
+          background-color: $colour-grey-mid-dark;
+        }
+        
+        &.is-active {
+          @include bold-font;
+          background-color: $colour-grey-mid-light;
+        }
       }
     }
-  }
-  .active {
-    font-weight: bold;
   }
 </style>

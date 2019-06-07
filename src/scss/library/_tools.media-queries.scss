@@ -1,0 +1,79 @@
+////
+/// @group -Library-
+////
+
+//*------------------------------------
+//  Tools: Media Queries
+//  ------------------------------------*/
+@import '../projectConfig/_settings.media-queries.scss';
+@import '_tools.sizing.scss';
+
+
+///
+/// Wraps content in a media query with upper and lower sizes (min-width & max-width, >= && <)
+///
+/// @param {String} $min [$media-query-xsmall] - Key of the lower limit of the breakpoint, found in the $breakpoints map
+/// @param {String} $max [$media-query-xlarge] - Key of the upper limit of the breakpoint, found in the $breakpoints map
+/// @param {Map} $breakpoints [$breakpoints] - Breakpoints map
+///
+@mixin respond-between ($min: $media-query-xsmall, $max: $media-query-xlarge, $breakpoints: $breakpoints) {
+  // Render media query
+  @media screen and (min-width: get-breakpoint($min, $breakpoints)) and (max-width: get-breakpoint($max, $breakpoints) - size(1px, 'em')) {
+    @content;
+  }
+}
+
+
+///
+/// Wraps content in a media query above a certain size (min-width, >=)
+///
+/// @param {String} $from [$media-query-xsmall] - Key of the lower limit of the breakpoint, found in the $breakpoints map
+/// @param {Map} $breakpoints [$breakpoints] - Breakpoints map
+///
+@mixin respond-from ($from: $media-query-xsmall, $breakpoints: $breakpoints) {
+  // Render media query
+  @media screen and (min-width: get-breakpoint($from, $breakpoints)) {
+    @content;
+  }
+}
+
+
+///
+/// Wraps content in a media query below a certain size (max-width, <)
+///
+/// @param {String} $to [$media-query-xlarge] - Key of the upper limit of the breakpoint, found in the $breakpoints map
+/// @param {Map} $breakpoints [$breakpoints] - Breakpoints map
+///
+@mixin respond-upto ($to: $media-query-xlarge, $breakpoints: $breakpoints) {
+  // Render media query
+  @media screen and (max-width: get-breakpoint($to, $breakpoints) - size(1px, 'em')) {
+    @content;
+  }
+}
+
+///
+/// Wraps content in a media query above a certain size (max-width, >)
+///
+/// @param {String} $above [$media-query-xlarge] - Key of the lower limit of the breakpoint, found in the $breakpoints map
+/// @param {Map} $breakpoints [$breakpoints] - Breakpoints map
+///
+@mixin respond-above ($above: $media-query-xlarge, $breakpoints: $breakpoints) {
+  // Render media query
+  @media screen and (min-width: get-breakpoint($above) + size(1px, 'em')) {
+      @content;
+  }
+}
+
+///
+/// Fetches breakpoint value out of the map
+///
+/// @param {String} $breakpoint - Key used to retrieve the value from the map
+/// @param {Map} $breakpoints [$breakpoints] - Breakpoints map
+///
+@function get-breakpoint($breakpoint, $breakpoints: $breakpoints) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @return map-get($breakpoints, $breakpoint);
+  } @else {
+    @return $breakpoint;
+  }
+}

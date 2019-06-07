@@ -2,11 +2,11 @@
   <div class="tree-menu">
     <ul class="tree-menu__list" v-for="(value, propertyname, index) in items" v-bind:key="propertyname">
       <tree-menu-item
-        class="test2"
         :value="value"
         :propertyname="propertyname"
         :index="index"
         :depth="0"
+        :class="'tree-menu-item--root'"
       ></tree-menu-item>
     </ul>
   </div>
@@ -36,8 +36,7 @@ export default {
     }
 
     &__list {
-      @include u-reset-list;
-      
+      @include u-reset-list;      
     }
   }
 </style>

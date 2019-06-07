@@ -1,0 +1,69 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '../projectConfig/_settings.media-queries';
+@import '../projectConfig/_settings.typography';
+@import '_tools.media-queries';
+
+////
+/// @group -Library-
+////
+
+// Try not to use this - intended for <strong> generic definition
+@mixin bold {
+    font-weight: 700;
+}
+
+//*------------------------------------
+//  Tools: Font scale
+//  ------------------------------------*/
+
+///
+/// Gets responsive font-sizes from typographical scale map
+///
+/// @param {String} $size [$font-size-small] - Key (name of font size) in typographical scale map
+/// @param {Boolean} $margins [true] - Toggles the output of margin properties (if present) in typographical scale map
+/// @param {Map} $scale [$typographic-scale] - Properties to be output at and above the breakpoint's size (font-size, line-height, margin-top, margin-bottom etc.). Allows 'default' key for breakpointless/non-responsive properties
+/// @param {Map} $breakpoints [$breakpoints] - Set of breakpoints used in the typographic scale (if responsive font sizes are set)
+///
+@mixin font-size(
+    $size: $font-size-small,
+    $margins: true,
+    $scale: $typographic-scale,
+    $breakpoints: $breakpoints
+    ) {
+    // Output default font size
+    @if map-has-key($scale, 'default'){
+        $default: map-get($scale, 'default');
+        @if map-has-key($default, $size) {
+            @include outputFontProperties(map-get($default, $size), $margins);
+        }
+    }
+    // Output responsive fonts
+    @each $breakpoint, $width in $breakpoints {
+        @if map-has-key($scale, $breakpoint) {
+            $b: map-get($scale, $breakpoint);
+            @if map-has-key($b, $size) {
+                @include respond-from($breakpoint) {
+                    @include outputFontProperties(map-get($b, $size), $margins);
+                }
+            }
+        }
+    }
+}
+
+
+///
+/// Outputs font properties
+///
+/// @access private
+/// @param {Map} $properties - Font properties & values to be rendered (default, non-responsive/at the current breakpoint)
+/// @param {Boolean} $margins - Toggles the output of margin properties (if present)
+///
+@mixin outputFontProperties ($properties, $margins) {
+    @each $prop, $val in $properties {
+        @if $margins  {
+            #{$prop}: #{$val};
+        } @else if $prop != 'margin-top' and $prop != 'margin-bottom' {
+            #{$prop}: #{$val};
+        }
+    }
+}

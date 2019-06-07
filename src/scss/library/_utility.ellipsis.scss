@@ -1,0 +1,16 @@
+//*------------------------------------
+//  Utility : Ellipsis
+//  ------------------------------------*/
+
+////
+/// @group -Library-
+////
+
+///
+/// Makes text add ellipsis on overflow
+///
+@mixin u-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
