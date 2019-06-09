@@ -1,5 +1,6 @@
 <template>
   <div v-if="data" class="wrapper">
+    <button @click="saveState">Save State</button>
     <json-data-property :item="data" :depth="0">
     </json-data-property>
   </div>
@@ -23,6 +24,19 @@ export default {
       axios.get("/api/get/content.json").then(response => {
         this.$store.commit("loadBlockData", response.data);
       });
+    }
+  },
+  watch: {
+    data:{
+      deep: true,
+      handler: function() {
+        this.$store.commit("saveBlockData", this.data);
+      }
+    }
+  },
+  methods: {
+    saveState: function() {
+      //this.$store.commit("saveBlockData", this.$computes);
     }
   }
 };

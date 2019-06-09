@@ -23,6 +23,9 @@ export default new Vuex.Store({
     loadBlockData: function(state, blockData) {
       state.blockData = blockData;
     },
+    saveBlockData: function(state, data) {
+      state.blockData.data = data;
+    },
     selectItem: function(state, item) {
       state.selectedItem = item;
     },

@@ -11,12 +11,13 @@
         </div>
         <div v-else class="propertyEditor">
           <label>{{ key }}</label>
-          <input type="text" :value="item[key]">
+          <input v-if="valueLength(key) <= 50" type="text" v-model="item[key]">
+          <textarea v-if="valueLength(key) > 50" v-model="item[key]"></textarea>
         </div>
       </div>
     </div>
     <div v-if="isCollapsed" @click="uncollapse" :style="indent">
-      item {{ arrayIndex }}
+      {{ guessCollapsedTitle }}
     </div>
   </div>
 </template>
@@ -36,6 +37,18 @@ export default {
   computed: {
     indent() {
       return { transform: `margin-left: ${this.depth * 15}px` };
+    },
+    guessCollapsedTitle() {
+      var guesses = ['type', 'title'];
+      var output = 'item '+ this.$props.arrayIndex;
+      for(let guess of guesses) {
+        var item = this.$props.item;
+        if(item.hasOwnProperty(guess) && item[guess]) {
+          output = item[guess];
+          break;
+        }
+      };
+      return output;
     }
   },
   methods: {
@@ -52,6 +65,9 @@ export default {
     },
     uncollapse: function() {
       this.$data.isCollapsed = false;
+    },
+    valueLength(key) {
+      return this.$props.item[key].length;
     }
   },
   props: ["item", "depth", "isArrayItem", "collapsed", "arrayIndex"],
@@ -89,7 +105,11 @@ export default {
 .propertyEditor {
   margin: 20px 0;
 }
+.propertyEditor * {
+  vertical-align: top;
+}
 label {
+  margin-top: 16px;
   margin-right: 10px;
   display: inline-block;
   min-width: 120px;
@@ -97,5 +117,11 @@ label {
 input {
   width: 250px;
   padding: 15px;
+}
+textarea {
+  width: 300px;
+  height: 250px;
+  padding: 15px;
+  line-height: 20px;
 }
 </style>
