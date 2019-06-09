@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data" class="wrapper">
+  <div v-if="data">
     <json-data-property :item="data" :depth="0" :path="initialPath">
     </json-data-property>
   </div>
@@ -47,9 +47,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.wrapper {
-  width: 100%;
-  height: 90vh;
-  overflow-y: scroll;
-}
 </style>

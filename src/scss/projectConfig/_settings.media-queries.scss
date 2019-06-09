@@ -1,0 +1,35 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '../library/_tools.sizing.scss';
+
+////
+/// @group -Project-
+////
+
+//*------------------------------------
+//  @const Media Query Breakpoint Names
+//  ------------------------------------*/
+$media-query-xsmall: 'xsmall';
+$media-query-small: 'small';
+$media-query-smallmedium: 'smallmedium';
+$media-query-medium: 'medium';
+$media-query-mediumlarge: 'mediumlarge';
+$media-query-large: 'large';
+$media-query-xlarge: 'xlarge';
+$media-query-xxlarge: 'xxlarge';
+
+
+
+//*------------------------------------
+//  @param Breakpoint settings
+//  ------------------------------------*/
+///
+$breakpoints: (
+  $media-query-xsmall      : size(320px, $unit-em),
+  $media-query-small       : size(480px, $unit-em),
+  $media-query-smallmedium : size(601px, $unit-em),
+  $media-query-medium      : size(768px, $unit-em),
+  $media-query-mediumlarge : size(1024px, $unit-em),
+  $media-query-large       : size(1366px, $unit-em),
+  $media-query-xlarge      : size(1920px, $unit-em),
+  $media-query-xxlarge     : size(2560px, $unit-em)
+) !default;

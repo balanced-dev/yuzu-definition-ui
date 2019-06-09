@@ -1,0 +1,17 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '../library/_tools.sizing';
+
+////
+/// @group -Project-
+////
+
+//*------------------------------------
+//  @const Page Constants
+//  ------------------------------------*/
+
+/// Standard column padding <br>
+/// Total Column Gutter = (2 * $column-gutter-default)
+$column-gutter-default: size(16px) !default;
+
+
+$app-bar-height: size(42px);

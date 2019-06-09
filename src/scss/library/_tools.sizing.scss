@@ -1,0 +1,198 @@
+//*------------------------------------
+//  Tools: Sizing
+//  ------------------------------------*/
+
+////
+/// @group -Library-
+////
+
+/// Pixel basis for all sizing
+/// @type Length
+$rem-base: 16px !default;
+
+/// Suffix for 'EM' values
+/// @type String
+$unit-em: 'em';
+
+/// Suffix for 'REM' values
+/// @type String
+$unit-rem: 'rem';
+
+/// Suffix for 'Pixel' values
+/// @type String
+$unit-px: 'px';
+
+
+//*------------------------------------
+//  Units
+//  ------------------------------------*/
+
+///
+/// Convert one value to use another unit (mainly px->rem)
+///
+/// @param {Length} $value [1px] - Value to be converted
+/// @param {String} $return-unit [$unit-rem] - What type the value should be returned in ($unit-em, $unit-rem, $unit-px)
+///
+/// @example scss - Basic usage
+///     .dot { 
+///         width: size(1px);
+///     }
+///     .image { 
+///         height: size(200px);
+///     }
+///     .text { 
+///         font-size: size(16px, $unit-em);
+///     }
+///     .title { 
+///         line-height: size(1.6em, $unit-rem);
+///     }
+///
+/// @return {Length}
+///
+@function size($value: 1px, $return-unit: $unit-rem) {
+  // If unitless Assume px & return as described
+  // If px return as described unless return unit also px
+  // If same units just return
+  // If em or rem and convert to px
+  // If em or rem and not covert to px then toggle
+  @if unitless($value) or unit($value) == $unit-px {
+    @if not ($return-unit == $unit-px) {
+      @if $return-unit == $unit-rem { @return rem-calc($value); }
+      @else if $return-unit == $unit-em { @return em-calc($value); }
+      @else { @warn "Oops '#{return-unit}' is not a valid unit"; }
+    }
+    @else if unitless($value) and not ($value == 0) { @return $value * 1px; }
+    @else { @return $value; }
+  }
+  @else if unit($value) == $return-unit { @return $value; }
+  @else if $return-unit == $unit-px { @return px-calc($value); }
+  @else { @return toggle-em-rem($value); }
+}
+
+
+///
+/// Simple conversion function for converting a px value to em
+///
+/// @access private
+/// @param {Length} $value [1px] - Pixel value to be converted
+/// @param {String} $base-value [$rem-base] - Pixel basis for rem sizing
+///
+/// @return {Length}
+///
+@function em-calc($value: 1px, $base-value: $rem-base) {
+  @return strip-unit(rem-calc($value)) * 1em;
+}
+
+
+///
+/// Simple conversion function for converting a px value to rem
+///
+/// @access private
+/// @param {Length} $value [1px] - Pixel value to be converted
+/// @param {String} $base-value [$rem-base] - Pixel basis for rem sizing
+///
+/// @return {Length}
+///
+@function rem-calc($value: 1px, $base-value: $rem-base) {
+  $value: strip-unit($value) / strip-unit($base-value)  * 1rem;
+  @if ($value == 0rem) { $value: 0; }
+  @return $value;
+}
+
+
+///
+/// Simple conversion function for converting a rem or em value to a pixel based value
+///
+/// @access private
+/// @param {Length} $value [1rem] - em/rem value to be converted
+/// @param {String} $base-value [$rem-base] - Pixel basis for rem sizing
+///
+/// @return {Length}
+///
+@function px-calc($value: 1rem, $base-value: $rem-base) {
+  $value: strip-unit($value) * strip-unit($base-value)  * 1px;
+  @if ($value == 0px) { $value: 0; }
+  @return $value;
+}
+
+
+///
+/// Converts value either from rem->em or em->rem
+///
+/// @access private
+/// @param {Length} $value [1em] - rem/em value to be converted
+///
+/// @return {Length}
+///
+@function toggle-em-rem($value: 1em) {
+  $value: strip-unit($value) * (if(unit($value) == $unit-rem, 1em, 1rem));
+  @if (strip-unit($value) == 0) { $value: 0; }
+  @return $value;
+}
+
+
+///
+/// Strips the unit of measure and returns a unitless value
+///
+/// @param {Length} $value [1em] - Value to be made unitless (px, em, rem...)
+/// @link https://github.com/zurb/foundation-sites/blob/develop/scss/util/_unit.scss ©ZURB Foundation
+/// @return {Length}
+///
+@function strip-unit($num) {
+  @return $num / ($num * 0 + 1);
+}
+
+
+///
+/// Calibrates padding with borders. <br>
+/// Used for making non-fixed height elements align their contents using padding & a border (padding compensates for border-width by reducing itself) <br>
+/// e.g. useful for a row of buttons, with differing border widths
+///
+/// @param {List} $padding [1em 1em 1em 1em]
+/// @param {Length} $border-width [1px]
+/// @return {List}
+///
+@function padding-calc($padding: 1em, $border-width: 1px) {
+  $total: length($padding);
+  $calibrated-padding: ();
+  $values: ();
+
+  @if $total == 1 {
+    $values: match-units(nth($padding, 1), $border-width);
+    $calibrated-padding: (nth($values, 1) - nth($values, 2));
+  } @else {
+    @for $i from 1 through $total {
+      $values: append($values, match-units(nth($padding, $i), $border-width));
+      $new-padding: max(0, (nth(nth($values, $i), 1) - nth(nth($values, $i), 2))); // Calc and ensure that padding not -ve
+      $calibrated-padding: append($calibrated-padding, $new-padding);
+    }
+  }
+  @return $calibrated-padding;
+}
+
+
+///
+/// Matches the units of two values by converting them to match the unit of the first value
+///
+/// @param {Length} $valueA
+/// @param {Length} $valueB
+/// @return {Map}
+///
+@function match-units($valueA, $valueB) {
+  $unitA: unit($valueA);
+  $unitB: unit($valueB);
+  @if $unitA == $unitB or unitless($valueA) or unitless($valueB) { @return ($valueA, $valueB); }
+  @else if $unitA == $unit-px {
+      @return ($valueA, px-calc($valueB));
+  } @else if  $unitA == $unit-em {
+    @if $unitB == $unit-px { @return ($valueA, em-calc($valueB)); }
+    @else if $unitB == $unit-rem { @return ($valueA, (strip-unit($valueB) * 1em) ); }
+    @else { @error "match-units: Invalid unit (valueB = #{$valueB}}"; }
+  } @else if $unitA == $unit-rem {
+    @if $unitB == $unit-px { @return ($valueA, rem-calc($valueB)); }
+    @else if $unitB == $unit-em { @return ($valueA, (strip-unit($valueB) * 1rem) ); }
+    @else { @error "match-units: Invalid unit (valueB = #{$valueB}}"; }
+  } @else {
+    @error "match-units: Invalid values valueA = #{$valueA} // $valueB = #{$valueB}";
+  }
+}

@@ -1,0 +1,125 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '../projectConfig/_settings.layout';
+
+////
+/// @group -Library-
+////
+
+///
+/// Adds horizontal margin/padding (padding by default)
+///
+/// @param {String} $property ['padding'] - Property to be used in the creation of the gutters (padding/margin)
+/// @param {Length} $value [$column-gutter-default] - Gutter width
+///
+/// @example scss - Basic usage
+///     .column { 
+///         @include column-gutters;
+///     }
+///
+/// @example scss - Fully customised usage
+///     .column {
+///         @include column-gutters($property: 'margin', $value: size(16px);
+///     }
+///
+@mixin column-gutters ($property: 'padding', $value: $column-gutter-default) {
+  @include column-gutter($property, 'left', $value);
+  @include column-gutter($property, 'right', $value);
+}
+
+
+///
+/// Adds horizontal margin/padding (padding by default) to a single side
+///
+/// @param {String} $property ['padding'] - Property to be used in the creation of the gutter (padding/margin)
+/// @param {String} $side ['left'] - Gutter width
+/// @param {Length} $value [$column-gutter-default] - Gutter width
+///
+/// @example scss - Basic usage
+///     .column { 
+///         @include column-gutter;
+///     }
+///
+/// @example scss - Fully customised usage
+///     .column {
+///         @include column-gutter($property: 'margin', $side: 'left', $value: size(16px);
+///     }
+///
+@mixin column-gutter ($property: 'padding', $side: 'left', $value: $column-gutter-default) {
+  #{$property}-#{$side}: $column-gutter-default;
+}
+
+
+///
+/// Aligns an element to a gutter. Used for an absolutely position child of a column using the @column-gutters mixin (padding used for gutters) to align it correctly to the column
+///
+/// @param {String} $property ['alignment'] - Property to be used in the alignment (left/right)
+/// @param {Length} $value [$column-gutter-default] - Gutter width
+///
+/// @example scss - Basic usage
+///     .column { 
+///         @include column-gutters;
+///         position: relative;
+///     }
+///     .column-child {
+///         @include position-to-gutter('right');
+///         position: absolute;
+///         width: size(100px);
+///     }
+///
+@mixin position-to-gutter ($alignment: 'left', $value: $column-gutter-default) {
+  #{$alignment}: $value;
+}
+
+
+///
+/// Sizes an element's width according to a grid. Calculated by using the amount of columns wide it should be and how many total columns there are in the grid
+///
+/// @param {Number} $sizeInColumns [1] - Desired proportion / size
+/// @param {Number} $totalColumns [2] - Of total proportion / size
+/// @param {Boolean} $calibrate [false] - <ul>
+///                                           <li>Should the percentage be calibrated to account for page gutters / padding</li>
+///                                           <li>This is for when sizing at 'top level' and not within an existing layout 'cell'</li>
+///                                       </ul>
+/// @param {Boolean} $widthCalibration [true] - Is the dimension being calibrated so that it can be used for a width setting?
+///                                               <ul>
+///                                                   <li>When TRUE: we simply need to account for the page gutter before creating the %</li>
+///                                                   <li>When FALSE: we are calculating the distance (%) we need to move the element to align it onto the grid. To do so need to add an additional amount of 'push' to the % that accounts for the page gutter on one side</li>
+///                                               </ul>
+/// @param {Length} $pageGutter [$column-gutter-default] - The page gutter / padding size.
+///                                                         <ul>
+///                                                             <li>Assumes that there is a matching left and right gutters</li>
+///                                                             <li>They CANNOT be different gutter on one side</li>
+///                                                         </ul>
+///
+/// @example scss - Basic usage
+///     .column { 
+///         width: column-width(1,2);
+///     }
+///
+/// @example scss - Advanced usage
+///     .column { 
+///         padding-left: column-width(1,2, $calibrate: true, $widthCalibration: false);
+///     }
+///
+/// @return {Percentage | Calc()}
+///
+@function column-width($sizeInColumns:1,
+                       $totalColumns:2,
+                       $calibrate:false,
+                       $widthCalibration:true,
+                       $pageGutter:$column-gutter-default
+                       )
+{
+  @if not $calibrate {
+    @return percentage(($sizeInColumns/$totalColumns));
+  }
+  @else {
+    $gutter: $pageGutter*2;
+    $push: $pageGutter;
+    @if $widthCalibration {
+      $push: 0px;
+    }
+    @return calc((#{$sizeInColumns/$totalColumns})*(100% - #{$gutter}) + #{$push});
+  }
+}
+

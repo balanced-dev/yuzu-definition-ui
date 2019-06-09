@@ -1,0 +1,27 @@
+///*------------------------------------
+//  #Settings : Colours
+//  ------------------------------------*/
+$colour-black       : #000000;
+$colour-white       : #ffffff;
+
+$colour-grey-dark       : #1E1E1E;
+$colour-grey-mid-dark   : #252526;
+$colour-grey-mid        : #2D2D2D;
+$colour-grey-mid-light  : #333333;
+$colour-grey-light      : #3F3F46;
+$colour-grey-xlight     : #ADADAD;
+
+$colour-blue            : #007ACC;
+$colour-green            : #CBC535;
+$colour-orange            : #CE9169;
+$colour-purple            : #9c73b0;
+$colour-red            : #cd3131;
+
+$colour-text-default: #CCCCCC;
+$colour-text-inactive: $colour-grey-xlight;
+$colour-text-inactive-light: #969696;
+
+$colour-body-bgnd-light-grey  : $colour-grey-mid;
+$colour-body-bgnd-dark-grey   : $colour-grey-dark;
+
+$drop-shadow: rgba($colour-black, 0.2) 0 2px 8px 0 !default;
