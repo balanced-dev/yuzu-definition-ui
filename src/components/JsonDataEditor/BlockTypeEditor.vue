@@ -1,7 +1,5 @@
 <template>
-  <div v-if="blockType">
-      Block Type: {{blockType}}
-  </div>
+  <div v-if="blockType">Block Type: {{ blockType }}</div>
 </template>
 
 <script>

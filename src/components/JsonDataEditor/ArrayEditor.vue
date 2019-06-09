@@ -2,8 +2,18 @@
   <div>
     <label @click="toggleActive">+ {{ label }}</label>
     <div v-if="active" class="array">
-      <draggable :list="items" ghost-class="ghost" handle=".handle" @start="drag=true" @end="drag=false">
-        <div v-for="(item, index) in items" v-bind:key="index" class="arrayItem">
+      <draggable
+        :list="items"
+        ghost-class="ghost"
+        handle=".handle"
+        @start="drag = true"
+        @end="drag = false"
+      >
+        <div
+          v-for="(item, index) in items"
+          v-bind:key="index"
+          class="arrayItem"
+        >
           <json-data-collapsible-property
             :item="item"
             :depth="depth + 1"
@@ -15,7 +25,10 @@
         </div>
       </draggable>
       <a @click="addItem">add item</a>
-      <json-data-block-type :item="items[0]" :path="path"></json-data-block-type>
+      <json-data-block-type
+        :item="items[0]"
+        :path="path"
+      ></json-data-block-type>
     </div>
   </div>
 </template>

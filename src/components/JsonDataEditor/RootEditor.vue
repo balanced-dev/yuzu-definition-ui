@@ -31,20 +31,14 @@ export default {
     }
   },
   watch: {
-    data:{
+    data: {
       deep: true,
       handler: function() {
         this.$store.commit("saveBlockData", this.data);
       }
     }
-  },
-  methods: {
-    saveState: function() {
-      //this.$store.commit("saveBlockData", this.$computes);
-    }
   }
 };
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

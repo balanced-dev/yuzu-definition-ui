@@ -7,10 +7,7 @@
         :depth="depth + 1"
         :path="path"
       ></json-data-property>
-      <json-data-block-type
-        :item="item"
-        :path="path"
-      ></json-data-block-type>
+      <json-data-block-type :item="item" :path="path"></json-data-block-type>
     </div>
   </div>
 </template>

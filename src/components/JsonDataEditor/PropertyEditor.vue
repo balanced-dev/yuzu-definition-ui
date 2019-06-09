@@ -2,14 +2,24 @@
   <div class="property" :style="indent">
     <div v-for="key in Object.keys(item)" v-bind:key="key">
       <div v-if="isObject(item[key])" class="objectSelector">
-        <json-data-object :label="key" :item="item[key]" :depth="depth" :path="buildPath(key)"></json-data-object>
+        <json-data-object
+          :label="key"
+          :item="item[key]"
+          :depth="depth"
+          :path="buildPath(key)"
+        ></json-data-object>
       </div>
       <div v-else-if="isArray(item[key])" class="objectSelector">
-        <json-data-array :label="key" :items="item[key]" :depth="depth" :path="buildPath(key)"></json-data-array>
+        <json-data-array
+          :label="key"
+          :items="item[key]"
+          :depth="depth"
+          :path="buildPath(key)"
+        ></json-data-array>
       </div>
       <div v-else class="propertyEditor">
         <label>{{ key }}</label>
-        <input v-if="valueLength(key) <= 50" type="text" v-model="item[key]">
+        <input v-if="valueLength(key) <= 50" type="text" v-model="item[key]" />
         <textarea v-if="valueLength(key) > 50" v-model="item[key]"></textarea>
       </div>
     </div>
@@ -39,19 +49,13 @@ export default {
       return this.$props.item[key].length;
     },
     buildPath(key) {
-      return this.$props.path +'/'+ key;
+      return this.$props.path + "/" + key;
     }
   },
   props: ["item", "depth", "path"],
   components: {
     JsonDataArray,
     JsonDataObject
-  },
-  events: {
-    sort: function( item, oldIndex, newIndex ) {
-      console.log( "Sort!" );
-      console.log( item );
-    }
   }
 };
 </script>
