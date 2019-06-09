@@ -1,23 +1,17 @@
 <template>
-  <div class="property">
-    <div v-if="!isCollapsed" :style="indent">
-      <span class="collapse" v-if="isArrayItem" @click="collapse">-</span>
-      <div v-for="key in Object.keys(item)" v-bind:key="key">
-        <div v-if="isObject(item[key])" class="objectSelector">
-          <json-data-object :label="key" :item="item[key]" :depth="depth"></json-data-object>
-        </div>
-        <div v-else-if="isArray(item[key])" class="objectSelector">
-          <json-data-array :label="key" :items="item[key]" :depth="depth"></json-data-array>
-        </div>
-        <div v-else class="propertyEditor">
-          <label>{{ key }}</label>
-          <input v-if="valueLength(key) <= 50" type="text" v-model="item[key]">
-          <textarea v-if="valueLength(key) > 50" v-model="item[key]"></textarea>
-        </div>
+  <div class="property" :style="indent">
+    <div v-for="key in Object.keys(item)" v-bind:key="key">
+      <div v-if="isObject(item[key])" class="objectSelector">
+        <json-data-object :label="key" :item="item[key]" :depth="depth" :path="buildPath(key)"></json-data-object>
       </div>
-    </div>
-    <div v-if="isCollapsed" @click="uncollapse" :style="indent">
-      {{ guessCollapsedTitle }}
+      <div v-else-if="isArray(item[key])" class="objectSelector">
+        <json-data-array :label="key" :items="item[key]" :depth="depth" :path="buildPath(key)"></json-data-array>
+      </div>
+      <div v-else class="propertyEditor">
+        <label>{{ key }}</label>
+        <input v-if="valueLength(key) <= 50" type="text" v-model="item[key]">
+        <textarea v-if="valueLength(key) > 50" v-model="item[key]"></textarea>
+      </div>
     </div>
   </div>
 </template>
@@ -29,26 +23,9 @@ import JsonDataObject from "./ObjectEditor.vue";
 
 export default {
   name: "json-data-property",
-  data() {
-    return {
-      isCollapsed: this.$props.collapsed
-    };
-  },
   computed: {
     indent() {
       return { transform: `margin-left: ${this.depth * 15}px` };
-    },
-    guessCollapsedTitle() {
-      var guesses = ['type', 'title'];
-      var output = 'item '+ this.$props.arrayIndex;
-      for(let guess of guesses) {
-        var item = this.$props.item;
-        if(item.hasOwnProperty(guess) && item[guess]) {
-          output = item[guess];
-          break;
-        }
-      };
-      return output;
     }
   },
   methods: {
@@ -58,19 +35,14 @@ export default {
     isArray: function(item) {
       return _.isArray(item);
     },
-    collapse: function() {
-      if(this.$props.isArrayItem) {
-        this.$data.isCollapsed = true;
-      }
-    },
-    uncollapse: function() {
-      this.$data.isCollapsed = false;
-    },
     valueLength(key) {
       return this.$props.item[key].length;
+    },
+    buildPath(key) {
+      return this.$props.path +'/'+ key;
     }
   },
-  props: ["item", "depth", "isArrayItem", "collapsed", "arrayIndex"],
+  props: ["item", "depth", "path"],
   components: {
     JsonDataArray,
     JsonDataObject
@@ -87,14 +59,6 @@ export default {
 <style scoped lang="scss">
 .property {
   position: relative;
-}
-.collapse {
-    position: absolute;
-    top: -15px;
-    display: block;
-    font-size: 46px;
-    line-height: 1px;
-    cursor: pointer;
 }
 .objectSelector {
   margin: 10px 0;

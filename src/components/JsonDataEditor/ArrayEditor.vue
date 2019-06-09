@@ -4,18 +4,18 @@
     <div v-if="active" class="array">
       <draggable :list="items" ghost-class="ghost" handle=".handle" @start="drag=true" @end="drag=false">
         <div v-for="(item, index) in items" v-bind:key="index" class="arrayItem">
-          <json-data-property
+          <json-data-collapsible-property
             :item="item"
             :depth="depth + 1"
-            :collapsed="true"
-            :isArrayItem="true"
+            :path="path"
             :arrayIndex="index + 1"
-          ></json-data-property>
+          ></json-data-collapsible-property>
           <a class="handle">sort</a>&nbsp;
           <a @click="deleteItem(item)">delete</a>
         </div>
       </draggable>
       <a @click="addItem">add item</a>
+      <json-data-block-type :item="items[0]" :path="path"></json-data-block-type>
     </div>
   </div>
 </template>
@@ -41,7 +41,7 @@ export default {
       this.$props.items.push({ href:"", title:"" });
     }
   },
-  props: ["label", "items", "depth"],
+  props: ["label", "items", "depth", "path"],
   components: {
     draggable,
   }

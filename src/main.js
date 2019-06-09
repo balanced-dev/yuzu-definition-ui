@@ -10,3 +10,6 @@ new Vue({
 }).$mount("#app");
 
 Vue.component('JsonDataProperty', require('./components/JsonDataEditor/PropertyEditor.vue').default);
+Vue.component('JsonDataCollapsibleProperty', require('./components/JsonDataEditor/CollapsiblePropertyEditor.vue').default);
+Vue.component('JsonDataBlockType', require('./components/JsonDataEditor/BlockTypeEditor.vue').default);
+

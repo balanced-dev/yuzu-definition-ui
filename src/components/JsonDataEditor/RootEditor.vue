@@ -1,7 +1,6 @@
 <template>
   <div v-if="data" class="wrapper">
-    <button @click="saveState">Save State</button>
-    <json-data-property :item="data" :depth="0">
+    <json-data-property :item="data" :depth="0" :path="initialPath">
     </json-data-property>
   </div>
 </template>
@@ -11,6 +10,11 @@ import axios from "axios";
 
 export default {
   name: "json-data-editor",
+  data() {
+    return {
+      initialPath: ""
+    };
+  },
   computed: {
     data() {
       return this.$store.state.blockData.data;
