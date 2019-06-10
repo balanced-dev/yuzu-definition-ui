@@ -134,25 +134,28 @@
         ]
     },
     "map": {
-        "/parPageHeader": {
-            "paths": [
-                "/header"
+        "parPageHeader": {
+            "instances": [
+                {
+                    "path": "/header",
+                    "state": "parPageHeader"
+                }
             ]
         },
-        "/parDataImage": {
-            "paths": [
-                "/header/background"
+        "parTeam": {
+            "instances": [
+                {
+                    "path": "/contentRows[1]/vm",
+                    "state": "parTeam"
+                }
             ]
         },
-        "/parDataLink": {
-            "paths": [
-                "/header/items",
-                "/header/link"
-            ]
-        },
-        "/parDataRowItem": {
-            "paths": [
-                "/items"
+        "parFeatures": {
+            "instances": [
+                {
+                    "path": "/contentRows[0]/vm",
+                    "state": "parFeatures"
+                }
             ]
         }
     }

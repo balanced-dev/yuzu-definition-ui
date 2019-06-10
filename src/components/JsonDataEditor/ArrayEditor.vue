@@ -17,7 +17,7 @@
           <json-data-collapsible-property
             :item="item"
             :depth="depth + 1"
-            :path="path"
+            :path="buildPath(index)"
             :arrayIndex="index + 1"
           ></json-data-collapsible-property>
           <a class="handle">sort</a>&nbsp;
@@ -52,6 +52,9 @@ export default {
     },
     addItem() {
       this.$props.items.push({ href:"", title:"" });
+    },
+    buildPath(index) {
+      return this.$props.path + "[" + index +"]";
     }
   },
   props: ["label", "items", "depth", "path"],

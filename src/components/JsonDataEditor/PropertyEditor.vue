@@ -65,6 +65,7 @@ export default {
   position: relative;
 }
 .objectSelector {
+  position: relative;
   margin: 10px 0;
   padding: 20px;
   padding-top: 0px;

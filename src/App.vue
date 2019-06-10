@@ -31,8 +31,12 @@ export default {
     axios.get("/_templates/templates.json").then(response => {
       this.$store.commit("loadItems", response.data);
       var route = bootstrap.getRoute();
-      bootstrap.findCurrentBlockAndState(response.data, route, this.$store);
-      console.log(route);
+      if(!route) route = "content";
+
+      var context = {};
+      bootstrap.getBlockAndState(response.data, route, context);
+      this.$store.commit("selectItem", context.block);
+      this.$store.commit("setBlockState", context.state);
     });
   },
   methods: {

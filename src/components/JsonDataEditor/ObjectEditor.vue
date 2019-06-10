@@ -37,5 +37,6 @@ label {
 }
 div.object {
   padding-top: 10px;
+  display: relative;
 }
 </style>
