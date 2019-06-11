@@ -26,8 +26,8 @@
         >
           <json-data-collapsible-property
             :item="item"
-            :depth="depth+1"
-            :path="path"
+            :depth="depth + 1"
+            :path="buildPath(index)"
             :arrayIndex="index + 1"
           ></json-data-collapsible-property>
           <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
@@ -87,6 +87,9 @@ export default {
     },
     addItem() {
       this.$props.items.push({ href:"", title:"" });
+    },
+    buildPath(index) {
+      return this.$props.path + "[" + index +"]";
     }
   },
   props: ["label", "items", "depth", "path"],
