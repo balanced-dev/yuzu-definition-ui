@@ -63,6 +63,7 @@
       <json-data-block-type
         :item="items[0]"
         :path="path"
+        :depth="depth+1"
       ></json-data-block-type>
     </div>
   </div>

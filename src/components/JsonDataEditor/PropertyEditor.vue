@@ -77,6 +77,7 @@ $property-editor__property-v-padding: $column-gutter-default / 2;
   @include json-data-editor__section($this);
 
   &__section {    
+    position: relative;
     
     &--object {}
     &--array {}
@@ -164,7 +165,7 @@ $property-editor__property-v-padding: $column-gutter-default / 2;
     }
 
     &__icon {
-      background-color: $colour-text-default;
+      background-color: $colour-grey-darker;
       color: $colour-blue;
       cursor: pointer;
       display: none;
