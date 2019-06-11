@@ -45,7 +45,7 @@
 ///     }
 ///
 @mixin column-gutter ($property: 'padding', $side: 'left', $value: $column-gutter-default) {
-  #{$property}-#{$side}: $column-gutter-default;
+  #{$property}-#{$side}: $value;
 }
 
 

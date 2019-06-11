@@ -3,10 +3,10 @@
     <span v-if="isFolder(value)">
       <a class="tree-menu-item__parent" @click="toggleChildren" :style="{'padding-left': `${depth + 1}rem`}">
         <svg class="tree-menu-item__parent__icon feather" :class="{'is-hidden': !showChildren}">
-          <use xlink:href="#corner-left-up"/>
+          <use xlink:href="#minus-square"/>
         </svg>
         <svg class="tree-menu-item__parent__icon feather" :class="{'is-hidden': showChildren}">
-          <use xlink:href="#corner-down-right"/>
+          <use xlink:href="#plus-square"/>
         </svg>
         <span class="tree-menu-item__parent__text">
           {{ propertyname }}
@@ -22,7 +22,8 @@
       </ul>
     </span>
     <span v-else>
-      <a class="tree-menu-item__child" 
+      <a
+       class="tree-menu-item__child" 
         @click="selectItem(propertyname, value)"
         :style="{'padding-left': `${depth + 1}rem`}"
       >
@@ -68,39 +69,27 @@ export default {
   @import '../scss/main';
 
   @mixin tree-menu-item__list-item {
-    padding-top: $column-gutter-default / 4;
-    padding-bottom: $column-gutter-default / 4;
+    padding-bottom: $column-gutter-default / 2;
+    padding-top: $column-gutter-default / 2;
     
     &:hover {
       background-color: $colour-grey-mid-dark;
     }
   }
 
-  $tree-menu-item__icon-size: size(16px);
+  
 
   .tree-menu-item {
     $this: &;
 
     &__parent {
       @include tree-menu-item__list-item;
-      @include u-ellipsis;
-      cursor: pointer;
-      display: block;
+      @include accordion-button;
       padding-right: $column-gutter-default;
-
-      &__icon,
-      &__text {
-        display: inline-block;
-        vertical-align: middle;
-      }
+      width: 100%;
 
       &__icon {
-        height: $tree-menu-item__icon-size;
-        width: $tree-menu-item__icon-size;
 
-        &.is-hidden {
-          display: none;
-        }
       }
 
       &__text {
@@ -126,7 +115,10 @@ export default {
 
     &--root {
       > span > #{$this}__parent {
-        text-transform: capitalize;
+        @include bold-font;
+        background-color: $colour-grey-light;
+        margin-bottom: 1px;
+        text-transform: uppercase;
       }
     }
   }

@@ -48,16 +48,16 @@ export default {
     icon: (name) => {
       let iconName = '';
       switch (name.toLowerCase()) {
-        case 'blocks':
-          iconName = 'box';
+        case "blocks":
+          iconName = "box";
           break;      
-        case 'states':
-          iconName = 'file-text';
+        case "states":
+          iconName = "file-text";
           break;      
-        case 'data':
-          iconName = 'code';
+        case "data":
+          iconName = "code";
           break;      
-        default: ''
+        default: ""
           break;
       }
       return iconName;
@@ -79,7 +79,7 @@ export default {
 
 <style scoped lang="scss">
 @import '../scss/main';
-$tabs__nav-height: size(42px);
+$tabs__tab-stack-breakpoint: size(246px, $unit-em);
 
 .tabs {
   &__nav {
@@ -92,21 +92,32 @@ $tabs__nav-height: size(42px);
     top: 0;
 
     &__item {
-      @include u-ellipsis;
-      @include column-gutters;
+      @include column-gutters('padding', ($column-gutter-default / 2));
       align-items: center;
       background-color: $colour-body-bgnd-light-grey;
       color: $colour-text-inactive-light;
       cursor: pointer;
-      display: block;
-      flex: 1 1 0;
+      display: flex;
+      flex: 1 1 0%;
+      justify-content: center;
+      min-width: 0;
+
+      @include respond-upto($tabs__tab-stack-breakpoint) {
+        flex-direction: column;
+      }
 
       &__icon {
+        display: block;
+        flex-shrink: 0;
         height: size(1em);
-        display: inline-block;
-        margin-right: $column-gutter-default / 4;
-        vertical-align: middle;
         width: size(1em);
+
+        @include respond-upto($tabs__tab-stack-breakpoint) {
+          margin-bottom: $column-gutter-default / 4;
+        }
+        @include respond-from($tabs__tab-stack-breakpoint) {
+          margin-right: $column-gutter-default / 4;
+        }
 
         &--blocks {
           stroke: $colour-blue;
@@ -115,14 +126,22 @@ $tabs__nav-height: size(42px);
           stroke: $colour-purple;
         }
         &--data {
-          stroke: $colour-green;
+          stroke: $colour-lime;
         }
       }
 
       &__text {
-        display: inline-block;
-        line-height: $app-bar-height;
-        vertical-align: middle;
+        @include u-ellipsis;
+        display: block;
+        flex-shrink: 1;
+        max-width: 100%;
+
+        @include respond-upto($tabs__tab-stack-breakpoint) {
+          line-height: 1;
+        }
+        @include respond-from($tabs__tab-stack-breakpoint) {
+          line-height: $app-bar-height;
+        }
       }
 
       &:not(:last-child) {

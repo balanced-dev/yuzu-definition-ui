@@ -1,10 +1,20 @@
 <template>
-  <div>
-    <label @click="toggleActive">+ {{ label }}</label>
-    <div class="object" v-if="active">
+  <div class="object-editor" :class="[{'is-active': this.active}, `object-editor--depth-${depth}`]">
+    <label class="object-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
+      <svg class="object-editor__title__icon feather" :class="{'is-hidden': this.active}">
+        <use xlink:href="#plus-square"/>
+      </svg>
+      <svg class="object-editor__title__icon feather" :class="{'is-hidden': !this.active}">
+        <use xlink:href="#minus-square"/>
+      </svg>
+      <span class="object-editor__title__text">
+        {{ label }}
+      </span>
+    </label>
+    <div class="object-editor__section" v-if="active">
       <json-data-property
         :item="item"
-        :depth="depth + 1"
+        :depth="depth+1"
         :path="path"
       ></json-data-property>
       <json-data-block-type :item="item" :path="path"></json-data-block-type>
@@ -30,12 +40,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-label {
-  display: block;
-  font-weight: bold;
-  padding-top: 20px;
-}
-div.object {
-  padding-top: 10px;
+@import '../../scss/main';
+
+.object-editor {
+  $this: &;
+
+  @include json-data-editor__section($this, $includeSectionPadding: false);
 }
 </style>

@@ -1,0 +1,27 @@
+$accordion-button__icon-size: size(14px);
+
+@mixin accordion-button {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    user-select: none;
+
+    &__icon,
+    &__text {
+        display: block;
+    }
+
+    &__icon {
+        height: $accordion-button__icon-size;
+        margin-right: $column-gutter-default - $accordion-button__icon-size;
+        stroke-width: 3;
+        width: $accordion-button__icon-size;
+
+        &.is-hidden {
+            display: none;
+        }
+    }
+
+    &__text {
+    }
+}

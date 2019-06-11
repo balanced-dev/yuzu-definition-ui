@@ -1,0 +1,62 @@
+///*------------------------------------
+//  Generic: Forms
+//  ------------------------------------*/
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+label {
+  display: block;
+}
+
+label,
+input,
+textarea,
+select,
+option {
+  width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+// 1. Override normalize styles without editing normalize
+// 2. Removes default styling from iOs
+input[type="search"] {
+  box-sizing:border-box; // 1.
+  appearance: none; // 2.
+}
+
+// 1. Hide default selectlist arrow
+// 2. Removes default styling from iOs
+select {
+  appearance: none; // 1.
+}
+
+// Hide default selectlist arrow on IE
+select::-ms-expand {
+ opacity: 0;
+}
+
+// 1. Removes default styling from iOs (box-shadow not being removed)
+input,
+select,
+textarea {
+  border-radius: 0; //  1.
+  box-shadow: none;
+}
+
+// 1. Reset normalize styling that removed the cancel icon from search input fields
+[type="search"] {
+  -webkit-appearance: searchfield; // 1.
+}
+[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: searchfield-cancel-button; // 1.
+}
+

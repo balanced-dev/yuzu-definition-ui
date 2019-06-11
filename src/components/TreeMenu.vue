@@ -29,14 +29,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import '../scss/main';
-  .tree-menu {
-    &__title {
-      
-    }
+@import '../scss/main';
+.tree-menu {
+  &__title {}
 
-    &__list {
-      @include u-reset-list;      
-    }
+  &__list {
+    @include u-reset-list;
   }
+}
 </style>

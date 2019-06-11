@@ -48,9 +48,11 @@ export default {
     
     &__title {
       @include column-gutters;
-      @include default-font;
+      @include bold-font;
       @include font-size($font-size-small);
       background-color: $colour-grey-light;
+      padding-bottom: $column-gutter-default / 4;
+      padding-top: $column-gutter-default / 4;
       text-transform: uppercase;
     }
 
@@ -65,8 +67,8 @@ export default {
         @include column-gutters;  
         color: inherit;
         display: block;
-        padding-bottom: $column-gutter-default / 4;
-        padding-top: $column-gutter-default / 4;
+        padding-bottom: $column-gutter-default / 2;
+        padding-top: $column-gutter-default / 2;
         text-decoration: none;
 
         &:hover {

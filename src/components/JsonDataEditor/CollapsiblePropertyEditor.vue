@@ -1,16 +1,22 @@
 <template>
   <div class="collapse">
-    <div v-if="!isCollapsed">
-      <span class="collapse__handle" @click="collapse">-</span>
-      <json-data-property
-        :item="item"
-        :depth="depth + 1"
-        :path="path"
-      ></json-data-property>
-    </div>
-    <div v-if="isCollapsed" @click="uncollapse">
-      {{ guessCollapsedTitle }}
-    </div>
+    <span class="collapse__handle" @click="open" :style="{'padding-left': `${depth}rem`}">
+      <svg class="collapse__handle__icon feather" :class="{'is-hidden': !isOpen}">
+        <use xlink:href="#plus-square"/>
+      </svg>
+      <svg class="collapse__handle__icon feather" :class="{'is-hidden': isOpen}">
+        <use xlink:href="#minus-square"/>
+      </svg>
+      <span class="collapse__handle__text">
+        {{ guessCollapsedTitle }}
+      </span>
+    </span>
+    <json-data-property
+      v-if="!isOpen"
+      :item="item"
+      :depth="depth+1"
+      :path="path"
+    ></json-data-property>
   </div>
 </template>
 
@@ -21,7 +27,7 @@ export default {
   name: "json-data-collapsible-property",
   data() {
     return {
-      isCollapsed: true,
+      isOpen: true,
       guesses: ['type', 'title']
     };
   },
@@ -39,11 +45,8 @@ export default {
     }
   },
   methods: {
-    collapse: function() {
-      this.$data.isCollapsed = true;
-    },
-    uncollapse: function() {
-      this.$data.isCollapsed = false;
+    open: function() {
+      this.$data.isOpen = !this.$data.isOpen;
     }
   },
   props: ["item", "depth", "path", "arrayIndex"]
@@ -51,16 +54,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '../../scss/main.scss';
 .collapse {
-  position: relative;
-
   &__handle {
-    position: absolute;
-    top: -15px;
-    display: block;
-    font-size: 46px;
-    line-height: 1px;
-    cursor: pointer;
+    @include accordion-button;
   }
 }
 </style>

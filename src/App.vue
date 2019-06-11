@@ -4,6 +4,7 @@
       <svg class="app__toggle__icon feather">
         <use xlink:href="#menu"/>
       </svg>
+      <span class="app__toggle__text">Dev Tools</span>
     </button>
     <tabs></tabs>
     <button class="app__close" @click="toggleNav">
@@ -47,8 +48,21 @@ export default {
 </script>
 
 <style lang="scss">
+  @import './scss/generic.scss';
   @import './scss/main.scss';
   $app__nav-open-selector: '.nav-is-open';
+
+  .feather-sprite {
+    @include u-visually-hide;
+  }
+
+  .feather {
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
   
   .app {
     $this: &;
@@ -56,7 +70,6 @@ export default {
     @include default-font;
     @include font-size($font-size-small);
     background-color: $colour-grey-dark;
-    // font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: $colour-text-default;
@@ -78,19 +91,46 @@ export default {
 
     &__toggle {
       @include u-reset-button;
-      display: block;      
+      background-color: $colour-green;
+      cursor: pointer;
+      display: flex;      
       left: 100%;
+      padding: $column-gutter-default / 2;
       position: absolute;
       top: 50%;
 
       &__icon {
         display: block;
-        height: size(24px);
-        width: size(24px);
+        flex-shrink: 0;
+        height: size(16px);
+        position: relative;
+        stroke-width: 3;
+        width: size(16px);              
+      }
 
-        #{$app__nav-open-selector} & {
-          display: none;
-        }        
+      &__text {
+        max-width: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+
+        &::before {
+          content: '';
+          display: inline-block;
+          width: size(4px);
+        }
+      }
+
+      #{$app__nav-open-selector} & {
+        display: none;
+      }  
+
+      &:hover {
+        #{$this}__toggle {
+          &__text {
+            max-width: size(80px);
+          }
+        }
       }
     }
 
@@ -98,31 +138,21 @@ export default {
       @include u-reset-button;
       align-items: center;
       background-color: $colour-red;
+      bottom: 0;
+      cursor: pointer;
       display: flex;      
-      height: $app-bar-height;
       left: 0;
+      height: $app-bar-height;
+      justify-content: center;
+      outline-offset: -5px;
       position: absolute;
       width: 100%;
-      justify-content: center;
-      bottom: 0;
 
       &__icon {
         display: block;
-        height: size(24px);
-        width: size(24px)
+        height: 1.25em;
+        width: 1.25em
       }
     }
-  }
-
-  .feather-sprite {
-    @include u-visually-hide;
-  }
-
-  .feather {
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
   }
 </style>

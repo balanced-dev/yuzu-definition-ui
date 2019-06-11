@@ -1,0 +1,24 @@
+@mixin json-data-editor__section($this, $includeSectionPadding: true) {
+    &__title {
+        @include accordion-button;
+    }
+
+    &__section {
+        &:hover {
+            background-color: $colour-grey-mid-dark;
+        }
+    }
+    
+    &--depth {
+        &-0 {
+            > #{$this}__section {
+                @include column-gutter('padding', 'right');
+            }
+            > #{$this}__title {
+                background-color: $colour-grey-light;
+                margin-bottom: 1px;
+                padding: ($column-gutter-default / 4) ($column-gutter-default)!important;
+            }
+        }    
+    }
+}

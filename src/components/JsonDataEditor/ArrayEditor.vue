@@ -1,30 +1,65 @@
 <template>
-  <div>
-    <label @click="toggleActive">+ {{ label }}</label>
-    <div v-if="active" class="array">
+  <div class="array-editor" :class="`array-editor--depth-${depth}`">
+    <label class="array-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
+      <svg class="array-editor__title__icon feather" :class="{'is-hidden': this.active}">
+        <use xlink:href="#plus-square"/>
+      </svg>
+      <svg class="array-editor__title__icon feather" :class="{'is-hidden': !this.active}">
+        <use xlink:href="#minus-square"/>
+      </svg>
+      <span class="array-editor__title__text">
+        {{ label }}
+      </span>
+    </label>
+    <div class="array-editor__section" v-if="active">
       <draggable
         :list="items"
         ghost-class="ghost"
-        handle=".handle"
+        handle=".array-editor__item__sort"
         @start="drag = true"
         @end="drag = false"
       >
         <div
           v-for="(item, index) in items"
           v-bind:key="index"
-          class="arrayItem"
+          class="array-editor__item"
         >
           <json-data-collapsible-property
             :item="item"
-            :depth="depth + 1"
+            :depth="depth+1"
             :path="path"
             :arrayIndex="index + 1"
           ></json-data-collapsible-property>
-          <a class="handle">sort</a>&nbsp;
-          <a @click="deleteItem(item)">delete</a>
+          <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
+            <a class="array-editor__item__sort">
+              <svg class="array-editor__item__sort__icon feather">
+                <use xlink:href="#more-vertical"/>
+              </svg>
+              <span class="array-editor__item__sort__text">
+                Sort
+              </span>
+            </a>            
+            <a class="array-editor__item__delete" @click="deleteItem(item)">            
+              <svg class="array-editor__item__delete__icon feather">
+                <use xlink:href="#x-square"/>
+              </svg>
+              <span class="array-editor__item__delete__text">
+                Delete
+              </span>
+            </a>
+          </div>
         </div>
       </draggable>
-      <a @click="addItem">add item</a>
+      <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
+        <a class="array-editor__section__add" @click="addItem">
+          <svg class="array-editor__section__add__icon feather">
+            <use xlink:href="#plus-square"/>
+          </svg>
+          <span class="array-editor__section__add__text">
+            Add item
+          </span>        
+        </a>
+      </div>
       <json-data-block-type
         :item="items[0]"
         :path="path"
@@ -62,22 +97,100 @@ export default {
 </script>
 
 <style scoped lang="scss">
-label {
-  display: block;
-  font-weight: bold;
-  padding-top: 20px;
-}
-div.array {
-  padding-top: 10px;
-}
-div.arrayItem {
-  margin: 10px 15px;
-  padding: 10px 20px;
-  border: 1px solid green;
+@import '../../scss/main';
+
+@mixin array-editor__button {
+  @include bold-font;
+  @include font-size($font-size-xsmall);
+  align-items: center;
   cursor: pointer;
+  color: $colour-white;
+  display: inline-flex;
+  padding: $column-gutter-default / 4;
+  text-transform: uppercase;
+
+  &:not(:only-child) {
+    margin-bottom: $column-gutter-default / 4;
+    margin-right: $column-gutter-default / 4;
+  }
+
+  &__icon {
+    margin-right: size(2px);
+    height: 1em;
+    width: 1em;
+  }
+
+  &__text {
+    line-height: 1;
+  }
 }
-.ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
+.array-editor {
+  $this: &;
+
+  @include json-data-editor__section($this);
+  
+  &__title {
+  
+  }  
+
+  &__section {
+    &__add {
+      @include array-editor__button;
+      background-color: $colour-green;
+      color: $colour-body-bgnd-dark-grey;
+
+      &__icon {
+      }
+
+      &__text {
+
+      } 
+    }
+
+    &__footer {
+      border-top: 1px solid $colour-grey-light;
+      margin-top: $column-gutter-default / 2;
+      padding-top: $column-gutter-default / 2;
+    }
+  }
+
+  &__item {
+    &__sort {
+      @include array-editor__button;
+      background-color: $colour-blue;
+      cursor: move; /* Fallback if grab cursor is unsupported */
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &__icon {
+      }
+
+      &__text {
+
+      }      
+    }
+
+    &__delete {
+      @include array-editor__button;
+      background-color: $colour-red;
+
+      &__icon {
+      }
+
+      &__text {
+
+      }      
+    }
+
+    &.ghost {
+      color: $colour-body-bgnd-dark-grey;
+      background-color: $colour-grey-xlight;
+      margin-right: -$column-gutter-default;
+      padding-right: $column-gutter-default;
+    }
+  }
 }
 </style>
