@@ -8,7 +8,7 @@ const findRefForPath = (store, currentPath) => {
     var instances = maps[block].instances;
     for(let instance of instances) {
       if(currentPath == instance.path) {
-        blockType = block;
+        blockType = instance.state;
       }
     }
   });
