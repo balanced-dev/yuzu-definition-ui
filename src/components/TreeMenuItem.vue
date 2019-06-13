@@ -1,6 +1,6 @@
 <template>
   <li class="tree-menu-item">
-    <span v-if="isFolder(value)">
+    <template v-if="isFolder(value)">
       <a class="tree-menu-item__parent" @click="toggleChildren" :style="{'padding-left': `${depth + 1}rem`}">
         <svg class="tree-menu-item__parent__icon feather" :class="{'is-hidden': !showChildren}">
           <use xlink:href="#minus-square"/>
@@ -20,8 +20,8 @@
           :depth="depth + 1"
         ></tree-menu-item>
       </ul>
-    </span>
-    <span v-else>
+    </template>
+    <template v-else>
       <a
        class="tree-menu-item__child" 
         @click="selectItem(propertyname, value)"
@@ -29,7 +29,7 @@
       >
         {{ propertyname }}
       </a>
-    </span>
+    </template>
   </li>
 </template>
 
@@ -114,7 +114,7 @@ export default {
     }
 
     &--root {
-      > span > #{$this}__parent {
+      > #{$this}__parent {
         @include bold-font;
         background-color: $colour-grey-light;
         margin-bottom: 1px;

@@ -1,9 +1,11 @@
 <template>
   <div id="app" class="app" :class="{'nav-is-open': open}">
     <button class="app__toggle" @click="toggleNav">
-      <svg class="app__toggle__icon feather">
-        <use xlink:href="#menu"/>
-      </svg>
+      <div class="app__toggle__icon__wrapper">
+        <svg class="app__toggle__icon feather">
+          <use xlink:href="#menu"/>
+        </svg>
+      </div>
       <span class="app__toggle__text">Dev Tools</span>
     </button>
     <tabs></tabs>
@@ -55,6 +57,8 @@ export default {
   @import './scss/generic.scss';
   @import './scss/main.scss';
   $app__nav-open-selector: '.nav-is-open';
+  $app__toggle-button-padding: $column-gutter-default / 2;
+  $app__toggle-button-icon-size: size(16px);
 
   .feather-sprite {
     @include u-visually-hide;
@@ -95,33 +99,42 @@ export default {
 
     &__toggle {
       @include u-reset-button;
-      background-color: $colour-green;
       cursor: pointer;
       display: flex;      
       left: 100%;
-      padding: $column-gutter-default / 2;
       position: absolute;
       top: 50%;
 
+      &__icon__wrapper,
+      &__text {
+        background-color: $colour-green;
+      }
+
       &__icon {
         display: block;
-        flex-shrink: 0;
-        height: size(16px);
+        height: $app__toggle-button-icon-size;
         position: relative;
         stroke-width: 3;
-        width: size(16px);              
+        width: $app__toggle-button-icon-size;    
+        
+        &__wrapper {
+          padding: $app__toggle-button-padding;
+        }
       }
 
       &__text {
-        max-width: 0;
+        display: block;
+        flex: 0;
+        min-width: 0;
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: flex 0.3s ease;
+        padding: $app__toggle-button-padding 0;
         white-space: nowrap;
 
-        &::before {
+        &::after {
           content: '';
           display: inline-block;
-          width: size(4px);
+          width: $app__toggle-button-padding;
         }
       }
 
@@ -132,7 +145,7 @@ export default {
       &:hover {
         #{$this}__toggle {
           &__text {
-            max-width: size(80px);
+            flex: 1;
           }
         }
       }

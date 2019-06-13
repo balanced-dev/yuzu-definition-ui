@@ -10,14 +10,14 @@
     }
     
     &--depth {
-        &-0 {
+        &-1 {
             > #{$this}__section {
                 @include column-gutter('padding', 'right');
             }
             > #{$this}__title {
                 background-color: $colour-grey-light;
                 margin-bottom: 1px;
-                padding: ($column-gutter-default / 4) ($column-gutter-default)!important;
+                padding: $json-data-editor__v-spacing ($column-gutter-default)!important;
             }
         }    
     }

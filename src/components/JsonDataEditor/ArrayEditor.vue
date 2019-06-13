@@ -110,22 +110,25 @@ export default {
   cursor: pointer;
   color: $colour-white;
   display: inline-flex;
-  padding: $column-gutter-default / 4;
+  padding: ($column-gutter-default / 4) ($column-gutter-default / 2);
   text-transform: uppercase;
 
   &:not(:only-child) {
-    margin-bottom: $column-gutter-default / 4;
-    margin-right: $column-gutter-default / 4;
+    margin-right: $column-gutter-default / 2;
   }
 
   &__icon {
-    margin-right: size(2px);
     height: 1em;
+    margin-right: size(2px);
     width: 1em;
   }
 
   &__text {
     line-height: 1;
+  }
+
+  &:hover {
+    box-shadow: $drop-shadow;
   }
 }
 .array-editor {
@@ -153,12 +156,23 @@ export default {
 
     &__footer {
       border-top: 1px solid $colour-grey-light;
-      margin-top: $column-gutter-default / 2;
-      padding-top: $column-gutter-default / 2;
+      margin-top: $json-data-editor__v-spacing;
+      padding-top: $json-data-editor__v-spacing * 1.5;
+      margin-bottom: $json-data-editor__v-spacing;
     }
   }
 
   &__item {
+    margin-bottom: $json-data-editor__v-spacing;
+    margin-top: $json-data-editor__v-spacing;
+    position: relative;
+
+    &__footer {
+      top: 0;
+      right: 0;
+      position: absolute;
+    }
+
     &__sort {
       @include array-editor__button;
       background-color: $colour-blue;
@@ -193,7 +207,12 @@ export default {
       color: $colour-body-bgnd-dark-grey;
       background-color: $colour-grey-xlight;
       margin-right: -$column-gutter-default;
+      padding-left: size(5px);
       padding-right: $column-gutter-default;
+
+      #{$this}__item__footer {
+        right: $column-gutter-default;
+      }
     }
   }
 }

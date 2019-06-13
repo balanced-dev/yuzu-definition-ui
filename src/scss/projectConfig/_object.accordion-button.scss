@@ -6,6 +6,10 @@ $accordion-button__icon-size: size(14px);
     display: flex;
     user-select: none;
 
+    &:hover {
+        box-shadow: $drop-shadow;
+    }
+
     &__icon,
     &__text {
         display: block;
