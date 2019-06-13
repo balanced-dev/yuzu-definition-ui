@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { isRegExp } from "util";
+import path from "path";
 
 const findRefForPath = (store, currentPath) => {
   var maps = store.state.blockData.map;
@@ -35,6 +35,15 @@ const getBlockAndState = (items, state, output, parent) => {
   });
 };
 
+const convertPreviewToDataPath = function(strPath)
+{
+  var arrPath = strPath.split(path.sep);
+  var lastIndex = arrPath.length - 1; 
+  arrPath[lastIndex] = arrPath[lastIndex].replace(".html", ".json");
+  arrPath.splice(lastIndex, 0, "data");
+  return arrPath.join(path.sep);
+}
+
 const getRoute = () => {
   var url = window.parent.location.pathname;
   var filename = url.substring(url.lastIndexOf("/") + 1);
@@ -42,6 +51,7 @@ const getRoute = () => {
 };
 
 export default {
+  convertPreviewToDataPath,
   findRefForPath,
   getBlockAndState,
   getRoute

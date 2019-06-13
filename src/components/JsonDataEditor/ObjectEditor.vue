@@ -17,7 +17,7 @@
         :depth="depth+1"
         :path="path"
       ></json-data-property>
-      <json-data-block-type :item="item" :path="path" :depth="depth+1"></json-data-block-type>
+      <json-data-block-type :label="label" :item="item" :path="path" :depth="depth+1" :updateItem="updateItem"></json-data-block-type>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ export default {
       this.active = !this.active;
     }
   },
-  props: ["label", "item", "depth", "path"]
+  props: ["label", "item", "depth", "path", "updateItem"]
 };
 </script>
 

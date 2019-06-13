@@ -10,5 +10,5 @@ connection.onerror = (error) => {
 }
 
 connection.onmessage = (e) => {
-  console.log(e.data)
+  $('.content-root').html(e.data);
 }

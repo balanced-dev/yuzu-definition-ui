@@ -1,13 +1,13 @@
 <template>
-  <div class="block-type-editor" v-if="type" :class="`block-type-editor--depth-${depth}`">
+  <div class="block-type-editor" v-if="blockName" :class="`block-type-editor--depth-${depth}`">
     <label class="block-type-editor__select">
-      <select class="block-type-editor__select__control">
-        <option class="block-type-editor__select__control__option" v-for="state in states" v-bind:key="state" :value="state.fileName" :selected="state.selected">
+      <select class="block-type-editor__select__control" v-model="currentStateName" @change="changeState()">
+        <option class="block-type-editor__select__control__option" v-for="state in states" v-bind:key="state.name" :value="state.value">
           {{ state.name }}
         </option>
       </select>
       <span class="block-type-editor__select__label">
-        {{type}}
+        {{blockName}}
       </span>
       <svg class="block-type-editor__select__icon feather" :class="{'is-hidden': this.active}">
         <use xlink:href="#chevron-down"/>
@@ -33,32 +33,50 @@ const stateName = (name, blockName) => {
     return name.replace(blockName +"_", "");
 }
 
+import axios from "axios";
 import bootstrap from "../../bootstrap";
 export default {
   name: "json-data-block-type",
   data() {
     return {
-      type: "",
-      states: []
+      active: true,
+      blockNamePrefixed: "",
+      blockName: "",
+      currentStateName: "",
+      states: [],
+      context: {}
     };
   },
   mounted() {
-    var block = bootstrap.findRefForPath(this.$store, this.$props.path);
-    var context = {};
-    bootstrap.getBlockAndState(this.$store.state.items, block, context);
 
     var that = this;
-    var blockName = context.block.name;
-    this.$data.type = blockName;
-    Object.keys(context.block.states).forEach((state) => {
-      that.$data.states.push({
-        name: stateName(state, blockName),
-        fileName: state,
-        selected: state == context.state.name
+
+    this.blockNamePrefixed = bootstrap.findRefForPath(this.$store, this.$props.path);
+    bootstrap.getBlockAndState(this.$store.state.items, this.blockNamePrefixed, this.context);
+    this.blockName = this.context.block.name;
+    this.currentStateName = this.context.state.name;
+
+    Object.keys(this.context.block.states).forEach((state) => {
+      that.states.push({
+        name: stateName(state, that.blockName),
+        value: state
       });
     });
   },
-  props: ["item", "path", "depth"]
+  methods: {
+    changeState: function(event)
+    {
+      var that = this;
+
+      axios.post("http://localhost:3000/api/get", {
+        stateName: this.currentStateName
+      })
+      .then(function(response) {
+        that.$props.updateItem(that.$props.label, response.data);
+      });
+    }
+  },
+  props: ["label", "item", "path", "depth", "updateItem"]
 };
 </script>
 
