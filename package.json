@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "socket.io-p2p": "^2.2.0",
     "vue": "^2.6.10",
     "vuedraggable": "^2.21.0",
-    "vuex": "^3.0.1",
-    "ws": "^7.0.0"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",

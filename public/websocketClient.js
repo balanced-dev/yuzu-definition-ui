@@ -1,8 +1,9 @@
 const url = 'ws://localhost:8081/'
-const connection = new WebSocket(url)
+const connection = new WebSocket(url);
+var id = '25287289'
 
 connection.onopen = () => {
-  connection.send('hey') 
+  connection.send('setup:'+ id); 
 }
 
 connection.onerror = (error) => {
@@ -10,5 +11,9 @@ connection.onerror = (error) => {
 }
 
 connection.onmessage = (e) => {
-  console.log(e.data)
+  $('.content-root').html(e.data);
 }
+
+window.onbeforeunload = function(event) {
+  connection.close();
+};

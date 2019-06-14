@@ -1,12 +1,12 @@
 <template>
   <div v-if="data">
     <div class="root-editor__buttons">
-      <a href="" class="root-editor__button root-editor__button--update">
+      <button :disabled="updateDisabled" @click="update" class="root-editor__button root-editor__button--update">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#refresh-cw"/>
         </svg>
-        <span class="root-editor__button__text">Update view</span>
-      </a>
+        <span class="root-editor__button__text">Update Preview</span>
+      </button>
       <a href="" class="root-editor__button root-editor__button--save">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#save"/>
@@ -21,12 +21,14 @@
 
 <script>
 import axios from "axios";
+import bootstrap from "../../bootstrap";
 
 export default {
   name: "json-data-editor",
   data() {
     return {
-      initialPath: ""
+      initialPath: "",
+      updateDisabled: true
     };
   },
   computed: {
@@ -35,13 +37,26 @@ export default {
     },
     refs() {
       return this.$store.state.blockData.refs;
+    },
+    path() {
+      return bootstrap.convertPreviewToDataPath(this.$store.state.selectedBlockState.url);
     }
   },
   mounted: function() {
-    if (this.$store.state.selectedItem) {
-      axios.get("/api/get/content.json").then(response => {
+    var currentState = this.$store.state.selectedBlockState.name;
+    if (currentState) {
+      axios.get("http://localhost:3000/api/getWithRefs/"+ currentState).then(response => {
         this.$store.commit("loadBlockData", response.data);
       });
+    }
+  },
+  methods: {
+    update: function() {
+      axios.post("http://localhost:3000/api/preview", {
+        path: this.path,
+        data: this.data
+      })
+      .then(() => {});
     }
   },
   watch: {
@@ -49,6 +64,7 @@ export default {
       deep: true,
       handler: function() {
         this.$store.commit("saveBlockData", this.data);
+        this.$data.updateDisabled = false;
       }
     }
   }
@@ -65,6 +81,7 @@ export default {
   }
 
   &__button {
+    @include u-reset-button;
     @include font-size($font-size-xsmall);
     @include default-font;
     align-items: center;
