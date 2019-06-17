@@ -1,18 +1,18 @@
 <template>
   <div v-if="data">
     <div class="root-editor__buttons">
-      <button :disabled="updateDisabled" @click="update" class="root-editor__button root-editor__button--update">
+      <button @click="preview" class="root-editor__button root-editor__button--update">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#refresh-cw"/>
         </svg>
         <span class="root-editor__button__text">Update Preview</span>
       </button>
-      <a href="" class="root-editor__button root-editor__button--save">
+      <button @click="save" class="root-editor__button root-editor__button--save">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#save"/>
         </svg>
         <span class="root-editor__button__text">Save state</span>
-      </a>
+      </button>
     </div>
     <json-data-property :item="data" :depth="1" :path="initialPath">
     </json-data-property>
@@ -35,27 +35,39 @@ export default {
     data() {
       return this.$store.state.data.root;
     },
-    path() {
-      return bootstrap.convertPreviewToDataPath(this.$store.state.selectedBlockState.url);
+    refs() {
+      return this.$store.state.data.refs;
+    },
+    returnData() {
+      return {
+        path: this.$store.getters["state/previewUrlToDataPath"],
+        root: this.data,
+        refs: this.refs
+      };
     }
   },
   mounted: function() {
     this.$store.dispatch("data/load");
   },
   methods: {
-    update: function() {
-      axios.post("http://localhost:3000/api/preview", {
-        path: this.path,
-        data: this.data
-      })
-      .then(() => {});
+    preview: function() {
+      axios.post("http://localhost:3000/api/preview", this.returnData);
+    },
+    save: function() {
+      axios.post("http://localhost:3000/api/save", this.returnData);
+    },
+    updated: function() {
+      this.$store.dispatch("data/saveRoot", this.data);
     }
+  },
+  created: function() {
+    this.debouncedUpdate = _.debounce(this.updated, 500)
   },
   watch: {
     data: {
       deep: true,
       handler: function() {
-        this.$store.dispatch("data/saveRoot", this.data);
+        this.debouncedUpdate();
       }
     }
   }

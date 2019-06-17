@@ -60,12 +60,12 @@ export default {
     toggleActive() {
       this.active = !this.active;
     },
-    update: function() {
+    updated: function() {
       this.$store.dispatch("data/saveRef", this.subBlock);
     }
   },
   created: function() {
-    this.debouncedUpdate = _.debounce(this.update, 500)
+    this.debouncedUpdate = _.debounce(this.updated, 500)
   },
   watch: {
     subBlock: {
