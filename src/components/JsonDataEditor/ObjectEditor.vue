@@ -13,29 +13,69 @@
     </label>
     <div class="object-editor__section" v-if="active">
       <json-data-property
-        :item="item"
+        :item="resolvedItem"
         :depth="depth+1"
         :path="path"
       ></json-data-property>
-      <json-data-block-type :label="label" :item="item" :path="path" :depth="depth+1" :updateItem="updateItem"></json-data-block-type>
+      <json-data-block-type v-if="isRef" :item="item" :depth="depth+1" :subBlock="subBlock"></json-data-block-type>
     </div>
   </div>
 </template>
 
 <script>
+import bootstrap from "../../bootstrap";
 export default {
   name: "json-data-object",
   data() {
     return {
-      active: false
+      active: false,
+      isRef: false,
+      subBlock: {
+        raw: "",
+        name: "",
+        state: "",
+        data: {}
+      }
     };
+  },
+  computed: {
+    refs() {
+      return this.$store.state.data.refs;
+    },
+    resolvedItem() {
+      return this.isRef ? this.subBlock.data : this.item
+    }
+  },
+  mounted() {
+    var ref = this.item['$ref'];
+    if(this.item['$ref']) {
+      this.subBlock.raw = ref;
+      this.subBlock.name = bootstrap.getBlockFromRef(ref);
+      this.subBlock.state = bootstrap.getStateFromRef(ref);
+      this.subBlock.data = this.refs[ref];
+      this.isRef = true;
+    }
   },
   methods: {
     toggleActive() {
       this.active = !this.active;
+    },
+    update: function() {
+      this.$store.dispatch("data/saveRef", this.subBlock);
     }
   },
-  props: ["label", "item", "depth", "path", "updateItem"]
+  created: function() {
+    this.debouncedUpdate = _.debounce(this.update, 500)
+  },
+  watch: {
+    subBlock: {
+      deep: true,
+      handler: function() {
+        this.debouncedUpdate();
+      }
+    }
+  },
+  props: ["label", "item", "depth", "path"]
 };
 </script>
 

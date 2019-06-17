@@ -57,8 +57,8 @@ export default {
         name: name,
         states: value
       };
-      this.$store.commit("selectItem", payload);
-      this.$store.commit("setNavContext", 'States');
+      this.$store.commit("blocks/setCurrent", payload);
+      this.$store.commit("nav/setCurrent", 'States');
     }
   },
   props: ["value", "propertyname", "index", "depth"]

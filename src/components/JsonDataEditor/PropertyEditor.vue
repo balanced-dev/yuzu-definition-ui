@@ -7,7 +7,6 @@
           :item="item[key]"
           :depth="depth"
           :path="buildPath(key)"
-          :updateItem="updateItem"
         ></json-data-object>
       </div>
       <div v-else-if="isArray(item[key])" class="property-editor__section property-editor__section--array">
@@ -51,9 +50,6 @@ export default {
     },
     buildPath(key) {
       return this.$props.path + "/" + key;
-    },
-    updateItem(key, newValue) {
-      this.item[key] = newValue;
     }
   },
   props: ["item", "depth", "path"],
