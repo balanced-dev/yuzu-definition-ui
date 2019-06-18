@@ -42,7 +42,8 @@ export default {
       return {
         path: this.$store.getters["state/previewUrlToDataPath"],
         root: this.data,
-        refs: this.refs
+        refs: this.refs,
+        wsId: this.$store.state.ws.id
       };
     }
   },

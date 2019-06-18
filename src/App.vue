@@ -31,6 +31,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("blocks/load");
+    this.$store.dispatch("ws/setup");
   },
   methods: {
     toggleNav() {
