@@ -36,7 +36,6 @@
 <script>
 import _ from "lodash";
 import JsonDataArray from "./ArrayEditor.vue";
-import JsonDataObject from "./ObjectEditor.vue";
 import JsonDataText from "./TextEditor.vue";
 
 export default {
@@ -55,7 +54,6 @@ export default {
   props: ["item", "depth", "path"],
   components: {
     JsonDataArray,
-    JsonDataObject,
     JsonDataText
   }
 };
