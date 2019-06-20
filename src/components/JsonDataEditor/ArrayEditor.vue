@@ -24,7 +24,15 @@
           v-bind:key="index"
           class="array-editor__item"
         >
+          <json-data-object
+            v-if="isRef(item)"
+            :label="refLabel(item)"
+            :item="item"
+            :depth="depth+1"
+            :path="path"
+          ></json-data-object>
           <json-data-collapsible-property
+            v-if="!isRef(item)"
             :item="item"
             :depth="depth + 1"
             :path="buildPath(index)"
@@ -72,11 +80,6 @@
           </span>        
         </a>
       </div>
-      <json-data-block-type
-        :item="items[0]"
-        :path="path"
-        :depth="depth+1"
-      ></json-data-block-type>
     </div>
   </div>
 </template>
@@ -96,6 +99,12 @@ export default {
   methods: {
     toggleActive() {
       this.active = !this.active;
+    },
+    isRef(item) {
+      return item.hasOwnProperty('$ref');
+    },
+    refLabel(item) {
+      return item["$ref"];
     },
     setToDelete(value) {
       this.toDelete = value;

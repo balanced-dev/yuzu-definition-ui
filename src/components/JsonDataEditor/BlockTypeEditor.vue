@@ -1,16 +1,21 @@
 <template>
-  <div class="block-type-editor" v-if="blockName" :class="`block-type-editor--depth-${depth}`">
+  <div class="block-type-editor" v-if="subBlock" :class="`block-type-editor--depth-${depth}`">
     <label class="block-type-editor__select">
-      <select class="block-type-editor__select__control" v-model="currentStateName" @change="changeState()">
-        <option class="block-type-editor__select__control__option" v-for="state in states" v-bind:key="state.name" :value="state.value">
-          {{ state.name }}
-        </option>
+      <select
+        class="block-type-editor__select__control"
+        v-model="subBlock.state"
+        @change="changeState()"
+      >
+        <option
+          class="block-type-editor__select__control__option"
+          v-for="state in states"
+          v-bind:key="state.name"
+          :value="state.value"
+        >{{ state.name }}</option>
       </select>
-      <span class="block-type-editor__select__label" :data-content="blockName">
-        {{blockName}}
-      </span>
+      <span class="block-type-editor__select__label">{{subBlock.name}}</span>
       <svg class="block-type-editor__select__icon feather" :class="{'is-hidden': this.active}">
-        <use xlink:href="#chevron-down"/>
+        <use xlink:href="#chevron-down"></use>
       </svg>
     </label>
     <a href="" class="block-type-editor__button block-type-editor__button--link">
@@ -29,72 +34,73 @@
 </template>
 
 <script>
-
-const uppercaseFirst = (name) => {
-  return name.charAt(0).toUpperCase() + name.slice(1);
-}
-
-const stateName = (name, blockName) => {
-  var prefix = "par";
-  if(name.startsWith(prefix)) 
-    blockName = prefix + uppercaseFirst(blockName);
-
-  if(name === blockName)
-    return "default";
-  else 
-    return name.replace(blockName +"_", "");
-}
-
 import axios from "axios";
 import bootstrap from "../../bootstrap";
+
 export default {
   name: "json-data-block-type",
   data() {
     return {
       active: true,
-      blockNamePrefixed: "",
-      blockName: "",
-      currentStateName: "",
-      states: [],
-      context: {}
+      states: []
     };
   },
+  computed: {
+    refs() {
+      return this.$store.state.data.refs;
+    }
+  },
   mounted() {
-
     var that = this;
+    var context = {};
 
-    this.blockNamePrefixed = bootstrap.findRefForPath(this.$store, this.$props.path);
-    bootstrap.getBlockAndState(this.$store.state.items, this.blockNamePrefixed, this.context);
-    this.blockName = this.context.block.name;
-    this.currentStateName = this.context.state.name;
+    bootstrap.getBlockAndState(
+      this.$store.state.blocks.items,
+      this.subBlock.state,
+      context
+    );
 
-    Object.keys(this.context.block.states).forEach((state) => {
+    Object.keys(context.block.states).forEach(state => {
       that.states.push({
-        name: stateName(state, that.blockName),
+        name: this.createDisplayStateName(state),
         value: state
       });
     });
   },
   methods: {
-    changeState: function(event)
-    {
-      var that = this;
+    createDisplayStateName: function(name) {
+      if (name === this.subBlock.name) {
+        return "default";
+      } else {
+        return name.replace(this.subBlock.name + "_", "");
+      }
+    },
+    changeState: function() {
 
-      axios.post("http://localhost:3000/api/get", {
-        stateName: this.currentStateName
-      })
-      .then(function(response) {
-        that.$props.updateItem(that.$props.label, response.data);
-      });
+      var that = this;
+      var state = "/"+ this.subBlock.state;
+
+      if(!this.refs[state]) {
+        axios.post("http://localhost:3000/api/get", {
+          stateName: this.subBlock.state
+        })
+        .then(function(response) {
+          that.item["$ref"] = state;
+          that.subBlock.data = response.data
+        });
+      }
+      else {
+        that.item["$ref"] = state;
+        that.subBlock.data = this.refs[state];
+      }
     }
   },
-  props: ["label", "item", "path", "depth", "updateItem"]
+  props: ["item", "depth", "subBlock"]
 };
 </script>
 
 <style scoped lang="scss">
-@import '../../scss/main';
-
+@import "../../scss/main";
 $block-type-editor__icon-size: size(14px);
 $block-type-editor__select-height: size(34px);
 
@@ -154,7 +160,7 @@ $block-type-editor__select-height: size(34px);
         background-color: inherit;
         border-left: inherit;
         border-top: inherit;
-        content: '';
+        content: "";
         height: $column-gutter-default / 2;
         right: $column-gutter-default / 2;
         position: absolute;
@@ -200,7 +206,7 @@ $block-type-editor__select-height: size(34px);
       padding: 0 ($column-gutter-default / 2);
       padding-right: ($column-gutter-default / 2)*2 + $block-type-editor__icon-size;
     }
-    
+
     &__control {
       background-color: transparent;
       border: 0;

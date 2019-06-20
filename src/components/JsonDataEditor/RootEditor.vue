@@ -1,18 +1,18 @@
 <template>
   <div v-if="data">
     <div class="root-editor__buttons">
-      <button :disabled="updateDisabled" @click="update" class="root-editor__button root-editor__button--update">
+      <button @click="preview" class="root-editor__button root-editor__button--update">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#refresh-cw"/>
         </svg>
         <span class="root-editor__button__text">Update Preview</span>
       </button>
-      <a href="" class="root-editor__button root-editor__button--save">
+      <button @click="save" class="root-editor__button root-editor__button--save">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#save"/>
         </svg>
         <span class="root-editor__button__text">Save state</span>
-      </a>
+      </button>
     </div>
     <json-data-property :item="data" :depth="1" :path="initialPath" :class="'property-editor--root'">
     </json-data-property>
@@ -33,38 +33,42 @@ export default {
   },
   computed: {
     data() {
-      return this.$store.state.blockData.data;
+      return this.$store.state.data.root;
     },
     refs() {
-      return this.$store.state.blockData.refs;
+      return this.$store.state.data.refs;
     },
-    path() {
-      return bootstrap.convertPreviewToDataPath(this.$store.state.selectedBlockState.url);
+    returnData() {
+      return {
+        path: this.$store.getters["state/previewUrlToDataPath"],
+        root: this.data,
+        refs: this.refs,
+        wsId: this.$store.state.ws.id
+      };
     }
   },
   mounted: function() {
-    var currentState = this.$store.state.selectedBlockState.name;
-    if (currentState) {
-      axios.get("http://localhost:3000/api/getWithRefs/"+ currentState).then(response => {
-        this.$store.commit("loadBlockData", response.data);
-      });
-    }
+    this.$store.dispatch("data/load");
   },
   methods: {
-    update: function() {
-      axios.post("http://localhost:3000/api/preview", {
-        path: this.path,
-        data: this.data
-      })
-      .then(() => {});
+    preview: function() {
+      axios.post("http://localhost:3000/api/preview", this.returnData);
+    },
+    save: function() {
+      axios.post("http://localhost:3000/api/save", this.returnData);
+    },
+    updated: function() {
+      this.$store.dispatch("data/saveRoot", this.data);
     }
+  },
+  created: function() {
+    this.debouncedUpdate = _.debounce(this.updated, 500)
   },
   watch: {
     data: {
       deep: true,
       handler: function() {
-        this.$store.commit("saveBlockData", this.data);
-        this.$data.updateDisabled = false;
+        this.debouncedUpdate();
       }
     }
   }

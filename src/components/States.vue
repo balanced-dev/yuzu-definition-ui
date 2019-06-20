@@ -11,7 +11,7 @@
           class="states__list__link"
           target="_top"
           :href="href(url)"
-          :class="{'is-active': isSelectedState(currentState, name)}"
+          :class="{'is-active': name == state.name}"
         >
         {{ name }}</a>
       </li>
@@ -24,16 +24,13 @@ export default {
   name: "states",
   computed: {
     block() {
-      return this.$store.state.selectedItem;
+      return this.$store.state.blocks.current;
     },
-    currentState() {
-      return this.$store.state.selectedBlockState.name;
+    state() {
+      return this.$store.state.state.current;
     }
   },
   methods: {
-    isSelectedState: (currentState, state) => {
-      return currentState === state;
-    },
     href: state => {
       return "/_templates/html/" + state;
     }

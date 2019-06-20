@@ -38,10 +38,10 @@ export default {
   name: "tabs",
   computed: {
     navItems() {
-      return this.$store.state.navItems;
+      return this.$store.state.nav.items;
     },
     navContext() {
-      return this.$store.state.navContext;
+      return this.$store.state.nav.context;
     }
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
       return navContext === state;
     },
     setNavContext: function(navContext) {
-      this.$store.commit("setNavContext", navContext);
+      this.$store.commit("nav/setCurrent", navContext);
     }
   },
   components: {

@@ -19,7 +19,7 @@ export default {
   name: "tree-menu",
   computed: {
     items() {
-      return this.$store.state.items;
+      return this.$store.state.blocks.items;
     }
   },
   components: {

@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import bootstrap from "./bootstrap";
+
 import Tabs from "./components/Tabs.vue";
 
 export default {
@@ -31,16 +30,8 @@ export default {
     };
   },
   mounted() {
-    axios.get("/_templates/templates.json").then(response => {
-      this.$store.commit("loadItems", response.data);
-      var route = bootstrap.getRoute();
-      if(!route) route = "content";
-
-      var context = {};
-      bootstrap.getBlockAndState(response.data, route, context);
-      this.$store.commit("selectItem", context.block);
-      this.$store.commit("setBlockState", context.state);
-    });
+    this.$store.dispatch("blocks/load");
+    this.$store.dispatch("ws/setup");
   },
   methods: {
     toggleNav() {
