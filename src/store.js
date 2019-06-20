@@ -11,10 +11,10 @@ export default new Vuex.Store({
     blockData: {},
     navItems: [
       'Blocks',
-      'States',
+      'Context',
       'Data'
     ],
-    navContext: 'States'
+    navContext: 'Context'
   },
   mutations: {
     loadItems: function(state, items) {

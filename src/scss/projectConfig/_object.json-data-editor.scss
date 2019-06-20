@@ -1,12 +1,6 @@
 @mixin json-data-editor__section($this, $includeSectionPadding: true) {
     &__title {
-        @include accordion-button;
-    }
-
-    &__section {
-        &:hover {
-            background-color: $colour-grey-mid-dark;
-        }
+        @include accordion-button($includeDropShadow: false);
     }
     
     &--depth {

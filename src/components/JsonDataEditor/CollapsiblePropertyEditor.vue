@@ -57,7 +57,7 @@ export default {
 @import '../../scss/main.scss';
 .collapse {
   &__handle {
-    @include accordion-button;
+    @include accordion-button($includeDropShadow: false);
   }
 }
 </style>

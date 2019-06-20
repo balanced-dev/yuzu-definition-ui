@@ -14,7 +14,7 @@
         <span class="root-editor__button__text">Save state</span>
       </a>
     </div>
-    <json-data-property :item="data" :depth="1" :path="initialPath">
+    <json-data-property :item="data" :depth="1" :path="initialPath" :class="'property-editor--root'">
     </json-data-property>
   </div>
 </template>
@@ -77,6 +77,8 @@ export default {
 .root-editor {
 
   &__buttons {
+    display: flex;
+    justify-content: flex-end;
     padding: $column-gutter-default;
   }
 

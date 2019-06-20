@@ -73,11 +73,15 @@ export default {
 
   @include json-data-editor__section($this);
 
-  &--depth-1 {
+  &--root {
     > div > #{$this}__section {
       padding-bottom: 0;
       padding-top: 0;
       overflow: hidden;
+
+      &--property {
+        @include column-gutter('padding', 'right');
+      }
     }
   }
 
@@ -85,7 +89,8 @@ export default {
     position: relative;
 
     &--object,
-    &--arrray {
+    &--array {
+      background-color: $colour-grey-mid-dark;
       padding-bottom: $json-data-editor__v-spacing;
       padding-top: $json-data-editor__v-spacing;
     }
