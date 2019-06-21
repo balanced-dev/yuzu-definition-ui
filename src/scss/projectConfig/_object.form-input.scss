@@ -24,6 +24,11 @@
         z-index: 2;
     }
 
+    &::placeholder {
+      opacity: 1;
+      color: rgba($colour-white, 0.6);
+    }
+
     &--text {
       
     }

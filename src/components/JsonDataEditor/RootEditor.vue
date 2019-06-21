@@ -22,8 +22,8 @@
           <p><strong>WARNING:</strong> Any changes within sub-blocks will cause their appropriate state to be overwritten with the content in this current state!</p>
           <template v-if="saveModal.isAsNew">
             <label class="root-editor__text-editor">
-              <input class="root-editor__text-editor__control root-editor__text-editor__control--text" type="text" v-model="saveModal.asNewName" />
-              <span class="root-editor__text-editor__label">Save as</span>
+              <input class="root-editor__text-editor__control root-editor__text-editor__control--text" type="text" v-model="saveModal.asNewName" placeholder='e.g. "longDescription", "empty"' />
+              <span class="root-editor__text-editor__label">New state name</span>
             </label>
           </template>
         </template>
