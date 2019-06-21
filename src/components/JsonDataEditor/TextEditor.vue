@@ -34,11 +34,10 @@ export default {
 .text-editor {
   $this: &;
 
-  display: flex;
-  flex-wrap: wrap;
+  @include form-input;
+
   margin-bottom: $json-data-editor__v-spacing;
   margin-top: $json-data-editor__v-spacing;
-  position: relative;
 
   &:hover:not(:focus-within) {
     #{$this}__icon {
@@ -47,16 +46,6 @@ export default {
   }
 
   &__control {
-    @include font-size($font-size-small);
-    @include default-font;
-    background-color: $colour-grey-light;
-    border: 1px solid $colour-grey-mid-light;
-    color: $colour-white;
-    display: block;
-    overflow: auto;
-    order: 2;
-    padding: ($column-gutter-default / 4) ($column-gutter-default / 2);
-    width: 100%;
 
     &--text {
       line-height: 1;
@@ -67,50 +56,10 @@ export default {
       overflow: auto;
       resize: none;
     }
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    &:focus {
-      position: relative;
-      z-index: 2;
-
-      ~ #{$this}__label {
-        position: relative;
-        z-index: 1;
-        &::before {
-          display: block;
-        }
-      }
-    }
-
-    &--text {
-      
-    }
-
-    &--textarea {
-      
-    }
   }
 
   &__label {
-    display: block;
-    order: 1;
     margin-bottom: size(5px);
-    width: 100%;
-
-    &::before {
-      content: '';
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: $content-darken;
-      z-index: -1;
-    }
   }
 
   &__icon {

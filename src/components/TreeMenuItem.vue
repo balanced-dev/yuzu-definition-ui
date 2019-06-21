@@ -58,7 +58,7 @@ export default {
         states: value
       };
       this.$store.commit("blocks/setCurrent", payload);
-      this.$store.commit("nav/setCurrent", 'States');
+      this.$store.commit("nav/setCurrent", 'Context');
     }
   },
   props: ["value", "propertyname", "index", "depth"]

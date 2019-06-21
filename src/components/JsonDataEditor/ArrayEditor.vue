@@ -58,7 +58,7 @@
           </div>
         </div>
       </draggable>
-      <modal v-if="toDelete" @close="setToDelete(undefined);">
+      <modal v-if="toDelete" @close="resetToBeDeleted();">
         <template slot="header-text">
           <h2>Confirm deletion</h2>                
         </template>
@@ -66,8 +66,8 @@
           <p>Are you sure you want to delete this item from "{{toDelete.path}}"?</p>
         </template>
         <template slot="footer">
-          <button class="modal__button modal__button--red" @click="deleteItem(toDelete.item);setToDelete(undefined);">Delete</button>
-          <button class="modal__button modal__button" @click="setToDelete(undefined);">Cancel</button>
+          <button class="modal__button modal__button--red" @click="deleteItem(toDelete.item);">Delete</button>
+          <button class="modal__button modal__button--default" @click="resetToBeDeleted();">Cancel</button>
         </template>
       </modal>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
@@ -109,9 +109,13 @@ export default {
     setToDelete(value) {
       this.toDelete = value;
     },
+    resetToBeDeleted(value) {
+      this.toDelete = undefined;
+    },
     deleteItem(item) {
       var index = this.$props.items.indexOf(item);
       if (index !== -1) this.$props.items.splice(index, 1);
+      this.resetToBeDeleted();
     },
     addItem() {
       this.$props.items.push({ href:"", title:"" });

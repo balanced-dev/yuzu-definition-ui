@@ -44,17 +44,20 @@ export default {
 @keyframes modal-appear {
   0% {
     opacity: 0;
-    transform: translate(-50%, -55%);
+    transform: translateY(-5%);
   }
   100% {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translateY(0);
   }
 }
 
 .modal {
+  align-items: center;
   bottom: 0;
+  display: flex;
   left: 0;
+  justify-content: center;
   position: fixed;
   right: 0;
   top: 0;
@@ -73,12 +76,10 @@ export default {
   &__content {
     animation: modal-appear 0.15s linear forwards;
     box-shadow: $drop-shadow;
-    left: 50%;    
+    flex: 0 1 auto;
     min-width: 50%;
     max-width: 80%;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
   }
 
   &__header {
@@ -140,6 +141,12 @@ export default {
     overflow: auto;
     padding-bottom: $column-gutter-default * 1.5;
     padding-top: $column-gutter-default * 1.5;
+
+    > * {
+      &:not(:last-child) {
+        margin-bottom: size(10px);
+      }
+    }
   }
 
   &__footer {
@@ -152,6 +159,7 @@ export default {
 
   &__button {
     @include u-reset-button;
+    @include bold-font;
     background-color: $colour-blue;
     color: $colour-white;
     margin-top: $column-gutter-default / 2;

@@ -7,12 +7,32 @@
         </svg>
         <span class="root-editor__button__text">Update Preview</span>
       </button>
-      <button @click="save" class="root-editor__button root-editor__button--save">
+      <button @click="toggleSaveModal" class="root-editor__button root-editor__button--save">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#save"/>
         </svg>
         <span class="root-editor__button__text">Save state</span>
       </button>
+      <modal v-if="saveModal.isOpen" @close="toggleSaveModal">
+        <template slot="header-text">
+          <h2>Confirm save state</h2>                
+        </template>
+        <template slot="content">
+          <p v-if="!saveModal.isAsNew">Do you want to overwrite the current state or save as a new state?</p>
+          <p><strong>WARNING:</strong> Any changes within sub-blocks will cause their appropriate state to be overwritten with the content in this current state!</p>
+          <template v-if="saveModal.isAsNew">
+            <label class="root-editor__text-editor">
+              <input class="root-editor__text-editor__control root-editor__text-editor__control--text" type="text" v-model="saveModal.asNewName" />
+              <span class="root-editor__text-editor__label">Save as</span>
+            </label>
+          </template>
+        </template>
+        <template slot="footer">
+          <button class="modal__button modal__button--green" v-if="!saveModal.isAsNew" @click="save">Overwrite</button>
+          <button class="modal__button modal__button--default" @click="saveNew">Save as new</button>
+          <button class="modal__button modal__button--red" @click="toggleSaveModal">Cancel</button>
+        </template>
+      </modal>
     </div>
     <json-data-property :item="data" :depth="1" :path="initialPath" :class="'property-editor--root'">
     </json-data-property>
@@ -22,13 +42,20 @@
 <script>
 import axios from "axios";
 import bootstrap from "../../bootstrap";
+import _ from "lodash";
+import Modal from "../Global/Modal";
 
 export default {
   name: "json-data-editor",
   data() {
     return {
       initialPath: "",
-      updateDisabled: true
+      updateDisabled: true,
+      saveModal: {
+        isOpen: false,
+        isAsNew: false,
+        asNewName: ""
+      }
     };
   },
   computed: {
@@ -56,13 +83,61 @@ export default {
     },
     save: function() {
       axios.post("http://localhost:3000/api/save", this.returnData);
+      this.toggleSaveModal();
     },
     updated: function() {
       this.$store.dispatch("data/saveRoot", this.data);
+    },
+    toggleSaveModal() {
+      this.saveModal.isOpen = !this.saveModal.isOpen;
+      this.saveModal.isAsNew = false;
+    },
+    saveNew() {
+      if (this.saveModal.asNewName.length > 0) {
+        let data = this.returnData,
+            newPath = this.generateNewPath(data.path, this.saveModal.asNewName)
+
+        data.path = newPath.path;
+        axios.post("http://localhost:3000/api/save", this.data);
+        this.redirectToNewState(newPath.name);        
+      }
+      else {
+        this.saveModal.isAsNew = true;
+      }
+    },
+    generateNewPath(pathString, newState) {
+      let pathArr = pathString.split("/"),
+          fileSection = pathArr.pop(),
+          extension = fileSection.substring(fileSection.lastIndexOf(".")),
+          blockName = fileSection.substring(0, fileSection.lastIndexOf("."));
+
+      blockName =
+        blockName.indexOf("_") > -1
+          ? blockName.substring(0, blockName.indexOf("_"))
+          : blockName;
+
+      let newPathArr = [...pathArr],
+          newBlockName = blockName + "_" + newState;
+
+      newPathArr.push(newBlockName + extension);
+
+      return {
+        path: newPathArr.join("/"),
+        name: newBlockName
+      };
+    },
+    redirectToNewState(stateName) {
+      let urlArr = window.top.location.href.split("/"),
+          fileSection = urlArr.pop(),
+          extension = fileSection.substring(fileSection.lastIndexOf(".")),
+          newUrlArr = [...urlArr];
+
+      newUrlArr.push(stateName + extension);
+      window.top.location.href = newUrlArr.join("/");
     }
   },
   created: function() {
-    this.debouncedUpdate = _.debounce(this.updated, 500)
+    this.debouncedUpdate = _.debounce(this.updated, 500);
   },
   watch: {
     data: {
@@ -71,14 +146,20 @@ export default {
         this.debouncedUpdate();
       }
     }
+  },
+  components: {
+    Modal
   }
 };
 </script>
 
 <style scoped lang="scss">
-@import '../../scss/main';
+@import "../../scss/main";
 
 .root-editor {
+  &__text-editor {
+    @include form-input;
+  }
 
   &__buttons {
     display: flex;
