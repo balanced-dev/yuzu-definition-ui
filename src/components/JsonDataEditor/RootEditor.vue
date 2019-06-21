@@ -94,12 +94,12 @@ export default {
     },
     saveNew() {
       if (this.saveModal.asNewName.length > 0) {
-        let data = this.returnData,
-            newPath = this.generateNewPath(data.path, this.saveModal.asNewName)
+        let data = {...this.returnData},
+            newPath = this.generateNewPath(data.path, this.saveModal.asNewName);
 
-        data.path = newPath.path;
-        axios.post("http://localhost:3000/api/save", this.data);
-        this.redirectToNewState(newPath.name);        
+        data.path = newPath.path;        
+        axios.post("http://localhost:3000/api/save", data);
+        this.redirectToNewState(newPath.name);
       }
       else {
         this.saveModal.isAsNew = true;
