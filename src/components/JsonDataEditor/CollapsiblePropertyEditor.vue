@@ -16,6 +16,7 @@
       :item="item"
       :depth="depth+1"
       :path="path"
+      :blockName="blockName"
     ></json-data-property>
   </div>
 </template>
@@ -49,7 +50,7 @@ export default {
       this.$data.isOpen = !this.$data.isOpen;
     }
   },
-  props: ["item", "depth", "path", "arrayIndex"]
+  props: ["item", "depth", "path", "arrayIndex", "blockName"]
 };
 </script>
 

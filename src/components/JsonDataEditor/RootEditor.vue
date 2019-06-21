@@ -14,7 +14,12 @@
         <span class="root-editor__button__text">Save state</span>
       </button>
     </div>
-    <json-data-property :item="data" :depth="1" :path="initialPath">
+    <json-data-property 
+      :item="data" 
+      :depth="1" 
+      :path="initialPath"
+      :blockName="block.name"
+    >
     </json-data-property>
   </div>
 </template>
@@ -37,6 +42,9 @@ export default {
     },
     refs() {
       return this.$store.state.data.refs;
+    },
+    block() {
+      return this.$store.state.blocks.current;
     },
     returnData() {
       return {

@@ -35,8 +35,9 @@
             v-if="!isRef(item)"
             :item="item"
             :depth="depth + 1"
-            :path="buildPath(index)"
+            :path="path"
             :arrayIndex="index + 1"
+            :blockName="blockName"
           ></json-data-collapsible-property>
           <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
             <a class="array-editor__item__sort">
@@ -74,6 +75,7 @@
 
 <script>
 import draggable from "vuedraggable";
+import axios from 'axios';
 export default {
   name: "json-data-array",
   data() {
@@ -96,13 +98,17 @@ export default {
       if (index !== -1) this.$props.items.splice(index, 1);
     },
     addItem() {
-      this.$props.items.push({ href:"", title:"" });
-    },
-    buildPath(index) {
-      return this.$props.path + "[" + index +"]";
+
+      var that = this;
+      axios.get("http://localhost:3000/api/getEmpty/"+ this.blockName +"/"+ encodeURIComponent(this.path))
+      .then(response => {
+        that.$props.items.push(response.data);
+      });
+
+      
     }
   },
-  props: ["label", "items", "depth", "path"],
+  props: ["label", "items", "depth", "path", "blockName"],
   components: {
     draggable,
   }

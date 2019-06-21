@@ -15,6 +15,7 @@
           :items="item[key]"
           :depth="depth"
           :path="buildPath(key)"
+          :blockName="blockName"
         ></json-data-array>
       </div>
       <div v-else class="property-editor__section property-editor__section--property" :style="{'padding-left': `${depth}rem`}">
@@ -48,10 +49,16 @@ export default {
       return _.isArray(item);
     },
     buildPath(key) {
-      return this.$props.path + "/" + key;
+      var parentPath = this.$props.path;
+      if(parentPath) {
+        return parentPath + "/" + key; 
+      }
+      else {
+        return key;
+      }
     }
   },
-  props: ["item", "depth", "path"],
+  props: ["item", "depth", "path", "blockName"],
   components: {
     JsonDataArray,
     JsonDataText
