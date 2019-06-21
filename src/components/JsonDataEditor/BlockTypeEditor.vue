@@ -1,17 +1,5 @@
 <template>
   <div class="block-type-editor" v-if="subBlock" :class="`block-type-editor--depth-${depth}`">
-    <a href class="block-type-editor__button block-type-editor__button--link">
-      <svg class="block-type-editor__button__icon feather">
-        <use xlink:href="#link"></use>
-      </svg>
-      <span class="block-type-editor__button__text">Go to block</span>
-    </a>
-    <a href class="block-type-editor__button block-type-editor__button--save">
-      <svg class="block-type-editor__button__icon feather">
-        <use xlink:href="#save"></use>
-      </svg>
-      <span class="block-type-editor__button__text">Save state</span>
-    </a>
     <label class="block-type-editor__select">
       <select
         class="block-type-editor__select__control"
@@ -30,6 +18,18 @@
         <use xlink:href="#chevron-down"></use>
       </svg>
     </label>
+    <a href="" class="block-type-editor__button block-type-editor__button--link">
+      <svg class="block-type-editor__button__icon feather">
+        <use xlink:href="#link"/>
+      </svg>
+      <span class="block-type-editor__button__text">Go to block</span>
+    </a>
+    <!-- <a href="" class="block-type-editor__button block-type-editor__button--save">
+      <svg class="block-type-editor__button__icon feather">
+        <use xlink:href="#save"/>
+      </svg>
+      <span class="block-type-editor__button__text">Save state</span>
+    </a> -->
   </div>
 </template>
 
@@ -105,6 +105,7 @@ export default {
 <style scoped lang="scss">
 @import "../../scss/main";
 $block-type-editor__icon-size: size(14px);
+$block-type-editor__select-height: size(34px);
 
 .block-type-editor {
   $this: &;
@@ -121,7 +122,7 @@ $block-type-editor__icon-size: size(14px);
 
   &__button {
     display: block;
-    margin-right: ($column-gutter-default / 4);
+    margin-left: ($column-gutter-default / 4);
     padding: ($column-gutter-default / 4);
     position: relative;
 
@@ -150,12 +151,11 @@ $block-type-editor__icon-size: size(14px);
       color: $colour-text-default;
       display: none;
       line-height: 1;
-      left: 50%;
+      right: 0;
       margin-top: size(6px);
       padding: ($column-gutter-default / 4);
       position: absolute;
       top: 100%;
-      transform: translateX(-50%);
       white-space: nowrap;
       z-index: 1;
 
@@ -165,7 +165,7 @@ $block-type-editor__icon-size: size(14px);
         border-top: inherit;
         content: "";
         height: $column-gutter-default / 2;
-        left: calc(50% - #{$column-gutter-default / 8});
+        right: $column-gutter-default / 2;
         position: absolute;
         top: -($column-gutter-default / 4 + size(1px));
         transform: rotate(45deg);
@@ -183,6 +183,7 @@ $block-type-editor__icon-size: size(14px);
   &__select {
     background-color: $colour-grey-darker;
     border: 1px solid $colour-grey-mid-dark;
+    height: $block-type-editor__select-height;
     overflow: hidden;
     position: relative;
 
@@ -202,15 +203,16 @@ $block-type-editor__icon-size: size(14px);
     &__label {
       @include font-size($font-size-small);
       @include default-font;
-      padding: ($column-gutter-default / 4) ($column-gutter-default / 2);
-      padding-right: ($column-gutter-default / 2) * 2 +
-        $block-type-editor__icon-size;
+      align-items: center;
+      display: flex;
+      height: $block-type-editor__select-height;
+      padding: 0 ($column-gutter-default / 2);
+      padding-right: ($column-gutter-default / 2)*2 + $block-type-editor__icon-size;
     }
 
     &__control {
       background-color: transparent;
       border: 0;
-      display: block;
       color: $colour-text-default;
       height: 100%;
       opacity: 0;
@@ -234,15 +236,9 @@ $block-type-editor__icon-size: size(14px);
     }
 
     &__label {
-      align-items: center;
-      bottom: 0;
-      display: flex;
-      left: 0;
+      margin-top: -$block-type-editor__select-height;
       opacity: 1;
       pointer-events: none;
-      position: absolute;
-      right: 0;
-      top: 0;
       transform: translateY(0);
       transition: all 0.3s ease;
     }

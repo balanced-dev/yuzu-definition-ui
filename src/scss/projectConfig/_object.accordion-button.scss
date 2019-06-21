@@ -1,13 +1,15 @@
 $accordion-button__icon-size: size(14px);
 
-@mixin accordion-button {
+@mixin accordion-button($includeDropShadow: true) {
     align-items: center;
     cursor: pointer;
     display: flex;
     user-select: none;
 
-    &:hover {
-        box-shadow: $drop-shadow;
+    @if $includeDropShadow {
+        &:hover {
+            box-shadow: $drop-shadow;
+        }
     }
 
     &__icon,

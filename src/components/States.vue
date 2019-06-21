@@ -46,10 +46,10 @@ export default {
     &__title {
       @include column-gutters;
       @include bold-font;
-      @include font-size($font-size-small);
+      @include font-size($font-size-medium);
       background-color: $colour-grey-light;
-      padding-bottom: $column-gutter-default / 4;
-      padding-top: $column-gutter-default / 4;
+      padding-bottom: $json-data-editor__v-spacing;
+      padding-top: $json-data-editor__v-spacing;
       text-transform: uppercase;
     }
 
@@ -64,8 +64,8 @@ export default {
         @include column-gutters;  
         color: inherit;
         display: block;
-        padding-bottom: $column-gutter-default / 2;
-        padding-top: $column-gutter-default / 2;
+        padding-bottom: $json-data-editor__v-spacing;
+        padding-top: $json-data-editor__v-spacing;
         text-decoration: none;
 
         &:hover {

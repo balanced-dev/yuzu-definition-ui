@@ -3,10 +3,10 @@ export default {
     state: {
         items: [
             'Blocks',
-            'States',
+            'Context',
             'Data'
         ],
-        context: 'States'
+        context: 'Context'
     },
     mutations: {
         setCurrent: function (state, navContext) {

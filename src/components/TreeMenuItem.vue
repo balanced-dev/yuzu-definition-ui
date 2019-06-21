@@ -58,7 +58,7 @@ export default {
         states: value
       };
       this.$store.commit("blocks/setCurrent", payload);
-      this.$store.commit("nav/setCurrent", 'States');
+      this.$store.commit("nav/setCurrent", 'Context');
     }
   },
   props: ["value", "propertyname", "index", "depth"]
@@ -76,8 +76,6 @@ export default {
       background-color: $colour-grey-mid-dark;
     }
   }
-
-  
 
   .tree-menu-item {
     $this: &;

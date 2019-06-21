@@ -51,7 +51,7 @@ export default {
         case "blocks":
           iconName = "box";
           break;      
-        case "states":
+        case "context":
           iconName = "file-text";
           break;      
         case "data":
@@ -122,7 +122,7 @@ $tabs__tab-stack-breakpoint: size(246px, $unit-em);
         &--blocks {
           stroke: $colour-blue;
         }
-        &--states {
+        &--context {
           stroke: $colour-purple;
         }
         &--data {

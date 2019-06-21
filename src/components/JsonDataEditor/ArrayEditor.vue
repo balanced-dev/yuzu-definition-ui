@@ -48,7 +48,7 @@
                 Sort
               </span>
             </a>            
-            <a class="array-editor__item__delete" @click="deleteItem(item)">            
+            <a class="array-editor__item__delete" @click="setToDelete({item: item, path: path})">            
               <svg class="array-editor__item__delete__icon feather">
                 <use xlink:href="#x-square"/>
               </svg>
@@ -59,6 +59,18 @@
           </div>
         </div>
       </draggable>
+      <modal v-if="toDelete" @close="resetToBeDeleted();">
+        <template slot="header-text">
+          <h2>Confirm deletion</h2>                
+        </template>
+        <template slot="content">
+          <p>Are you sure you want to delete this item from "{{toDelete.path}}"?</p>
+        </template>
+        <template slot="footer">
+          <button class="modal__button modal__button--red" @click="deleteItem(toDelete.item);">Delete</button>
+          <button class="modal__button modal__button--default" @click="resetToBeDeleted();">Cancel</button>
+        </template>
+      </modal>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
         <a class="array-editor__section__add" @click="addItem">
           <svg class="array-editor__section__add__icon feather">
@@ -76,11 +88,14 @@
 <script>
 import draggable from "vuedraggable";
 import axios from 'axios';
+import Modal from "../Global/Modal";
+
 export default {
   name: "json-data-array",
   data() {
     return {
-      active: false
+      active: false,
+      toDelete: undefined
     };
   },
   methods: {
@@ -93,9 +108,16 @@ export default {
     refLabel(item) {
       return item["$ref"];
     },
+    setToDelete(value) {
+      this.toDelete = value;
+    },
+    resetToBeDeleted(value) {
+      this.toDelete = undefined;
+    },
     deleteItem(item) {
       var index = this.$props.items.indexOf(item);
       if (index !== -1) this.$props.items.splice(index, 1);
+      this.resetToBeDeleted();
     },
     addItem() {
 
@@ -111,6 +133,7 @@ export default {
   props: ["label", "items", "depth", "path", "blockName"],
   components: {
     draggable,
+    Modal
   }
 };
 </script>
