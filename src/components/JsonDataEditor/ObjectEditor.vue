@@ -15,7 +15,8 @@
       <json-data-property
         :item="resolvedItem"
         :depth="depth+1"
-        :path="''"
+        :absPath="absPath"
+        :relPath="''"
         :blockName="subBlock.name"
       ></json-data-property>
       <json-data-block-type 
@@ -79,6 +80,9 @@ export default {
   methods: {
     toggleActive() {
       this.active = !this.active;
+      if(this.isRef) {
+        axios.get("http://localhost:3000/api/setActive/"+ this.$store.state.ws.id +"/"+ encodeURIComponent(this.absPath) +"/"+ this.active);
+      }
     },
     updated: function() {
       this.$store.dispatch("data/saveRef", this.subBlock);
@@ -95,7 +99,7 @@ export default {
       }
     }
   },
-  props: ["label", "item", "depth", "path"]
+  props: ["label", "item", "depth", "absPath", "relPath",]
 };
 </script>
 

@@ -16,7 +16,21 @@ var setupWs = function(wsId) {
   }
   
   connection.onmessage = (e) => {
-    $('.content-root').html(e.data);
+
+    var response = JSON.parse(e.data);
+
+    if(response.action == 'preview') {
+      $('.content-root').html(response.data);
+    }
+    if(response.action == 'setActive') {
+      if(response.data.isActive === "true") {
+        $("[data-yuzu='"+ response.data.path +"']").css("border", "5px solid red");
+      }
+      else {
+        $("[data-yuzu='"+ response.data.path +"']").css("border", "0");
+      }
+    }
+
   }
   
   window.onbeforeunload = function(event) {

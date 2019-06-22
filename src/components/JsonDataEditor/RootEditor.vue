@@ -37,7 +37,8 @@
     <json-data-property 
       :item="data" 
       :depth="1" 
-      :path="initialPath"
+      :absPath="initialPath"
+      :relPath="initialPath"
       :blockName="block.name"
       :class="'property-editor--root'"
     >

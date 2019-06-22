@@ -29,13 +29,15 @@
             :label="refLabel(item)"
             :item="item"
             :depth="depth+1"
-            :path="path"
+            :absPath="buildPath(index, absPath)"
+            :relPath="relPath"
           ></json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item)"
             :item="item"
             :depth="depth + 1"
-            :path="path"
+            :absPath="buildPath(index, absPath)"
+            :relPath="relPath"
             :arrayIndex="index + 1"
             :blockName="blockName"
           ></json-data-collapsible-property>
@@ -119,10 +121,13 @@ export default {
       if (index !== -1) this.$props.items.splice(index, 1);
       this.resetToBeDeleted();
     },
+    buildPath(index, path) {
+      return path +"["+ index +"]";
+    },
     addItem() {
 
       var that = this;
-      axios.get("http://localhost:3000/api/getEmpty/"+ this.blockName +"/"+ encodeURIComponent(this.path))
+      axios.get("http://localhost:3000/api/getEmpty/"+ this.blockName +"/"+ encodeURIComponent(this.relPath))
       .then(response => {
         that.$props.items.push(response.data);
       });
@@ -130,7 +135,7 @@ export default {
       
     }
   },
-  props: ["label", "items", "depth", "path", "blockName"],
+  props: ["label", "items", "depth", "absPath", "relPath", "blockName"],
   components: {
     draggable,
     Modal
