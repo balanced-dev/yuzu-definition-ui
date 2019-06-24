@@ -1,10 +1,15 @@
 $accordion-button__icon-size: size(14px);
 
-@mixin accordion-button($includeDropShadow: true) {
+@mixin accordion-button($includeDropShadow: true, $v-padding: false) {
     align-items: center;
     cursor: pointer;
     display: flex;
     user-select: none;
+
+    @if $v-padding {
+        padding-bottom: $json-data-editor__v-spacing;
+        padding-top: $json-data-editor__v-spacing;
+    }
 
     @if $includeDropShadow {
         &:hover {

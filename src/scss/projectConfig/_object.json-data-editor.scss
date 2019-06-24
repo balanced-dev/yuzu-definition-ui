@@ -1,6 +1,6 @@
-@mixin json-data-editor__section($this, $includeSectionPadding: true) {
+@mixin json-data-editor__section($this, $title-v-padding: false) {
     &__title {
-        @include accordion-button($includeDropShadow: false);
+        @include accordion-button($includeDropShadow: false, $v-padding: $title-v-padding);
     }
     
     &--depth {

@@ -1,5 +1,21 @@
 <template>
   <div class="block-type-editor" v-if="subBlock" :class="`block-type-editor--depth-${depth}`">
+    <modal v-if="addModal.isOpen" @close="toggleAddModal">
+      <template slot="header-text">
+        <h2>Add new state</h2>                
+      </template>
+      <template slot="content">
+        <label class="block-type-editor__text-editor">
+          <input class="block-type-editor__text-editor__control block-type-editor__text-editor__control--text" type="text" v-model="addModal.name" placeholder='e.g. "longDescription", "empty"' />
+          <span class="block-type-editor__text-editor__label">New state name</span>
+        </label>
+      </template>
+      <template slot="footer">
+        <button class="modal__button modal__button--green" @click="createDuplicate">Duplicate current</button>
+        <button class="modal__button modal__button--default" @click="saveNew">Create blank</button>
+        <button class="modal__button modal__button--red" @click="toggleAddModal">Cancel</button>
+      </template>
+    </modal>
     <label class="block-type-editor__select">
       <select
         class="block-type-editor__select__control"
@@ -24,25 +40,36 @@
       </svg>
       <span class="block-type-editor__button__text">Go to block</span>
     </a>
-    <!-- <a href="" class="block-type-editor__button block-type-editor__button--save">
+    <button class="block-type-editor__button block-type-editor__button--add" @click="toggleAddModal">
+      <svg class="block-type-editor__button__icon feather">
+        <use xlink:href="#plus"/>
+      </svg>
+      <span class="block-type-editor__button__text">Add new state</span>
+    </button>
+    <!-- <button class="block-type-editor__button block-type-editor__button--save">
       <svg class="block-type-editor__button__icon feather">
         <use xlink:href="#save"/>
       </svg>
       <span class="block-type-editor__button__text">Save state</span>
-    </a> -->
+    </button> -->
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import bootstrap from "../../bootstrap";
+import Modal from "../Global/Modal";
 
 export default {
   name: "json-data-block-type",
   data() {
     return {
       active: true,
-      states: []
+      states: [],
+      addModal: {
+        isOpen: false,
+        name: ""
+      }
     };
   },
   computed: {
@@ -93,16 +120,30 @@ export default {
         that.item["$ref"] = state;
         that.subBlock.data = this.refs[state];
       }
+    },
+    createDuplicate: function() {
+      if(this.addModal.name.length > 0) {
+        this.toggleAddModal();
+      }
+    },
+    saveNew: function() {
+      if(this.addModal.name.length > 0) {
+        this.toggleAddModal();
+      }
+    },
+    toggleAddModal: function() {
+      this.addModal.isOpen = !this.addModal.isOpen;
     }
   },
-  props: ["item", "depth", "subBlock"]
+  props: ["item", "depth", "subBlock"],
+  components: {
+    Modal
+  }
 };
 </script>
 
 <style scoped lang="scss">
 @import "../../scss/main";
-$block-type-editor__icon-size: size(14px);
-$block-type-editor__select-height: size(34px);
 
 .block-type-editor {
   $this: &;
@@ -110,14 +151,24 @@ $block-type-editor__select-height: size(34px);
   align-items: center;
   display: flex;
   position: absolute;
-  right: $column-gutter-default;
+  right: 0;
   top: 0;
 
+  &--depth-1 {
+    
+  }
+
   &--depth-2 {
+    right: $column-gutter-default;
     top: size(3px);
   }
 
+  &__text-editor {
+    @include form-input;
+  }
+
   &__button {
+    @include u-reset-button;
     display: block;
     margin-left: ($column-gutter-default / 4);
     padding: ($column-gutter-default / 4);
@@ -126,11 +177,11 @@ $block-type-editor__select-height: size(34px);
     &--link {
       background-color: $colour-blue;
     }
-    &--save {
+    &--add {
       background-color: $colour-green;
     }
-    &--save-as-new {
-      background-color: $colour-red;
+    &--save {
+      background-color: $colour-green;
     }
 
     &__icon {
@@ -178,76 +229,20 @@ $block-type-editor__select-height: size(34px);
   }
 
   &__select {
-    background-color: $colour-grey-darker;
-    border: 1px solid $colour-grey-mid-dark;
-    height: $block-type-editor__select-height;
-    overflow: hidden;
-    position: relative;
-
-    &:focus-within {
-      #{$this}__select {
-        &__control {
-          opacity: 1;
-        }
-        &__label {
-          opacity: 0;
-          transform: translateY(-100%);
-        }
-      }
-    }
-
-    &__control,
-    &__label {
-      @include font-size($font-size-small);
-      @include default-font;
-      align-items: center;
-      display: flex;
-      height: $block-type-editor__select-height;
-      padding: 0 ($column-gutter-default / 2);
-      padding-right: ($column-gutter-default / 2)*2 + $block-type-editor__icon-size;
-    }
-
+    @include form-select($this: &, $overlayLabel: true);
     &__control {
-      background-color: transparent;
-      border: 0;
-      color: $colour-text-default;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      width: 100%;
-
-      &:hover,
-      &:focus {
-        opacity: 1;
-        transition: opacity 0.3s ease 0.15s;
-
-        ~ #{$this}__select__label {
-          opacity: 0;
-          transform: translateY(-100%);
-        }
-      }
 
       &__option {
-        color: $colour-grey-dark;
+
       }
     }
 
     &__label {
-      margin-top: -$block-type-editor__select-height;
-      opacity: 1;
-      pointer-events: none;
-      transform: translateY(0);
-      transition: all 0.3s ease;
+
     }
 
     &__icon {
-      pointer-events: none;
-      position: absolute;
-      right: ($column-gutter-default / 2);
-      top: 0;
-      display: block;
-      height: 100%;
-      width: $block-type-editor__icon-size;
+
     }
   }
 }

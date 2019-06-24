@@ -1,18 +1,18 @@
 <template>
-  <div class="collapse">
-    <span class="collapse__handle" @click="open" :style="{'padding-left': `${depth}rem`}">
-      <svg class="collapse__handle__icon feather" :class="{'is-hidden': !isOpen}">
+  <div class="collapse" :class="{'is-active': isOpen}">
+    <span class="collapse__title" @click="open" :style="{'padding-left': `${depth}rem`}">
+      <svg class="collapse__title__icon feather" :class="{'is-hidden': isOpen}">
         <use xlink:href="#plus-square"/>
       </svg>
-      <svg class="collapse__handle__icon feather" :class="{'is-hidden': isOpen}">
+      <svg class="collapse__title__icon feather" :class="{'is-hidden': !isOpen}">
         <use xlink:href="#minus-square"/>
       </svg>
-      <span class="collapse__handle__text">
+      <span class="collapse__title__text">
         {{ guessCollapsedTitle }}
       </span>
     </span>
     <json-data-property
-      v-if="!isOpen"
+      v-if="isOpen"
       :item="item"
       :depth="depth+1"
       :path="path"
@@ -27,7 +27,7 @@ export default {
   name: "json-data-collapsible-property",
   data() {
     return {
-      isOpen: true,
+      isOpen: false,
       guesses: ['type', 'title']
     };
   },
@@ -56,8 +56,16 @@ export default {
 <style scoped lang="scss">
 @import '../../scss/main.scss';
 .collapse {
-  &__handle {
-    @include accordion-button($includeDropShadow: false);
+  $this: &;
+
+  @include json-data-editor__section($this, $title-v-padding: true);
+  
+  &__title {
+    
+  }
+
+  &.is-active {
+    padding-bottom: $json-data-editor__v-spacing;
   }
 }
 </style>

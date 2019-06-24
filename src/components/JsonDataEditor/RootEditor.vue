@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data">
+  <div class="root-editor" v-if="data">
     <div class="root-editor__buttons">
       <button @click="preview" class="root-editor__button root-editor__button--update">
         <svg class="root-editor__button__icon feather">
@@ -98,8 +98,9 @@ export default {
             newPath = this.generateNewPath(data.path, this.saveModal.asNewName);
 
         data.path = newPath.path;        
-        axios.post("http://localhost:3000/api/save", data);
-        this.redirectToNewState(newPath.name);
+        axios.post("http://localhost:3000/api/save", data).then(() => {
+          this.redirectToNewState(newPath.name);
+        });        
       }
       else {
         this.saveModal.isAsNew = true;
@@ -157,6 +158,8 @@ export default {
 @import "../../scss/main";
 
 .root-editor {
+  padding-bottom: $json-data-editor__v-spacing;
+  
   &__text-editor {
     @include form-input;
   }

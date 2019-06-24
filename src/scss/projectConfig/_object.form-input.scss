@@ -8,7 +8,7 @@
     @include default-font;
     background-color: $colour-grey-light;
     border: 1px solid $colour-grey-mid-light;
-    color: $colour-white;
+    color: $colour-text-default;
     display: block;
     overflow: auto;
     order: 2;
@@ -26,7 +26,7 @@
 
     &::placeholder {
       opacity: 1;
-      color: rgba($colour-white, 0.6);
+      color: rgba($colour-text-default, 0.6);
     }
 
     &--text {

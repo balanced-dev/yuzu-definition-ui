@@ -1,0 +1,96 @@
+$form-select__icon-size: size(14px);
+$form-select__select-height: size(34px);
+
+@mixin form-select($this, $height: $form-select__select-height, $iconSize: $form-select__icon-size, $overlayLabel: false) {
+  overflow: hidden;
+  position: relative;
+  
+  @if $overlayLabel {
+    background-color: $colour-grey-darker;
+    border: 1px solid $colour-grey-mid-dark;
+    height: $form-select__select-height;
+
+    &:focus-within {
+      #{$this} {
+        &__control {
+          opacity: 1;
+        }
+        &__label {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+      }
+    }
+  }
+  @else {
+    display: flex;
+    flex-direction: column-reverse;
+  }  
+
+  &__control,
+  &__label {
+    @include font-size($font-size-small);
+    @include default-font;
+    align-items: center;
+    display: flex;
+    height: $form-select__select-height;
+    
+  }
+
+  &__control {
+    @if $overlayLabel {
+      background-color: transparent;
+      border: 0;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+        transition: opacity 0.3s ease 0.15s;
+
+        ~ #{$this}__label {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+      }
+    }
+    @else {
+      background-color: $colour-grey-darker;
+      border: 1px solid $colour-grey-mid-dark;
+    }
+
+    color: $colour-text-default;
+    padding: 0 ($column-gutter-default / 2);
+    padding-right: ($column-gutter-default / 2)*2 + $form-select__icon-size;
+    width: 100%;    
+
+    &__option {
+      background-color: $colour-white;
+      color: $colour-grey-dark;
+    }
+  }
+
+  &__label {
+    @if $overlayLabel {
+      margin-top: -$form-select__select-height;
+      opacity: 1;
+      padding: 0 ($column-gutter-default / 2);
+      padding-right: ($column-gutter-default / 2)*2 + $form-select__icon-size;
+      pointer-events: none;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+  }
+  
+  &__icon {
+    pointer-events: none;
+    position: absolute;
+    right: ($column-gutter-default / 2);
+    bottom: 0;
+    display: block;
+    height: $form-select__select-height;
+    width: $form-select__icon-size;
+  }
+}

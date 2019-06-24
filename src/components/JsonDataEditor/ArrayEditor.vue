@@ -70,15 +70,52 @@
           <button class="modal__button modal__button--default" @click="resetToBeDeleted();">Cancel</button>
         </template>
       </modal>
+      <modal v-if="addBlockModal.isOpen" @close="toggleAddBlockModal">
+        <template slot="header-text">
+          <h2>Add block to array</h2>                
+        </template>
+        <template slot="content">
+          <p>Select block type to add to array</p>
+          <label class="array-editor__select">
+            <select
+              class="array-editor__select__control"
+              v-model="addBlockModal.selectedOption"
+            >
+              <option
+                class="array-editor__select__control__option"
+                v-for="option in addBlockModal.options"
+                v-bind:key="option.value"
+                :value="option.value"
+              >{{ option.text }}</option>
+            </select>
+            <span class="array-editor__select__label">Block</span>
+            <svg class="array-editor__select__icon feather" :class="{'is-hidden': this.active}">
+              <use xlink:href="#chevron-down"></use>
+            </svg>
+          </label>
+        </template>
+        <template slot="footer">
+          <button class="modal__button modal__button--green" @click="toggleAddBlockModal">Add block</button>
+          <button class="modal__button modal__button--default" @click="toggleAddBlockModal">Cancel</button>
+        </template>
+      </modal>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
-        <a class="array-editor__section__add" @click="addItem">
+        <button class="array-editor__section__add" @click="addItem">
           <svg class="array-editor__section__add__icon feather">
             <use xlink:href="#plus-square"/>
           </svg>
           <span class="array-editor__section__add__text">
             Add item
           </span>        
-        </a>
+        </button>
+        <button class="array-editor__section__add" @click="toggleAddBlockModal">
+          <svg class="array-editor__section__add__icon feather">
+            <use xlink:href="#plus-square"/>
+          </svg>
+          <span class="array-editor__section__add__text">
+            Add block
+          </span>        
+        </button>
       </div>
     </div>
   </div>
@@ -93,7 +130,16 @@ export default {
   data() {
     return {
       active: false,
-      toDelete: undefined
+      toDelete: undefined,
+      addBlockModal: {
+        isOpen: false,
+        options: [
+          { text: '/parMockupOne', value: 'A' },
+          { text: '/parMockupTwo', value: 'B' },
+          { text: '/parMockupThree', value: 'C' }
+        ],
+        selectedOption: 'A'
+      }
     };
   },
   methods: {
@@ -119,6 +165,9 @@ export default {
     },
     addItem() {
       this.$props.items.push({ href:"", title:"" });
+    },
+    toggleAddBlockModal() {
+      this.addBlockModal.isOpen = !this.addBlockModal.isOpen;
     },
     buildPath(index) {
       return this.$props.path + "[" + index +"]";
@@ -146,7 +195,7 @@ export default {
   text-transform: uppercase;
 
   &:not(:only-child) {
-    margin-right: $column-gutter-default / 2;
+    margin-left: $column-gutter-default / 2;
   }
 
   &__icon {
@@ -172,8 +221,13 @@ export default {
   
   }  
 
+  .object-editor.is-active ~ #{$this}__item__footer {
+    display: none;
+  }
+
   &__section {
     &__add {
+      @include u-reset-button;
       @include array-editor__button;
       background-color: $colour-green;
       color: $colour-body-bgnd-dark-grey;
@@ -195,12 +249,10 @@ export default {
   }
 
   &__item {
-    margin-bottom: $json-data-editor__v-spacing;
-    margin-top: $json-data-editor__v-spacing;
     position: relative;
 
     &__footer {
-      top: 0;
+      top: $json-data-editor__v-spacing;
       right: 0;
       position: absolute;
     }
@@ -246,6 +298,10 @@ export default {
         right: $column-gutter-default;
       }
     }
+  }
+
+  &__select {
+    @include form-select($this: &);
   }
 }
 </style>

@@ -85,6 +85,6 @@ export default {
 .object-editor {
   $this: &;
 
-  @include json-data-editor__section($this, $includeSectionPadding: false);
+  @include json-data-editor__section($this, $title-v-padding: true);
 }
 </style>
