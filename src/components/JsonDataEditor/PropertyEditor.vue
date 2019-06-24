@@ -6,7 +6,8 @@
           :label="key"
           :item="item[key]"
           :depth="depth"
-          :path="buildPath(key)"
+          :absPath="buildPathAbs(key, absPath)"
+          :relPath="buildPathRel(key, relPath)"
         ></json-data-object>
       </div>
       <div v-else-if="isArray(item[key])" class="property-editor__section property-editor__section--array">
@@ -14,7 +15,9 @@
           :label="key"
           :items="item[key]"
           :depth="depth"
-          :path="buildPath(key)"
+          :absPath="buildPathAbs(key, absPath)"
+          :relPath="buildPathRel(key, relPath)"
+          :blockName="blockName"
         ></json-data-array>
       </div>
       <div v-else class="property-editor__section property-editor__section--property" :style="{'padding-left': `${depth}rem`}">
@@ -22,7 +25,8 @@
           :label="key"
           :item="item"
           :depth="depth"
-          :path="buildPath(key)"
+          :absPath="buildPathAbs(key, absPath)"
+          :relPath="buildPathRel(key, relPath)"
         ></json-data-text>
       </div>
       <!--  
@@ -47,11 +51,19 @@ export default {
     isArray: function(item) {
       return _.isArray(item);
     },
-    buildPath(key) {
-      return this.$props.path + "/" + key;
+    buildPathAbs(key, path) {
+        return path + "/" + key; 
+    },
+    buildPathRel(key, path) {
+      if(path) {
+        return path + "/" + key; 
+      }
+      else {
+        return key;
+      }
     }
   },
-  props: ["item", "depth", "path"],
+  props: ["item", "depth", "absPath", "relPath", "blockName"],
   components: {
     JsonDataArray,
     JsonDataText

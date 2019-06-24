@@ -15,14 +15,22 @@
       <json-data-property
         :item="resolvedItem"
         :depth="depth+1"
-        :path="path"
+        :absPath="absPath"
+        :relPath="''"
+        :blockName="subBlock.name"
       ></json-data-property>
-      <json-data-block-type v-if="isRef" :item="item" :depth="depth+1" :subBlock="subBlock"></json-data-block-type>
+      <json-data-block-type 
+        v-if="isRef" 
+        :item="item" 
+        :depth="depth+1" 
+        :subBlock="subBlock"
+      ></json-data-block-type>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import bootstrap from "../../bootstrap";
 export default {
   name: "json-data-object",
@@ -48,17 +56,33 @@ export default {
   },
   mounted() {
     var ref = this.item['$ref'];
-    if(this.item['$ref']) {
-      this.subBlock.raw = ref;
-      this.subBlock.name = bootstrap.getBlockFromRef(ref);
-      this.subBlock.state = bootstrap.getStateFromRef(ref);
-      this.subBlock.data = this.refs[ref];
-      this.isRef = true;
+
+    if(ref) {
+
+      if(!this.refs.hasOwnProperty(ref)) {
+        //safety value to pull in refs that have been added are actual in location data
+        var that = this;
+        axios.get("http://localhost:3000/api/getEmpty/"+ bootstrap.getBlockFromRef(ref))
+        .then(response => {
+          that.$props.item = response.data;
+        });
+      }
+      else {
+
+        this.subBlock.raw = ref;
+        this.subBlock.name = bootstrap.getBlockFromRef(ref);
+        this.subBlock.state = bootstrap.getStateFromRef(ref);
+        this.subBlock.data = this.refs[ref];
+        this.isRef = true;
+      }
     }
   },
   methods: {
     toggleActive() {
       this.active = !this.active;
+      if(this.isRef) {
+        axios.get("http://localhost:3000/api/setActive/"+ this.$store.state.ws.id +"/"+ encodeURIComponent(this.absPath) +"/"+ this.active);
+      }
     },
     updated: function() {
       this.$store.dispatch("data/saveRef", this.subBlock);
@@ -75,7 +99,7 @@ export default {
       }
     }
   },
-  props: ["label", "item", "depth", "path"]
+  props: ["label", "item", "depth", "absPath", "relPath",]
 };
 </script>
 

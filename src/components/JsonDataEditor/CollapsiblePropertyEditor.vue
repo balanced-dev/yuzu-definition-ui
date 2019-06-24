@@ -15,7 +15,9 @@
       v-if="isOpen"
       :item="item"
       :depth="depth+1"
-      :path="path"
+      :absPath="absPath"
+      :relPath="relPath"
+      :blockName="blockName"
     ></json-data-property>
   </div>
 </template>
@@ -49,7 +51,7 @@ export default {
       this.$data.isOpen = !this.$data.isOpen;
     }
   },
-  props: ["item", "depth", "path", "arrayIndex"]
+  props: ["item", "depth", "absPath", "relPath", "arrayIndex", "blockName"]
 };
 </script>
 

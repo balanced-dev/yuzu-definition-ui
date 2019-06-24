@@ -34,7 +34,14 @@
         </template>
       </modal>
     </div>
-    <json-data-property :item="data" :depth="1" :path="initialPath" :class="'property-editor--root'">
+    <json-data-property 
+      :item="data" 
+      :depth="1" 
+      :absPath="initialPath"
+      :relPath="initialPath"
+      :blockName="block.name"
+      :class="'property-editor--root'"
+    >
     </json-data-property>
   </div>
 </template>
@@ -64,6 +71,9 @@ export default {
     },
     refs() {
       return this.$store.state.data.refs;
+    },
+    block() {
+      return this.$store.state.blocks.current;
     },
     returnData() {
       return {

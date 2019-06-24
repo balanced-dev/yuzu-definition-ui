@@ -38,7 +38,7 @@ export default {
   name: "tree-menu-item",
   data() {
     return {
-      showChildren: false
+      showChildren: true
     };
   },
   methods: {

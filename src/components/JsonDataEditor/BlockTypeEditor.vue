@@ -75,6 +75,9 @@ export default {
   computed: {
     refs() {
       return this.$store.state.data.refs;
+    },
+    blocks() {
+      return this.$store.state.blocks.items;
     }
   },
   mounted() {
@@ -82,7 +85,7 @@ export default {
     var context = {};
 
     bootstrap.getBlockAndState(
-      this.$store.state.blocks.items,
+      this.blocks,
       this.subBlock.state,
       context
     );

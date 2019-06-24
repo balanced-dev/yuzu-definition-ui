@@ -29,14 +29,17 @@
             :label="refLabel(item)"
             :item="item"
             :depth="depth+1"
-            :path="path"
+            :absPath="buildPath(index, absPath)"
+            :relPath="relPath"
           ></json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item)"
             :item="item"
             :depth="depth + 1"
-            :path="buildPath(index)"
+            :absPath="buildPath(index, absPath)"
+            :relPath="relPath"
             :arrayIndex="index + 1"
+            :blockName="blockName"
           ></json-data-collapsible-property>
           <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
             <a class="array-editor__item__sort">
@@ -123,6 +126,7 @@
 
 <script>
 import draggable from "vuedraggable";
+import axios from 'axios';
 import Modal from "../Global/Modal";
 
 export default {
@@ -163,17 +167,21 @@ export default {
       if (index !== -1) this.$props.items.splice(index, 1);
       this.resetToBeDeleted();
     },
-    addItem() {
-      this.$props.items.push({ href:"", title:"" });
+    buildPath(index, path) {
+      return path +"["+ index +"]";
     },
     toggleAddBlockModal() {
       this.addBlockModal.isOpen = !this.addBlockModal.isOpen;
     },
-    buildPath(index) {
-      return this.$props.path + "[" + index +"]";
+    addItem() {
+      var that = this;
+      axios.get("http://localhost:3000/api/getEmpty/"+ this.blockName +"/"+ encodeURIComponent(this.relPath))
+      .then(response => {
+        that.$props.items.push(response.data);
+      });
     }
   },
-  props: ["label", "items", "depth", "path"],
+  props: ["label", "items", "depth", "absPath", "relPath", "blockName"],
   components: {
     draggable,
     Modal
