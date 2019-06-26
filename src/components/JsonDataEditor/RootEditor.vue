@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../../api";
 import bootstrap from "../../bootstrap";
 import _ from "lodash";
 import Modal from "../Global/Modal";
@@ -75,6 +75,9 @@ export default {
     block() {
       return this.$store.state.blocks.current;
     },
+    state() {
+      return this.$store.state.state.current;
+    },
     returnData() {
       return {
         path: this.$store.getters["state/previewUrlToDataPath"],
@@ -89,10 +92,10 @@ export default {
   },
   methods: {
     preview: function() {
-      axios.post("http://localhost:3000/api/preview", this.returnData);
+      api.preview(this.returnData);
     },
     save: function() {
-      axios.post("http://localhost:3000/api/save", this.returnData);
+      api.save(this.returnData);
       this.toggleSaveModal();
     },
     updated: function() {
@@ -104,47 +107,22 @@ export default {
     },
     saveNew() {
       if (this.saveModal.asNewName.length > 0) {
-        let data = {...this.returnData},
-            newPath = this.generateNewPath(data.path, this.saveModal.asNewName);
+        let data = {...this.returnData};
+        let newStateName = this.block.name +"_"+ this.saveModal.asNewName;
+        let newPath = bootstrap.buildNewBlockPath(newStateName, data.path);
 
-        data.path = newPath.path;        
-        axios.post("http://localhost:3000/api/save", data).then(() => {
-          this.redirectToNewState(newPath.name);
+        data.path = newPath;        
+        api.save(data).then(() => {
+          this.redirectToNewState(newStateName);
         });        
       }
       else {
         this.saveModal.isAsNew = true;
       }
     },
-    generateNewPath(pathString, newState) {
-      let pathArr = pathString.split("/"),
-          fileSection = pathArr.pop(),
-          extension = fileSection.substring(fileSection.lastIndexOf(".")),
-          blockName = fileSection.substring(0, fileSection.lastIndexOf("."));
-
-      blockName =
-        blockName.indexOf("_") > -1
-          ? blockName.substring(0, blockName.indexOf("_"))
-          : blockName;
-
-      let newPathArr = [...pathArr],
-          newBlockName = blockName + "_" + newState;
-
-      newPathArr.push(newBlockName + extension);
-
-      return {
-        path: newPathArr.join("/"),
-        name: newBlockName
-      };
-    },
-    redirectToNewState(stateName) {
-      let urlArr = window.top.location.href.split("/"),
-          fileSection = urlArr.pop(),
-          extension = fileSection.substring(fileSection.lastIndexOf(".")),
-          newUrlArr = [...urlArr];
-
-      newUrlArr.push(stateName + extension);
-      window.top.location.href = newUrlArr.join("/");
+    redirectToNewState(newStatename) {
+      let newUrl = "/_templates/html/" + this.state.url.replace(this.state.name +".html", newStatename +".html");
+      window.top.location.href = newUrl;
     }
   },
   created: function() {

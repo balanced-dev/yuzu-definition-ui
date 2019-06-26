@@ -1,15 +1,17 @@
 <template>
   <div class="object-editor" :class="[{'is-active': this.active}, `object-editor--depth-${depth}`]">
-    <label class="object-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
+    <label
+      class="object-editor__title"
+      @click="toggleActive"
+      :style="{'padding-left': `${depth}rem`}"
+    >
       <svg class="object-editor__title__icon feather" :class="{'is-hidden': this.active}">
-        <use xlink:href="#plus-square"/>
+        <use xlink:href="#plus-square"></use>
       </svg>
       <svg class="object-editor__title__icon feather" :class="{'is-hidden': !this.active}">
-        <use xlink:href="#minus-square"/>
+        <use xlink:href="#minus-square"></use>
       </svg>
-      <span class="object-editor__title__text">
-        {{ label }}
-      </span>
+      <span class="object-editor__title__text">{{ label }}</span>
     </label>
     <div class="object-editor__section" v-if="active">
       <json-data-property
@@ -19,18 +21,13 @@
         :relPath="''"
         :blockName="subBlock.name"
       ></json-data-property>
-      <json-data-block-type 
-        v-if="isRef" 
-        :item="item" 
-        :depth="depth+1" 
-        :subBlock="subBlock"
-      ></json-data-block-type>
+      <json-data-block-type v-if="isRef" :item="item" :depth="depth+1" :subBlock="subBlock"></json-data-block-type>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import api from "../../api";
 import bootstrap from "../../bootstrap";
 export default {
   name: "json-data-object",
@@ -41,38 +38,35 @@ export default {
       subBlock: {
         raw: "",
         name: "",
-        state: "",
-        data: {}
+        state: ""
       }
     };
   },
   computed: {
+    ref() {
+      return this.refs[this.item["$ref"]];
+    },
     refs() {
       return this.$store.state.data.refs;
     },
     resolvedItem() {
-      return this.isRef ? this.subBlock.data : this.item
+      return this.isRef ? this.ref : this.item;
     }
   },
   mounted() {
-    var ref = this.item['$ref'];
+    var ref = this.item["$ref"];
 
-    if(ref) {
-
-      if(!this.refs.hasOwnProperty(ref)) {
+    if (ref) {
+      if (!this.refs.hasOwnProperty(ref)) {
         //safety value to pull in refs that have been added are actual in location data
         var that = this;
-        axios.get("http://localhost:3000/api/getEmpty/"+ bootstrap.getBlockFromRef(ref))
-        .then(response => {
-          that.$props.item = response.data;
-        });
-      }
-      else {
-
+          api.getEmpty(ref).then(response => {
+            that.$props.item = response.data;
+          });
+      } else {
         this.subBlock.raw = ref;
-        this.subBlock.name = bootstrap.getBlockFromRef(ref);
-        this.subBlock.state = bootstrap.getStateFromRef(ref);
-        this.subBlock.data = this.refs[ref];
+        this.subBlock.name = bootstrap.blockFromState(ref, true);
+        this.subBlock.state = bootstrap.removePrefix(ref);
         this.isRef = true;
       }
     }
@@ -80,31 +74,32 @@ export default {
   methods: {
     toggleActive() {
       this.active = !this.active;
-      if(this.isRef) {
-        axios.get("http://localhost:3000/api/setActive/"+ this.$store.state.ws.id +"/"+ encodeURIComponent(this.absPath) +"/"+ this.active);
+      if (this.isRef) {
+        api.setActive(this.absPath, this.active);
       }
     },
     updated: function() {
-      this.$store.dispatch("data/saveRef", this.subBlock);
+      if(this.ref)
+        this.$store.dispatch("data/saveRef", this.ref);
     }
   },
   created: function() {
-    this.debouncedUpdate = _.debounce(this.updated, 500)
+    this.debouncedUpdate = _.debounce(this.updated, 500);
   },
   watch: {
-    subBlock: {
+    ref: {
       deep: true,
       handler: function() {
         this.debouncedUpdate();
       }
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath",]
+  props: ["label", "item", "depth", "absPath", "relPath"]
 };
 </script>
 
 <style scoped lang="scss">
-@import '../../scss/main';
+@import "../../scss/main";
 
 .object-editor {
   $this: &;

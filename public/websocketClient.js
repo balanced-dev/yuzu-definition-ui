@@ -24,7 +24,7 @@ var setupWs = function(wsId) {
     }
     if(response.action == 'setActive') {
       if(response.data.isActive === "true") {
-        $("[data-yuzu='"+ response.data.path +"']").css("border", "5px solid red");
+        $("[data-yuzu='"+ response.data.path +"']").css("border", "0px solid red");
       }
       else {
         $("[data-yuzu='"+ response.data.path +"']").css("border", "0");

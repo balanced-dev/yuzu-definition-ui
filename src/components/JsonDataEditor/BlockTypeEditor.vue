@@ -11,8 +11,8 @@
         </label>
       </template>
       <template slot="footer">
-        <button class="modal__button modal__button--green" @click="createDuplicate">Duplicate current</button>
-        <button class="modal__button modal__button--default" @click="saveNew">Create blank</button>
+        <button class="modal__button modal__button--green" @click="createNewState(true)">Duplicate current</button>
+        <button class="modal__button modal__button--default" @click="createNewState(false)">Create blank</button>
         <button class="modal__button modal__button--red" @click="toggleAddModal">Cancel</button>
       </template>
     </modal>
@@ -56,8 +56,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../../api";
 import bootstrap from "../../bootstrap";
+import _ from "lodash";
 import Modal from "../Global/Modal";
 
 export default {
@@ -98,6 +99,16 @@ export default {
     });
   },
   methods: {
+    toggleAddModal: function() {
+      this.addModal.isOpen = !this.addModal.isOpen;
+    },
+    addNewStateOption: function(state) {
+      this.states.push({
+        name: this.addModal.name,
+        value: state
+      });
+      this.subBlock.state = state;
+    },
     createDisplayStateName: function(name) {
       if (name === this.subBlock.name) {
         return "default";
@@ -106,36 +117,49 @@ export default {
       }
     },
     changeState: function() {
-
       var that = this;
-      var state = "/"+ this.subBlock.state;
+      var state = this.subBlock.state;
 
-      if(!this.refs[state]) {
-        axios.post("http://localhost:3000/api/get", {
-          stateName: this.subBlock.state
-        })
+      if(!this.refs["/"+ state]) {
+        api.get(state)
         .then(function(response) {
-          that.item["$ref"] = state;
-          that.subBlock.data = response.data
+          that.saveRef(state, response.data);
+          that.saveNewItemState(state);
         });
       }
       else {
-        that.item["$ref"] = state;
-        that.subBlock.data = this.refs[state];
+        that.saveNewItemState(state);
       }
     },
-    createDuplicate: function() {
-      if(this.addModal.name.length > 0) {
-        this.toggleAddModal();
+    createNewState: function(duplicate) {
+      var that = this;
+      var state = this.subBlock.name +"_"+ this.addModal.name;
+      this.addModal.isOpen = false;
+
+      if(!duplicate) {
+        api.getEmpty("/"+ this.subBlock.name)
+        .then(response => {
+          that.saveRef(state, response.data);
+          that.saveNewItemState(state);
+          that.addNewStateOption(state);
+        });
+      }
+      else {
+        var data = _.cloneDeep(this.refs["/"+ this.subBlock.state]);
+        that.saveRef(state, data);
+        that.saveNewItemState(state);
+        that.addNewStateOption(state);
       }
     },
-    saveNew: function() {
-      if(this.addModal.name.length > 0) {
-        this.toggleAddModal();
-      }
+    saveNewItemState: function(state) {
+      this.item["$ref"] = "/"+ state
     },
-    toggleAddModal: function() {
-      this.addModal.isOpen = !this.addModal.isOpen;
+    saveRef: function(state, data) {
+      var payload = {
+        state: state,
+        data: data
+      };
+      this.$store.dispatch("data/saveRef", payload);
     }
   },
   props: ["item", "depth", "subBlock"],

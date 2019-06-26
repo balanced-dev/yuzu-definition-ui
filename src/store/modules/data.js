@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../api";
 import _ from "lodash";
 import bootstrap from "../../bootstrap";
 
@@ -6,12 +6,14 @@ export default {
   namespaced: true,
   state: {
     root: {},
-    refs: {}
+    refs: {},
+    paths: {}
   },
   mutations: {
     loadAll: function (state, data) {
       state.root = data.data;
       state.refs = data.map;
+      state.paths = data.paths;
     },
     saveRoot: function (state, root) {
       state.root = root;
@@ -22,9 +24,10 @@ export default {
   },
   actions: {
     load(context) {
+      var currentBlock = context.rootState.blocks.current.name;
       var currentState = context.rootState.state.current.name;
       if(currentState) {
-        axios.get("http://localhost:3000/api/getWithRefs/"+ currentState)
+        api.getWithRefs(currentBlock, currentState)
         .then(response => {
           context.commit("loadAll", response.data);
         });

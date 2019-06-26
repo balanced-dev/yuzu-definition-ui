@@ -21,7 +21,8 @@ export default {
   actions: {
     setup(context) {
       var url = window.location.search;
-      var id =  getQsParameterByName("wsId", url);
+      var id = getQsParameterByName("wsId", url);
+      if(!id) id = 0;
       context.commit("setup", id);
     }
   }

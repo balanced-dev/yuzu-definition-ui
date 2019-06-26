@@ -3,7 +3,8 @@ import bootstrap from "../../bootstrap";
 export default {
   namespaced: true,
   state: {
-    current: {}
+    current: {},
+    objectSetttings: {}
   },
   getters: {
     previewUrlToDataPath: state => {
