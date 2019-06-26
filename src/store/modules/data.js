@@ -19,7 +19,7 @@ export default {
       state.root = root;
     },
     saveRef: function (state, payload) {
-      state.refs["/"+ payload.state] = payload.data;
+      state.refs[payload.state] = payload.data;
     },
   },
   actions: {

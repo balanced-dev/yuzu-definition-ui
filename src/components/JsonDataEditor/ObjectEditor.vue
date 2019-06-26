@@ -37,8 +37,7 @@ export default {
       isRef: false,
       subBlock: {
         raw: "",
-        name: "",
-        state: ""
+        name: ""
       }
     };
   },
@@ -64,9 +63,9 @@ export default {
             that.$props.item = response.data;
           });
       } else {
-        this.subBlock.raw = ref;
-        this.subBlock.name = bootstrap.blockFromState(ref, true);
-        this.subBlock.state = bootstrap.removePrefix(ref);
+        this.subBlock.name = bootstrap.blockFromState(ref);
+        this.subBlock.defaultState = bootstrap.defaultFromState(ref);
+        this.subBlock.state = ref;
         this.isRef = true;
       }
     }

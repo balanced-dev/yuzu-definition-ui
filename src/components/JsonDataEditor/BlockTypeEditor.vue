@@ -109,18 +109,18 @@ export default {
       });
       this.subBlock.state = state;
     },
-    createDisplayStateName: function(name) {
-      if (name === this.subBlock.name) {
+    createDisplayStateName: function(state) {
+      if (state == bootstrap.defaultFromState(state)) {
         return "default";
       } else {
-        return name.replace(this.subBlock.name + "_", "");
+        return bootstrap.getStateSuffix(state);
       }
     },
     changeState: function() {
       var that = this;
       var state = this.subBlock.state;
 
-      if(!this.refs["/"+ state]) {
+      if(!this.refs[state]) {
         api.get(state)
         .then(function(response) {
           that.saveRef(state, response.data);
@@ -133,11 +133,11 @@ export default {
     },
     createNewState: function(duplicate) {
       var that = this;
-      var state = this.subBlock.name +"_"+ this.addModal.name;
+      var state = bootstrap.createNewStateName(this.subBlock.state, this.addModal.name);
       this.addModal.isOpen = false;
 
       if(!duplicate) {
-        api.getEmpty("/"+ this.subBlock.name)
+        api.getEmpty(this.subBlock.name)
         .then(response => {
           that.saveRef(state, response.data);
           that.saveNewItemState(state);
@@ -145,14 +145,14 @@ export default {
         });
       }
       else {
-        var data = _.cloneDeep(this.refs["/"+ this.subBlock.state]);
+        var data = _.cloneDeep(this.refs[this.subBlock.state]);
         that.saveRef(state, data);
         that.saveNewItemState(state);
         that.addNewStateOption(state);
       }
     },
     saveNewItemState: function(state) {
-      this.item["$ref"] = "/"+ state
+      this.item["$ref"] = state
     },
     saveRef: function(state, data) {
       var payload = {

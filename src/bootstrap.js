@@ -49,25 +49,44 @@ const removePrefix = function(blockName) {
   return blockName;
 }
 
-const blockFromState = function (blockName, takeOffPrefix) {
+const blockFromState = function (state) {
 
-  if(takeOffPrefix) blockName = removePrefix(blockName);
-  return blockName.split('_')[0];
+  state = removePrefix(state);
+  return state.split('_')[0];
+}
+
+const defaultFromState = function (state) {
+
+  return state.split('_')[0];
 }
 
 const buildNewBlockPath = function (state, path) {
 
-  var defaultState = blockFromState(state);
+  var defaultState = defaultFromState(state);
   var defaultFilename = removePrefix(defaultState);
   var stateFilename = removePrefix(state);
   return path.replace(defaultFilename + ".json", stateFilename + ".json");
+}
+
+const getStateSuffix = function(state) {
+  var defaultState = defaultFromState(state);
+  return state.replace(defaultState + "_", "")
+}
+
+const createNewStateName = function(state, stateSuffix) {
+  var defaultState = defaultFromState(state);
+  return defaultState +"_"+ stateSuffix;
 }
 
 export default {
   convertPreviewToDataPath,
   getBlockAndState,
   getRoute,
+  addPrefix,
   removePrefix,
   blockFromState,
-  buildNewBlockPath
+  defaultFromState,
+  buildNewBlockPath,
+  getStateSuffix,
+  createNewStateName
 }

@@ -10,7 +10,7 @@ export default {
   },
   get: (state) => {
     return axios.post(rootUrl + "get", {
-      stateName: state
+      stateName: bootstrap.removePrefix(state)
     })
   },
   getWithRefs: (block, state) => {

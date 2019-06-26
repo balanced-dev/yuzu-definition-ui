@@ -121,7 +121,8 @@ export default {
       }
     },
     redirectToNewState(newStatename) {
-      let newUrl = "/_templates/html/" + this.state.url.replace(this.state.name +".html", newStatename +".html");
+      var filename = bootstrap.removePrefix(this.state.name);
+      let newUrl = "/_templates/html/" + this.state.url.replace(filename +".html", newStatename +".html");
       window.top.location.href = newUrl;
     }
   },
