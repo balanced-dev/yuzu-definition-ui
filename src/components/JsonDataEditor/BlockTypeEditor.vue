@@ -102,13 +102,6 @@ export default {
     toggleAddModal: function() {
       this.addModal.isOpen = !this.addModal.isOpen;
     },
-    addNewStateOption: function(state) {
-      this.states.push({
-        name: this.addModal.name,
-        value: state
-      });
-      this.subBlock.state = state;
-    },
     createDisplayStateName: function(state) {
       if (state == bootstrap.defaultFromState(state)) {
         return "default";
@@ -116,9 +109,16 @@ export default {
         return bootstrap.getStateSuffix(state);
       }
     },
+    addNewStateOption: function(state) {
+      this.states.push({
+        name: this.addModal.name,
+        value: state
+      });
+      this.subBlock.state = state;
+    },
     changeState: function() {
-      var that = this;
       var state = this.subBlock.state;
+      var that = this;
 
       if(!this.refs[state]) {
         api.get(state)
@@ -128,28 +128,28 @@ export default {
         });
       }
       else {
-        that.saveNewItemState(state);
+        this.saveNewItemState(state);
       }
     },
     createNewState: function(duplicate) {
-      var that = this;
       var state = bootstrap.createNewStateName(this.subBlock.state, this.addModal.name);
       this.addModal.isOpen = false;
 
       if(!duplicate) {
         api.getEmpty(this.subBlock.name)
         .then(response => {
-          that.saveRef(state, response.data);
-          that.saveNewItemState(state);
-          that.addNewStateOption(state);
+          this.saveNewState(state, response.data);
         });
       }
       else {
         var data = _.cloneDeep(this.refs[this.subBlock.state]);
-        that.saveRef(state, data);
-        that.saveNewItemState(state);
-        that.addNewStateOption(state);
+        this.saveNewState(state, data);
       }
+    },
+    saveNewState: function(state, data) {
+        this.saveRef(state, data);
+        this.saveNewItemState(state);
+        this.addNewStateOption(state);
     },
     saveNewItemState: function(state) {
       this.item["$ref"] = state
