@@ -98,9 +98,6 @@ export default {
       api.save(this.returnData);
       this.toggleSaveModal();
     },
-    updated: function() {
-      this.$store.dispatch("data/saveRoot", this.data);
-    },
     toggleSaveModal() {
       this.saveModal.isOpen = !this.saveModal.isOpen;
       this.saveModal.isAsNew = false;
@@ -124,7 +121,10 @@ export default {
       var filename = bootstrap.removePrefix(this.state.name);
       let newUrl = "/_templates/html/" + this.state.url.replace(filename +".html", newStatename +".html");
       window.top.location.href = newUrl;
-    }
+    },
+    updated: function() {
+      this.$store.dispatch("data/saveRoot", this.data);
+    },
   },
   created: function() {
     this.debouncedUpdate = _.debounce(this.updated, 500);

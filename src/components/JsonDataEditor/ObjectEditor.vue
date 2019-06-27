@@ -42,8 +42,11 @@ export default {
     };
   },
   computed: {
+    refString() {
+      return this.item["$ref"];
+    },
     ref() {
-      return this.refs[this.item["$ref"]];
+      return this.refs[this.refString];
     },
     refs() {
       return this.$store.state.data.refs;
@@ -53,21 +56,11 @@ export default {
     }
   },
   mounted() {
-    var ref = this.item["$ref"];
-
-    if (ref) {
-      if (!this.refs.hasOwnProperty(ref)) {
-        //safety value to pull in refs that have been added are actual in location data
-        var that = this;
-          api.getEmpty(ref).then(response => {
-            that.$props.item = response.data;
-          });
-      } else {
-        this.subBlock.name = bootstrap.blockFromState(ref);
-        this.subBlock.defaultState = bootstrap.defaultFromState(ref);
-        this.subBlock.state = ref;
-        this.isRef = true;
-      }
+    if (this.ref) {
+      this.subBlock.name = bootstrap.blockFromState(this.refString);
+      this.subBlock.defaultState = bootstrap.defaultFromState(this.refString);
+      this.subBlock.state = this.refString;
+      this.isRef = true;
     }
   },
   methods: {
@@ -76,6 +69,19 @@ export default {
       if (this.isRef) {
         api.setActive(this.absPath, this.active);
       }
+      if(this.active) {
+        this.tryPopulateOrphanRef();
+      }
+    },
+    tryPopulateOrphanRef: function() {
+      //safety value to pull in refs that have been added are actual in location data
+      if(this.refString && !this.isRef) {
+        var that = this;
+        api.getEmpty(this.refString).then(response => {
+          that.$props.item = response.data;
+        });
+      }
+
     },
     updated: function() {
       if(this.ref)

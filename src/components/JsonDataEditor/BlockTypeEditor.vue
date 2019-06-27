@@ -66,7 +66,6 @@ export default {
   data() {
     return {
       active: true,
-      states: [],
       addModal: {
         isOpen: false,
         name: ""
@@ -79,40 +78,27 @@ export default {
     },
     blocks() {
       return this.$store.state.blocks.items;
+    },
+    states() {
+      return this.$store.getters["blockStates/get"](this.subBlock.name);
     }
   },
   mounted() {
-    var that = this;
-    var context = {};
-
-    bootstrap.getBlockAndState(
-      this.blocks,
-      this.subBlock.state,
-      context
-    );
-
-    Object.keys(context.block.states).forEach(state => {
-      that.states.push({
-        name: this.createDisplayStateName(state),
-        value: state
-      });
+    this.$store.dispatch("blockStates/loadStates", { 
+      block: this.subBlock.name,
+      state: this.subBlock.state
     });
   },
   methods: {
     toggleAddModal: function() {
       this.addModal.isOpen = !this.addModal.isOpen;
     },
-    createDisplayStateName: function(state) {
-      if (state == bootstrap.defaultFromState(state)) {
-        return "default";
-      } else {
-        return bootstrap.getStateSuffix(state);
-      }
-    },
     addNewStateOption: function(state) {
-      this.states.push({
-        name: this.addModal.name,
-        value: state
+      this.$store.dispatch("blockStates/addNewState", 
+        { 
+          name: this.addModal.name,
+          value: state,
+          block: this.subBlock.name
       });
       this.subBlock.state = state;
     },
