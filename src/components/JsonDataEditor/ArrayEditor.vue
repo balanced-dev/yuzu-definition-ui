@@ -82,14 +82,14 @@
           <label class="array-editor__select">
             <select
               class="array-editor__select__control"
-              v-model="addBlockModal.selectedOption"
+              v-model="addBlockModal.selected"
             >
               <option
                 class="array-editor__select__control__option"
                 v-for="option in addBlockModal.options"
-                v-bind:key="option.value"
-                :value="option.value"
-              >{{ option.text }}</option>
+                v-bind:key="option"
+                :value="option"
+              >{{ option }}</option>
             </select>
             <span class="array-editor__select__label">Block</span>
             <svg class="array-editor__select__icon feather" :class="{'is-hidden': this.active}">
@@ -98,12 +98,12 @@
           </label>
         </template>
         <template slot="footer">
-          <button class="modal__button modal__button--green" @click="toggleAddBlockModal">Add block</button>
+          <button class="modal__button modal__button--green" @click="addItem">Add block</button>
           <button class="modal__button modal__button--default" @click="toggleAddBlockModal">Cancel</button>
         </template>
       </modal>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
-        <button class="array-editor__section__add" @click="addItem">
+        <button class="array-editor__section__add" v-if="!hasBlocks" @click="addItem">
           <svg class="array-editor__section__add__icon feather">
             <use xlink:href="#plus-square"/>
           </svg>
@@ -111,7 +111,7 @@
             Add item
           </span>        
         </button>
-        <button class="array-editor__section__add" @click="toggleAddBlockModal">
+        <button class="array-editor__section__add" v-if="hasBlocks" @click="toggleAddBlockModal">
           <svg class="array-editor__section__add__icon feather">
             <use xlink:href="#plus-square"/>
           </svg>
@@ -126,7 +126,8 @@
 
 <script>
 import draggable from "vuedraggable";
-import axios from 'axios';
+import api from '../../api';
+import bootstrap from "../../bootstrap";
 import Modal from "../Global/Modal";
 
 export default {
@@ -137,14 +138,24 @@ export default {
       toDelete: undefined,
       addBlockModal: {
         isOpen: false,
-        options: [
-          { text: '/parMockupOne', value: 'A' },
-          { text: '/parMockupTwo', value: 'B' },
-          { text: '/parMockupThree', value: 'C' }
-        ],
-        selectedOption: 'A'
+        options: [],
+        selected: ''
       }
     };
+  },
+  computed: {
+    paths() {
+      return this.$store.state.data.paths;
+    },
+    hasBlocks() {
+      return this.addBlockModal.options.length > 1;
+    }
+  },
+  mounted() {
+    if(this.paths.hasOwnProperty("/"+ this.relPath)) {
+      this.addBlockModal.options = this.paths["/"+ this.relPath];
+      this.addBlockModal.selected = this.addBlockModal.options[0];
+    }
   },
   methods: {
     toggleActive() {
@@ -174,11 +185,21 @@ export default {
       this.addBlockModal.isOpen = !this.addBlockModal.isOpen;
     },
     addItem() {
+
       var that = this;
-      axios.get("http://localhost:3000/api/getEmpty/"+ this.blockName +"/"+ encodeURIComponent(this.relPath))
-      .then(response => {
-        that.$props.items.push(response.data);
-      });
+      if(this.addBlockModal.selected) {
+        this.addBlockModal.isOpen = false;
+        var item = {};
+        item['$ref'] = this.addBlockModal.selected;
+        this.$props.items.push(item);
+      }
+      else {
+        api.getEmpty("/"+ this.blockName, this.relPath)
+        .then(response => {
+          that.$props.items.push(response.data);
+        });
+      }
+
     }
   },
   props: ["label", "items", "depth", "absPath", "relPath", "blockName"],

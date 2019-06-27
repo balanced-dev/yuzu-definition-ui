@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../api";
 import bootstrap from "../../bootstrap";
 
 export default {
@@ -17,7 +17,7 @@ export default {
   },
   actions: {
     load(context) {
-      axios.get("/_templates/templates.json").then(response => {
+      api.getPreviews().then(response => {
         var items = response.data;
 
         context.commit("load", items);

@@ -5,7 +5,7 @@ const getBlockAndState = (items, state, output, parent) => {
   Object.keys(items).forEach((key) => {
     var item = items[key];
     if (!_.isPlainObject(item) && !_.isArray(item)) {
-      if (key === state) {
+      if (key === addPrefix(state)) {
         output.block = {
           name: parent,
           states: items
@@ -22,7 +22,7 @@ const getBlockAndState = (items, state, output, parent) => {
 };
 
 const convertPreviewToDataPath = function (strPath) {
-  var arrPath = strPath.split(path.sep);
+  var arrPath = strPath.split("\\");
   var lastIndex = arrPath.length - 1;
   arrPath[lastIndex] = arrPath[lastIndex].replace(".html", ".json");
   arrPath.splice(lastIndex, 0, "data");
@@ -35,18 +35,58 @@ const getRoute = () => {
   return filename.substring(0, filename.lastIndexOf("."));
 }
 
-const getStateFromRef = (ref) => {
-  return ref.substring(1);
+const addPrefix = function(blockName) {
+
+  var firstChar = blockName.charAt(0);
+  if (firstChar != "/") blockName = "/"+ blockName;
+  return blockName;
 }
 
-const getBlockFromRef = (ref) => {
-  return getStateFromRef(ref).split('_')[0];
+const removePrefix = function(blockName) {
+
+  var firstChar = blockName.charAt(0);
+  if (firstChar == "/") blockName = blockName.substring(1);
+  return blockName;
+}
+
+const blockFromState = function (state) {
+
+  state = removePrefix(state);
+  return state.split('_')[0];
+}
+
+const defaultFromState = function (state) {
+
+  return state.split('_')[0];
+}
+
+const buildNewBlockPath = function (state, path) {
+
+  var defaultState = defaultFromState(state);
+  var defaultFilename = removePrefix(defaultState);
+  var stateFilename = removePrefix(state);
+  return path.replace(defaultFilename + ".json", stateFilename + ".json");
+}
+
+const getStateSuffix = function(state) {
+  var defaultState = defaultFromState(state);
+  return state.replace(defaultState + "_", "")
+}
+
+const createNewStateName = function(state, stateSuffix) {
+  var defaultState = defaultFromState(state);
+  return defaultState +"_"+ stateSuffix;
 }
 
 export default {
   convertPreviewToDataPath,
   getBlockAndState,
   getRoute,
-  getStateFromRef,
-  getBlockFromRef
+  addPrefix,
+  removePrefix,
+  blockFromState,
+  defaultFromState,
+  buildNewBlockPath,
+  getStateSuffix,
+  createNewStateName
 }
