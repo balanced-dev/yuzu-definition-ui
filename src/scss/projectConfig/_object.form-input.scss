@@ -1,4 +1,4 @@
-@mixin form-input {
+@mixin form-input($includeFocusBackdrop: true) {
   display: flex;
   flex-wrap: wrap;
   position: relative;
@@ -7,7 +7,7 @@
     @include font-size($font-size-small);
     @include default-font;
     background-color: $colour-grey-light;
-    border: 1px solid $colour-grey-mid-light;
+    border: 1px solid $colour-grey-mid-dark;
     color: $colour-text-default;
     display: block;
     overflow: auto;
@@ -20,8 +20,8 @@
     }
 
     &:focus {
-        position: relative;
-        z-index: 2;
+      position: relative;
+      z-index: 2;
     }
 
     &::placeholder {
@@ -38,12 +38,14 @@
     }
   }
 
-  &__control:focus ~ &__label {
-    position: relative;
-    z-index: 1;
-    
-    &::before {
-        display: block;
+  @if $includeFocusBackdrop {
+    &__control:focus ~ &__label {
+      position: relative;
+      z-index: 1;
+      
+      &::before {
+          display: block;
+      }
     }
   }
 
