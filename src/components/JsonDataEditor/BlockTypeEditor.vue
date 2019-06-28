@@ -106,10 +106,10 @@ export default {
       var state = this.subBlock.state;
       var that = this;
 
-      if(!this.refs[state]) {
+      if(!this.$store.getters["state/has"](state)) {
         api.get(state)
         .then(function(response) {
-          that.saveRef(state, response.data);
+          that.addRef(state, response.data);
           that.saveNewItemState(state);
         });
       }
@@ -128,24 +128,24 @@ export default {
         });
       }
       else {
-        var data = _.cloneDeep(this.refs[this.subBlock.state]);
+        var data = _.cloneDeep(this.$store.getters["state/get"](this.subBlock.state));
         this.saveNewState(state, data);
       }
     },
     saveNewState: function(state, data) {
-        this.saveRef(state, data);
+        this.addRef(state, data);
         this.saveNewItemState(state);
         this.addNewStateOption(state);
     },
     saveNewItemState: function(state) {
       this.item["$ref"] = state
     },
-    saveRef: function(state, data) {
+    addRef: function(state, data) {
       var payload = {
-        state: state,
-        data: data
+        name: state,
+        state: data
       };
-      this.$store.dispatch("data/saveRef", payload);
+      this.$store.dispatch("state/add", payload);
     }
   },
   props: ["item", "depth", "subBlock"],

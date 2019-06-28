@@ -13,8 +13,11 @@ export default {
       stateName: bootstrap.removePrefix(state)
     })
   },
-  getWithRefs: (block, state) => {
-    return axios.get(rootUrl + "getWithRefs/"+ bootstrap.removePrefix(block) +"/"+  bootstrap.removePrefix(state))
+  getChildStates: (state) => {
+    return axios.get(rootUrl + "getChildStates/"+  bootstrap.removePrefix(state))
+  },
+  getRefPaths: (block) => {
+    return axios.get(rootUrl + "getRefPaths/"+ bootstrap.removePrefix(block));
   },
   getEmpty: (blockName, path) => {
     var url = rootUrl + "getEmpty/" +

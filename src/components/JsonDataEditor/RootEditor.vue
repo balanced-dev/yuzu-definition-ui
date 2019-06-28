@@ -89,6 +89,8 @@ export default {
   },
   mounted: function() {
     this.$store.dispatch("data/load");
+    this.$store.dispatch("blockPaths/load", this.block.name);
+    this.$store.dispatch("state/loadAll", this.state.name);
   },
   methods: {
     preview: function() {
@@ -123,7 +125,7 @@ export default {
       window.top.location.href = newUrl;
     },
     updated: function() {
-      this.$store.dispatch("data/saveRoot", this.data);
+      this.$store.dispatch("data/save", this.data);
     },
   },
   created: function() {
