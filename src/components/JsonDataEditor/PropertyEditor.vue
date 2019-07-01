@@ -8,6 +8,8 @@
           :depth="depth"
           :absPath="buildPathAbs(key, absPath)"
           :relPath="buildPathRel(key, relPath)"
+          :parentState="parentState"
+          :blockName="blockName"
         ></json-data-object>
       </div>
       <div v-else-if="isArray(item[key])" class="property-editor__section property-editor__section--array">
@@ -63,7 +65,7 @@ export default {
       }
     }
   },
-  props: ["item", "depth", "absPath", "relPath", "blockName"],
+  props: ["item", "depth", "absPath", "relPath", "blockName", "parentState"],
   components: {
     JsonDataArray,
     JsonDataText

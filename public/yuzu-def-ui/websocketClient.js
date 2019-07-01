@@ -146,7 +146,7 @@ var addOverlayToggleEvents = function() {
 var setupHTML = function() {
   stylesheetLink.rel  = 'stylesheet';
   stylesheetLink.type = 'text/css';
-  stylesheetLink.href = '/overlay.css';
+  stylesheetLink.href = '/yuzu-def-ui/overlay.css';
   
   container.classList.add('yuzu-overlay');
   container.style.width = userSettings.overlayWidth + 'px';
@@ -169,7 +169,7 @@ var setupHTML = function() {
   iframe.classList.add('yuzu-overlay__content');
   iframe.setAttribute("frameborder", "0");
   iframe.setAttribute("scrolling", "0");
-  iframe.setAttribute("src", src="/index.html?wsId="+ wsId);
+  iframe.setAttribute("src", src="/yuzu-def-ui/index.html?wsId="+ wsId);
 }
 
 var initialiseSettings = function() {

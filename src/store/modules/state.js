@@ -12,6 +12,13 @@ export default {
     previewUrlToDataPath: state => {
       return bootstrap.convertPreviewToDataPath(state.current.url);
     },
+    convertToRefs: state => {
+      var output = {};
+      state.items.forEach(function(item) {
+        output[item.name] = item.state;
+      });
+      return output;
+    },
     has: (state) => (s) => {
       return _.find(state.items, function(item) {
         return item.name == s; 
