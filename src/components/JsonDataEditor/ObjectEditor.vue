@@ -11,7 +11,7 @@
       <svg class="object-editor__title__icon feather" :class="{'is-hidden': !this.active}">
         <use xlink:href="#minus-square"></use>
       </svg>
-      <span class="object-editor__title__text">{{ label }}</span>
+      <span class="object-editor__title__text">{{ resolvedLabel }}</span>
     </label>
     <div class="object-editor__section" v-if="active">
       <json-data-property
@@ -34,33 +34,40 @@ export default {
   data() {
     return {
       active: false,
-      isRef: false,
       subBlock: {
-        raw: "",
-        name: ""
-      }
+        name: "",
+        defaultState: "",
+        state: ""
+      }, 
+      resolvedLabel: ""
     };
   },
   computed: {
+    isRef() {
+      return this.item.hasOwnProperty("$ref");
+    },  
     refString() {
-      return this.item["$ref"];
+      return this.item["$ref"]
     },
     ref() {
-      return this.refs[this.refString];
-    },
-    refs() {
-      return this.$store.state.data.refs;
+      return this.$store.getters["state/get"](this.refString);
     },
     resolvedItem() {
       return this.isRef ? this.ref : this.item;
     }
   },
   mounted() {
-    if (this.ref) {
+    if (this.isRef) {
       this.subBlock.name = bootstrap.blockFromState(this.refString);
       this.subBlock.defaultState = bootstrap.defaultFromState(this.refString);
       this.subBlock.state = this.refString;
-      this.isRef = true;
+      this.$store.dispatch("blockPaths/load", this.subBlock.name);
+      this.$store.dispatch("state/load", this.refString);
+    }
+
+    this.resolvedLabel = this.label;
+    if(this.isAnyOf && this.ref) {
+      this.setAnyOfLabel();
     }
   },
   methods: {
@@ -71,6 +78,19 @@ export default {
       }
       if(this.active) {
         this.tryPopulateOrphanRef();
+      }
+    },
+    setAnyOfLabel: function() {
+      if(this.ref) {
+        var that = this;
+        this.$store.dispatch("itemTitle/get", {
+          item: this.ref,
+          action: function(text, item) {
+            if(that.label === that.refString) {
+              that.resolvedLabel = item[text] +" ("+ that.label +")";
+            }
+          }
+        });
       }
     },
     tryPopulateOrphanRef: function() {
@@ -84,8 +104,13 @@ export default {
 
     },
     updated: function() {
-      if(this.ref)
-        this.$store.dispatch("data/saveRef", this.ref);
+      if(this.isRef)
+        this.$store.dispatch("state/update", { 
+          name: this.refString,
+          state: this.ref
+        });
+      if(this.isAnyOf)
+        this.setAnyOfLabel();
     }
   },
   created: function() {
@@ -99,7 +124,7 @@ export default {
       }
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath"]
+  props: ["label", "item", "depth", "absPath", "relPath", "isAnyOf"]
 };
 </script>
 

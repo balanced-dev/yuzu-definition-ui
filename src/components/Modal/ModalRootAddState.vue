@@ -1,5 +1,5 @@
 <template>
-  <modal class="modal-root-add-state" @close="cancelFunction">
+  <modal class="modal-root-add-state" @close="cancelFunction();reset();">
     <template slot="header-text">
       <h2>Confirm save state</h2>                
     </template>
@@ -14,9 +14,9 @@
       </template>
     </template>
     <template slot="footer">
-      <button class="modal__button modal__button--green" v-if="!isAsNew" @click="saveFunction">Overwrite</button>
-      <button class="modal__button modal__button--default" @click="saveNewFunction(name)">Save as new</button>
-      <button class="modal__button modal__button--red" @click="cancelFunction">Cancel</button>
+      <button class="modal__button modal__button--green" v-if="!isAsNew" @click="saveFunction();reset();">Overwrite</button>
+      <button class="modal__button modal__button--default" @click="saveNewFunction(name);reset();">Save as new</button>
+      <button class="modal__button modal__button--red" @click="cancelFunction();reset();">Cancel</button>
     </template>
   </modal>
 </template>
@@ -31,8 +31,12 @@ export default {
       name: ''
     };
   },
-  mounted() {
-    this.name = '';
+  methods: {
+    reset() {
+      if(this.name.length > 0) {
+        this.name = '';
+      }
+    }
   },
   components: {
     Modal

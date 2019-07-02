@@ -1,43 +1,32 @@
 import api from "../../api";
 import _ from "lodash";
-import bootstrap from "../../bootstrap";
 
 export default {
   namespaced: true,
   state: {
     root: {},
-    refs: {},
-    paths: {}
+    refs: {}
   },
   mutations: {
-    loadAll: function (state, data) {
-      state.root = data.data;
-      state.refs = data.map;
-      state.paths = data.paths;
+    load: function (state, data) {
+      state.root = data;
     },
-    saveRoot: function (state, root) {
+    save: function (state, root) {
       state.root = root;
-    },
-    saveRef: function (state, payload) {
-      state.refs[payload.state] = payload.data;
-    },
+    }
   },
   actions: {
     load(context) {
-      var currentBlock = context.rootState.blocks.current.name;
-      var currentState = context.rootState.state.current.name;
-      if(currentState) {
-        api.getWithRefs(currentBlock, currentState)
+      var state = context.rootState.state.current.name;
+      if(state) {
+        api.get(state)
         .then(response => {
-          context.commit("loadAll", response.data);
+          context.commit("load", response.data);
         });
       }
     },
-    saveRoot(context, root) {
-      context.commit("saveRoot", root);
-    },
-    saveRef(context, payload) {
-      context.commit("saveRef", payload);
+    save(context, root) {
+      context.commit("save", root);
     }
   }
 };

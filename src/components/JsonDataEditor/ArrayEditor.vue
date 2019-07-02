@@ -31,6 +31,7 @@
             :depth="depth+1"
             :absPath="buildPath(index, absPath)"
             :relPath="relPath"
+            :isAnyOf="isAnyOf"
           ></json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item)"
@@ -68,14 +69,14 @@
         :cancelFunction="resetToBeDeleted"
       ></modal-array-editor-delete>
       <modal-array-editor-add 
-        v-if="addBlockModal.isOpen" 
+        v-if="isAnyOf && addBlockModal.isOpen" 
         :selected="addBlockModal.selected"
         :options="addBlockModal.options"
         :addFunction="addBlockItem"
         :cancelFunction="toggleAddBlockModal"
       ></modal-array-editor-add>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
-        <button class="array-editor__section__add" v-if="!hasBlocks" @click="addItem">
+        <button class="array-editor__section__add" v-if="!isAnyOf" @click="addItem">
           <svg class="array-editor__section__add__icon feather">
             <use xlink:href="#plus-square"/>
           </svg>
@@ -83,7 +84,7 @@
             Add item
           </span>        
         </button>
-        <button class="array-editor__section__add" v-if="hasBlocks" @click="toggleAddBlockModal">
+        <button class="array-editor__section__add" v-if="isAnyOf" @click="toggleAddBlockModal">
           <svg class="array-editor__section__add__icon feather">
             <use xlink:href="#plus-square"/>
           </svg>
@@ -120,13 +121,13 @@ export default {
     paths() {
       return this.$store.state.data.paths;
     },
-    hasBlocks() {
+    isAnyOf() {
       return this.addBlockModal.options.length > 1;
     }
   },
   mounted() {
-    if(this.paths.hasOwnProperty("/"+ this.relPath)) {
-      this.addBlockModal.options = this.paths["/"+ this.relPath];
+    if(this.$store.getters['blockPaths/has'](this.blockName, this.relPath)) {
+      this.addBlockModal.options = this.$store.getters['blockPaths/get'](this.blockName, this.relPath);
       this.addBlockModal.selected = this.addBlockModal.options[0];
     }
   },
