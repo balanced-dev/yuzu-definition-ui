@@ -7,7 +7,7 @@ const getBlockAndState = (items, state, output, parent) => {
     if (!_.isPlainObject(item) && !_.isArray(item)) {
       if (key === addPrefix(state)) {
         output.block = {
-          name: parent,
+          name: removePrefix(Object.keys(items)[0]),
           states: items
         };
         output.state = {
@@ -60,12 +60,10 @@ const defaultFromState = function (state) {
   return state.split('_')[0];
 }
 
-const buildNewBlockPath = function (state, path) {
+const buildNewBlockPath = function (currentState, newState, path, extension) {
 
-  var defaultState = defaultFromState(state);
-  var defaultFilename = removePrefix(defaultState);
-  var stateFilename = removePrefix(state);
-  return path.replace(defaultFilename + ".json", stateFilename + ".json");
+  currentState = removePrefix(currentState);
+  return path.replace(currentState + extension, newState + extension);
 }
 
 const getStateSuffix = function(state) {

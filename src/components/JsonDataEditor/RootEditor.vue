@@ -61,14 +61,18 @@ export default {
     block() {
       return this.$store.state.blocks.current;
     },
-    state() {
+    currentState() {
       return this.$store.state.state.current;
+    },
+    toPreview() {
+      return this.$store.state.toPreview;
     },
     returnData() {
       return {
         path: this.$store.getters["state/previewUrlToDataPath"],
+        previewPath: this.currentState.url,
         root: this.data,
-        refs: this.refs,
+        refs: this.$store.getters["state/convertToRefs"],
         wsId: this.$store.state.ws.id
       };
     }
@@ -76,48 +80,53 @@ export default {
   mounted: function() {
     this.$store.dispatch("data/load");
     this.$store.dispatch("blockPaths/load", this.block.name);
-    this.$store.dispatch("state/loadAll", this.state.name);
+    this.$store.dispatch("state/loadAll", this.currentState.name);
   },
   methods: {
-    preview: function() {
+    preview: function($index, $event) {
       api.preview(this.returnData);
-    },
-    save: function() {
-      api.save(this.returnData);
-      this.toggleSaveModal();
     },
     toggleSaveModal() {
       this.saveModal.isOpen = !this.saveModal.isOpen;
       this.saveModal.isAsNew = false;
     },
+    save: function() {
+      api.save(this.returnData).then(() => {
+        window.top.location.href = "/_templates/html/"+ this.currentState.url;
+      }); 
+      this.toggleSaveModal();
+    },
     saveNew(name) {
       if (name.length > 0) {
         let data = {...this.returnData};
         let newStateName = this.block.name +"_"+ name;
-        let newPath = bootstrap.buildNewBlockPath(newStateName, data.path);
 
-        data.path = newPath;        
+        data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
+        data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
+        
         api.save(data).then(() => {
-          this.redirectToNewState(newStateName);
+          window.top.location.href = "/_templates/html/"+ data.previewPath;
         });        
       }
       else {
         this.saveModal.isAsNew = true;
       }
     },
-    redirectToNewState(newStatename) {
-      var filename = bootstrap.removePrefix(this.state.name);
-      let newUrl = "/_templates/html/" + this.state.url.replace(filename +".html", newStatename +".html");
-      window.top.location.href = newUrl;
-    },
     updated: function() {
       this.$store.dispatch("data/save", this.data);
+      api.preview(this.returnData);
     },
   },
   created: function() {
     this.debouncedUpdate = _.debounce(this.updated, 500);
   },
   watch: {
+    toPreview: function(val) {
+      if(val) {
+        this.preview();
+        this.$store.commit('resetPreview');
+      }
+    },
     data: {
       deep: true,
       handler: function() {

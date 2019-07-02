@@ -15,13 +15,24 @@
     </label>
     <div class="object-editor__section" v-if="active">
       <json-data-property
-        :item="resolvedItem"
+        v-if="isSubBlock"
+        :item="subBlockState"
         :depth="depth+1"
         :absPath="absPath"
         :relPath="''"
-        :blockName="subBlock.name"
+        :blockName="subBlockMeta.name"
+        :parentState="refString"
       ></json-data-property>
-      <json-data-block-type v-if="isRef" :item="item" :depth="depth+1" :subBlock="subBlock"></json-data-block-type>
+      <json-data-property
+        v-if="!isSubBlock"
+        :item="item"
+        :depth="depth+1"
+        :absPath="absPath"
+        :relPath="relPath"
+        :blockName="blockName"
+        :parentState="parentState"
+      ></json-data-property>
+      <json-data-block-type v-if="isSubBlock" :item="item" :depth="depth+1" :subBlock="subBlockMeta"></json-data-block-type>
     </div>
   </div>
 </template>
@@ -34,7 +45,7 @@ export default {
   data() {
     return {
       active: false,
-      subBlock: {
+      subBlockMeta: {
         name: "",
         defaultState: "",
         state: ""
@@ -43,48 +54,42 @@ export default {
     };
   },
   computed: {
-    isRef() {
+    isSubBlock() {
       return this.item.hasOwnProperty("$ref");
     },  
     refString() {
       return this.item["$ref"]
     },
-    ref() {
+    subBlockState() {
       return this.$store.getters["state/get"](this.refString);
-    },
-    resolvedItem() {
-      return this.isRef ? this.ref : this.item;
     }
   },
   mounted() {
-    if (this.isRef) {
-      this.subBlock.name = bootstrap.blockFromState(this.refString);
-      this.subBlock.defaultState = bootstrap.defaultFromState(this.refString);
-      this.subBlock.state = this.refString;
-      this.$store.dispatch("blockPaths/load", this.subBlock.name);
+    if (this.isSubBlock) {
+      this.subBlockMeta.name = bootstrap.blockFromState(this.refString);
+      this.subBlockMeta.defaultState = bootstrap.defaultFromState(this.refString);
+      this.subBlockMeta.state = this.refString;
+      this.$store.dispatch("blockPaths/load", this.subBlockMeta.name);
       this.$store.dispatch("state/load", this.refString);
     }
 
     this.resolvedLabel = this.label;
-    if(this.isAnyOf && this.ref) {
+    if(this.isAnyOf && this.subBlockState) {
       this.setAnyOfLabel();
     }
   },
   methods: {
     toggleActive() {
       this.active = !this.active;
-      if (this.isRef) {
+      if (this.isSubBlock) {
         api.setActive(this.absPath, this.active);
-      }
-      if(this.active) {
-        this.tryPopulateOrphanRef();
       }
     },
     setAnyOfLabel: function() {
-      if(this.ref) {
+      if(this.subBlockState) {
         var that = this;
         this.$store.dispatch("itemTitle/get", {
-          item: this.ref,
+          item: this.subBlockState,
           action: function(text, item) {
             if(that.label === that.refString) {
               that.resolvedLabel = item[text] +" ("+ that.label +")";
@@ -93,22 +98,15 @@ export default {
         });
       }
     },
-    tryPopulateOrphanRef: function() {
-      //safety value to pull in refs that have been added are actual in location data
-      if(this.refString && !this.isRef) {
-        var that = this;
-        api.getEmpty(this.refString).then(response => {
-          that.$props.item = response.data;
-        });
-      }
-
-    },
     updated: function() {
-      if(this.isRef)
+      if(this.isSubBlock) {
         this.$store.dispatch("state/update", { 
           name: this.refString,
-          state: this.ref
+          state: this.subBlockState
         });
+        this.$store.commit('triggerPreview');
+      }
+
       if(this.isAnyOf)
         this.setAnyOfLabel();
     }
@@ -117,14 +115,14 @@ export default {
     this.debouncedUpdate = _.debounce(this.updated, 500);
   },
   watch: {
-    ref: {
+    subBlockState: {
       deep: true,
       handler: function() {
         this.debouncedUpdate();
       }
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath", "isAnyOf"]
+  props: ["label", "item", "depth", "absPath", "relPath", "blockName", "isAnyOf", "parentState"]
 };
 </script>
 

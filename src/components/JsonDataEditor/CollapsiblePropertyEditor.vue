@@ -35,14 +35,13 @@ export default {
   },
   computed: {
     guessCollapsedTitle() {
-      var output = 'item '+ this.$props.arrayIndex;
-      for(let guess of this.$data.guesses) {
-        var item = this.$props.item;
-        if(item.hasOwnProperty(guess) && item[guess]) {
-          output = item[guess];
-          break;
+      var output = 'item '+ this.arrayIndex;
+      this.$store.dispatch("itemTitle/get", {
+        item: this.item,
+        action: function(text, item) {
+          output = item[text];
         }
-      };
+      });
       return output;
     }
   },
