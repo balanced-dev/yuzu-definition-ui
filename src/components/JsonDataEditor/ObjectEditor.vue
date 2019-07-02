@@ -99,11 +99,14 @@ export default {
       }
     },
     updated: function() {
-      if(this.isSubBlock)
+      if(this.isSubBlock) {
         this.$store.dispatch("state/update", { 
           name: this.refString,
           state: this.subBlockState
         });
+        this.$store.commit('triggerPreview');
+      }
+
       if(this.isAnyOf)
         this.setAnyOfLabel();
     }

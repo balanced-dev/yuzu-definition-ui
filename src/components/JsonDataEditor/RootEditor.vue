@@ -78,6 +78,9 @@ export default {
     currentState() {
       return this.$store.state.state.current;
     },
+    toPreview() {
+      return this.$store.state.toPreview;
+    },
     returnData() {
       return {
         path: this.$store.getters["state/previewUrlToDataPath"],
@@ -94,7 +97,7 @@ export default {
     this.$store.dispatch("state/loadAll", this.currentState.name);
   },
   methods: {
-    preview: function() {
+    preview: function($index, $event) {
       api.preview(this.returnData);
     },
     toggleSaveModal() {
@@ -125,12 +128,19 @@ export default {
     },
     updated: function() {
       this.$store.dispatch("data/save", this.data);
+      api.preview(this.returnData);
     },
   },
   created: function() {
     this.debouncedUpdate = _.debounce(this.updated, 500);
   },
   watch: {
+    toPreview: function(val) {
+      if(val) {
+        this.preview();
+        this.$store.commit('resetPreview');
+      }
+    },
     data: {
       deep: true,
       handler: function() {

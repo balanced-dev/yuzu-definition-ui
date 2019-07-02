@@ -14,8 +14,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: { 
+    toPreview: false
   },
   mutations: { 
+    triggerPreview: function(state) {
+      state.toPreview = true;
+    },
+    resetPreview: function(state) {
+      state.toPreview = false;
+    }
   },
   actions: {
   },
