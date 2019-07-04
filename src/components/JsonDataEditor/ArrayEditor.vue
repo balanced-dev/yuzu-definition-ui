@@ -149,13 +149,12 @@ export default {
       return this.$store.state.data.paths;
     },
     isAnyOf() {
-      return this.addBlockModal.options.length > 1;
-    }
-  },
-  mounted() {
-    if(this.$store.getters['blockPaths/has'](this.blockName, this.relPath)) {
-      this.addBlockModal.options = this.$store.getters['blockPaths/get'](this.blockName, this.relPath);
-      this.addBlockModal.selected = this.addBlockModal.options[0];
+      if(this.$store.getters['blockPaths/has'](this.blockName, this.relPath)) {
+        this.addBlockModal.options = this.$store.getters['blockPaths/get'](this.blockName, this.relPath);
+        this.addBlockModal.selected = this.addBlockModal.options[0];
+        return this.addBlockModal.options.length > 1
+      }
+      return false;
     }
   },
   methods: {
