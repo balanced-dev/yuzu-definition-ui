@@ -55,9 +55,6 @@ export default {
     data() {
       return this.$store.state.data.root;
     },
-    refs() {
-      return this.$store.state.data.refs;
-    },
     block() {
       return this.$store.state.blocks.current;
     },

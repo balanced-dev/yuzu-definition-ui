@@ -63,12 +63,6 @@ export default {
     };
   },
   computed: {
-    refs() {
-      return this.$store.state.data.refs;
-    },
-    blocks() {
-      return this.$store.state.blocks.items;
-    },
     states() {
       return this.$store.getters["blockStates/get"](this.subBlock.name);
     }
