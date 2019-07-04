@@ -51,7 +51,7 @@
                 Sort
               </span>
             </a>            
-            <a class="array-editor__item__delete" @click="setToDelete({item: item, path: path})">            
+            <a class="array-editor__item__delete" @click="setToDelete({item: item, path: relPath})">            
               <svg class="array-editor__item__delete__icon feather">
                 <use xlink:href="#x-square"/>
               </svg>
@@ -62,47 +62,19 @@
           </div>
         </div>
       </draggable>
-      <modal v-if="toDelete" @close="resetToBeDeleted();">
-        <template slot="header-text">
-          <h2>Confirm deletion</h2>                
-        </template>
-        <template slot="content">
-          <p>Are you sure you want to delete this item from "{{toDelete.path}}"?</p>
-        </template>
-        <template slot="footer">
-          <button class="modal__button modal__button--red" @click="deleteItem(toDelete.item);">Delete</button>
-          <button class="modal__button modal__button--default" @click="resetToBeDeleted();">Cancel</button>
-        </template>
-      </modal>
-      <modal v-if="addBlockModal.isOpen" @close="toggleAddBlockModal">
-        <template slot="header-text">
-          <h2>Add block to array</h2>                
-        </template>
-        <template slot="content">
-          <p>Select block type to add to array</p>
-          <label class="array-editor__select">
-            <select
-              class="array-editor__select__control"
-              v-model="addBlockModal.selected"
-            >
-              <option
-                class="array-editor__select__control__option"
-                v-for="option in addBlockModal.options"
-                v-bind:key="option"
-                :value="option"
-              >{{ option }}</option>
-            </select>
-            <span class="array-editor__select__label">Block</span>
-            <svg class="array-editor__select__icon feather" :class="{'is-hidden': this.active}">
-              <use xlink:href="#chevron-down"></use>
-            </svg>
-          </label>
-        </template>
-        <template slot="footer">
-          <button class="modal__button modal__button--green" @click="addItem">Add block</button>
-          <button class="modal__button modal__button--default" @click="toggleAddBlockModal">Cancel</button>
-        </template>
-      </modal>
+      <modal-array-editor-delete 
+        v-if="toDelete" 
+        :item="toDelete"
+        :deleteFunction="deleteItem"
+        :cancelFunction="resetToBeDeleted"
+      ></modal-array-editor-delete>
+      <modal-array-editor-add 
+        v-if="isAnyOf && addBlockModal.isOpen" 
+        :selected="addBlockModal.selected"
+        :options="addBlockModal.options"
+        :addFunction="addBlockItem"
+        :cancelFunction="toggleAddBlockModal"
+      ></modal-array-editor-add>
       <div class="array-editor__section__footer" :style="{'margin-left': `${depth+1}rem`}">
         <button class="array-editor__section__add" v-if="!isAnyOf" @click="addItem">
           <svg class="array-editor__section__add__icon feather">
@@ -129,7 +101,8 @@
 import draggable from "vuedraggable";
 import api from '../../api';
 import bootstrap from "../../bootstrap";
-import Modal from "../Global/Modal";
+import ModalArrayEditorAdd from "../Modal/ModalArrayEditorAdd";
+import ModalArrayEditorDelete from "../Modal/ModalArrayEditorDelete";
 
 export default {
   name: "json-data-array",
@@ -173,8 +146,8 @@ export default {
     resetToBeDeleted(value) {
       this.toDelete = undefined;
     },
-    deleteItem(item) {
-      var index = this.$props.items.indexOf(item);
+    deleteItem() {
+      var index = this.$props.items.indexOf(this.toDelete.item);
       if (index !== -1) this.$props.items.splice(index, 1);
       this.resetToBeDeleted();
     },
@@ -185,27 +158,25 @@ export default {
       this.addBlockModal.isOpen = !this.addBlockModal.isOpen;
     },
     addItem() {
-
       var that = this;
-      if(this.isAnyOf) {
-        this.addBlockModal.isOpen = false;
-        var item = {};
-        item['$ref'] = this.addBlockModal.selected;
-        this.$props.items.push(item);
-      }
-      else {
-        api.getEmpty("/"+ this.blockName, this.relPath)
-        .then(response => {
-          that.$props.items.push(response.data);
-        });
-      }
-
+      
+      api.getEmpty("/"+ this.blockName, this.relPath)
+      .then(response => {
+        that.$props.items.push(response.data);
+      });
+    },
+    addBlockItem(block) {
+      this.addBlockModal.isOpen = false;
+      var item = {};
+      item['$ref'] = block;
+      this.$props.items.push(item);
     }
   },
   props: ["label", "items", "depth", "absPath", "relPath", "blockName"],
   components: {
     draggable,
-    Modal
+    ModalArrayEditorAdd,
+    ModalArrayEditorDelete
   }
 };
 </script>
@@ -327,10 +298,6 @@ export default {
         right: $column-gutter-default;
       }
     }
-  }
-
-  &__select {
-    @include form-select($this: &);
   }
 }
 </style>

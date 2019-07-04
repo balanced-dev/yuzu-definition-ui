@@ -13,26 +13,13 @@
         </svg>
         <span class="root-editor__button__text">Save state</span>
       </button>
-      <modal v-if="saveModal.isOpen" @close="toggleSaveModal">
-        <template slot="header-text">
-          <h2>Confirm save state</h2>                
-        </template>
-        <template slot="content">
-          <p v-if="!saveModal.isAsNew">Do you want to overwrite the current state or save as a new state?</p>
-          <p><strong>WARNING:</strong> Any changes within sub-blocks will cause their appropriate state to be overwritten with the content in this current state!</p>
-          <template v-if="saveModal.isAsNew">
-            <label class="root-editor__text-editor">
-              <input class="root-editor__text-editor__control root-editor__text-editor__control--text" type="text" v-model="saveModal.asNewName" placeholder='e.g. "longDescription", "empty"' />
-              <span class="root-editor__text-editor__label">New state name</span>
-            </label>
-          </template>
-        </template>
-        <template slot="footer">
-          <button class="modal__button modal__button--green" v-if="!saveModal.isAsNew" @click="save">Overwrite</button>
-          <button class="modal__button modal__button--default" @click="saveNew">Save as new</button>
-          <button class="modal__button modal__button--red" @click="toggleSaveModal">Cancel</button>
-        </template>
-      </modal>
+      <modal-root-add-state 
+        v-if="saveModal.isOpen" 
+        :isAsNew="saveModal.isAsNew"
+        :saveFunction="save"
+        :saveNewFunction="saveNew"
+        :cancelFunction="toggleSaveModal"
+      ></modal-root-add-state>
     </div>
     <json-data-property 
       :item="data" 
@@ -50,7 +37,7 @@
 import api from "../../api";
 import bootstrap from "../../bootstrap";
 import _ from "lodash";
-import Modal from "../Global/Modal";
+import ModalRootAddState from "../Modal/ModalRootAddState";
 
 export default {
   name: "json-data-editor",
@@ -60,8 +47,7 @@ export default {
       updateDisabled: true,
       saveModal: {
         isOpen: false,
-        isAsNew: false,
-        asNewName: ""
+        isAsNew: false
       }
     };
   },
@@ -110,10 +96,10 @@ export default {
       }); 
       this.toggleSaveModal();
     },
-    saveNew() {
-      if (this.saveModal.asNewName.length > 0) {
+    saveNew(name) {
+      if (name.length > 0) {
         let data = {...this.returnData};
-        let newStateName = this.block.name +"_"+ this.saveModal.asNewName;
+        let newStateName = this.block.name +"_"+ name;
 
         data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
         data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
@@ -149,7 +135,7 @@ export default {
     }
   },
   components: {
-    Modal
+    ModalRootAddState
   }
 };
 </script>
@@ -159,10 +145,6 @@ export default {
 
 .root-editor {
   padding-bottom: $json-data-editor__v-spacing;
-  
-  &__text-editor {
-    @include form-input;
-  }
 
   &__buttons {
     display: flex;

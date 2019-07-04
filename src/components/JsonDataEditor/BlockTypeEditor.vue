@@ -1,21 +1,11 @@
 <template>
   <div class="block-type-editor" v-if="subBlock" :class="`block-type-editor--depth-${depth}`">
-    <modal v-if="addModal.isOpen" @close="toggleAddModal">
-      <template slot="header-text">
-        <h2>Add new state</h2>                
-      </template>
-      <template slot="content">
-        <label class="block-type-editor__text-editor">
-          <input class="block-type-editor__text-editor__control block-type-editor__text-editor__control--text" type="text" v-model="addModal.name" placeholder='e.g. "longDescription", "empty"' />
-          <span class="block-type-editor__text-editor__label">New state name</span>
-        </label>
-      </template>
-      <template slot="footer">
-        <button class="modal__button modal__button--green" @click="createNewState(true)">Duplicate current</button>
-        <button class="modal__button modal__button--default" @click="createNewState(false)">Create blank</button>
-        <button class="modal__button modal__button--red" @click="toggleAddModal">Cancel</button>
-      </template>
-    </modal>
+    <modal-block-add-state 
+      v-if="addModal.isOpen"
+      :stateName="addModal.name"
+      :addFunction="createNewState"
+      :cancelFunction="toggleAddModal"
+    ></modal-block-add-state>
     <label class="block-type-editor__select">
       <select
         class="block-type-editor__select__control"
@@ -59,7 +49,7 @@
 import api from "../../api";
 import bootstrap from "../../bootstrap";
 import _ from "lodash";
-import Modal from "../Global/Modal";
+import ModalBlockAddState from "../Modal/ModalBlockAddState";
 
 export default {
   name: "json-data-block-type",
@@ -117,11 +107,12 @@ export default {
         this.saveNewItemState(state);
       }
     },
-    createNewState: function(duplicate) {
+    createNewState: function(isDuplicate, stateName) {
+      this.addModal.name = stateName;
       var state = bootstrap.createNewStateName(this.subBlock.state, this.addModal.name);
       this.addModal.isOpen = false;
 
-      if(!duplicate) {
+      if(!isDuplicate) {
         api.getEmpty(this.subBlock.name)
         .then(response => {
           this.saveNewState(state, response.data);
@@ -150,7 +141,7 @@ export default {
   },
   props: ["item", "depth", "subBlock"],
   components: {
-    Modal
+    ModalBlockAddState
   }
 };
 </script>
@@ -174,10 +165,6 @@ export default {
   &--depth-2 {
     right: $column-gutter-default;
     top: size(3px);
-  }
-
-  &__text-editor {
-    @include form-input;
   }
 
   &__button {
