@@ -1,21 +1,21 @@
 <template>
   <modal class="modal-root-add-state" @close="cancelFunction();reset();">
     <template slot="header-text">
-      <h2>Confirm save state</h2>                
+      <h2>Add new state</h2>                
     </template>
     <template slot="content">
-      <p v-if="!isAsNew">Do you want to overwrite the current state or save as a new state?</p>
+      <p>Do you want to overwrite the current state or save as a new state?</p>
       <p><strong>WARNING:</strong> Any changes within sub-blocks will cause their appropriate state to be overwritten with the content in this current state!</p>
-      <template v-if="isAsNew">
+      <template>
         <label class="modal-root-add-state__input">
-          <input class="modal-root-add-state__input__control modal-root-add-state__input__control--text" type="text" v-model="name" placeholder='e.g. "longDescription", "empty"' />
+          <input class="modal-root-add-state__input__control modal-root-add-state__input__control--text" type="text" v-model="name" placeholder='e.g. "longDescription", "empty"' @input="validateFunction(name)" />
           <span class="modal-root-add-state__input__label">New state name</span>
         </label>
       </template>
     </template>
     <template slot="footer">
-      <button class="modal__button modal__button--green" v-if="!isAsNew" @click="saveFunction();reset();">Overwrite</button>
-      <button class="modal__button modal__button--default" @click="saveNewFunction(name);reset();">Save as new</button>
+      <button class="modal__button modal__button--green" @click="addFunction(true,name);reset();" :disabled="!isValid">Create duplicate</button>
+      <button class="modal__button modal__button--default" @click="addFunction(false,name);reset();" :disabled="!isValid">Create blank</button>
       <button class="modal__button modal__button--red" @click="cancelFunction();reset();">Cancel</button>
     </template>
   </modal>
@@ -41,7 +41,7 @@ export default {
   components: {
     Modal
   },
-  props: ["isAsNew", "saveFunction", "saveNewFunction", "cancelFunction"],
+  props: ["isValid", "validateFunction", "addFunction", "cancelFunction"],
 };
 </script>
 

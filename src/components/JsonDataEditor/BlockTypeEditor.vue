@@ -1,10 +1,12 @@
 <template>
   <div class="block-type-editor" v-if="subBlock" :class="`block-type-editor--depth-${depth}`">
     <modal-block-add-state 
-      v-if="addModal.isOpen"
-      :stateName="addModal.name"
+      :v-if="addModal.isOpen"
+      :isValid="addModal.isValid"
+      :validateFunction="stateNameIsValid"
       :addFunction="createNewState"
       :cancelFunction="toggleAddModal"
+      v-if="addModal.isOpen"
     ></modal-block-add-state>
     <label class="block-type-editor__select">
       <select
@@ -58,7 +60,8 @@ export default {
       active: true,
       addModal: {
         isOpen: false,
-        name: ""
+        name: "",
+        isValid: false
       }
     };
   },
@@ -107,26 +110,34 @@ export default {
         this.saveNewItemState(state);
       }
     },
+    stateNameIsValid(name) {
+      this.addModal.isValid = name.length > 0 && !this.states.find( state => state.name === name );
+      return this.addModal.isValid;
+    },
     createNewState: function(isDuplicate, stateName) {
       this.addModal.name = stateName;
-      var state = bootstrap.createNewStateName(this.subBlock.state, this.addModal.name);
-      this.addModal.isOpen = false;
 
-      if(!isDuplicate) {
-        api.getEmpty(this.subBlock.name)
-        .then(response => {
-          this.saveNewState(state, response.data);
-        });
-      }
-      else {
-        var data = _.cloneDeep(this.$store.getters["state/get"](this.subBlock.state));
-        this.saveNewState(state, data);
+      if(this.stateNameIsValid(stateName)) {
+
+        var state = bootstrap.createNewStateName(this.subBlock.state, this.addModal.name);
+        this.addModal.isOpen = false;
+
+        if(!isDuplicate) {
+          api.getEmpty(this.subBlock.name)
+          .then(response => {
+            this.saveNewState(state, response.data);
+          });
+        }
+        else {
+          var data = _.cloneDeep(this.$store.getters["state/get"](this.subBlock.state));
+          this.saveNewState(state, data);
+        }
       }
     },
     saveNewState: function(state, data) {
-        this.addRef(state, data);
-        this.saveNewItemState(state);
-        this.addNewStateOption(state);
+      this.addRef(state, data);
+      this.saveNewItemState(state);
+      this.addNewStateOption(state);
     },
     saveNewItemState: function(state) {
       this.item["$ref"] = state

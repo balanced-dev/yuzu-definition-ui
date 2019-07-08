@@ -178,6 +178,10 @@ export default {
     &:not(:last-child) {
       margin-right: $column-gutter-default / 2;
     }
+
+    &:disabled {
+      opacity: 0.4;
+    }
   }
 }
 </style>

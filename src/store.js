@@ -32,8 +32,7 @@ export default new Vuex.Store({
     setBlockState: function(state, blockState) {
       state.selectedBlockState = blockState;
     },
-    setNavContext: function(state, navContext)
-    {
+    setNavContext: function(state, navContext) {
       state.navContext = navContext;
     }
   }

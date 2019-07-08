@@ -1,17 +1,58 @@
 var container = document.createElement("DIV"),
     iframe = document.createElement("IFRAME"),
     resizeHandle = document.createElement("DIV"),
-    stylesheetLink  = document.createElement('LINK');
-    closeButton  = document.createElement('BUTTON'),
-    closeButtonInnerHTML = '<span class="yuzu-overlay__close__icon"></span><span class="yuzu-overlay__close__text">Close</span>',
-    openButton  = document.createElement('BUTTON'),
-    openButtonInnerHTML = '<span class="yuzu-overlay__open__icon"></span><span class="yuzu-overlay__open__text">Dev Tools</span>',
+    settingsArea = document.createElement("DIV"),
+    stylesheetLink  = document.createElement('LINK'),
     toggleClass = 'yuzu-overlay--is-open',
     alignRightClass = 'yuzu-overlay--dock-right',
     overlayCookieName = 'yuzu-overlay-user-settings',
     isDragging = false,
     newOverlayWidth = 0,
-    overlayResizeInertiaPx = 10;
+    overlayResizeInertiaPx = 10,
+    boxShadowStyle = 'rgb(255, 0, 0) 0px 0px 0px 3px inset',
+    iconSprite = document.createElement("DIV"),
+    iconSpriteInnerHTML = '<svg style="border: 0;clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;" xmlns="http://www.w3.org/2000/svg"><defs><symbol id="yuzu-feather-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></symbol><symbol id="yuzu-feather-maximize-2" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></symbol><symbol id="yuzu-feather-sidebar" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></symbol><symbol id="yuzu-feather-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol><symbol id="yuzu-feather-menu" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>';
+
+var buttons = {
+  open: {
+    addButtonClass: true,
+    html: '<svg class="yuzu-overlay__button__icon yuzu-overlay__open__icon yuzu-feather-icon"><use xlink:href="#yuzu-feather-menu"></use></svg><span class="yuzu-overlay__button__text yuzu-overlay__open__text">Dev Tools</span>'
+  },
+  close: {
+    addButtonClass: true,
+    html: '<svg class="yuzu-overlay__button__icon yuzu-overlay__close__icon yuzu-feather-icon"><use xlink:href="#yuzu-feather-x"></use></svg><span class="yuzu-overlay__button__text yuzu-overlay__close__text">Close</span>'
+  },
+  settings: {
+    addButtonClass: true,
+    html: '<svg class="yuzu-overlay__button__icon yuzu-overlay__settings__icon yuzu-feather-icon"><use xlink:href="#yuzu-feather-settings"></use></svg><span class="yuzu-overlay__button__text yuzu-overlay__settings__text">Settings</span>'
+  },
+  fullscreen: {
+    addButtonClass: true,
+    html: '<svg class="yuzu-overlay__button__icon yuzu-overlay__fullscreen__icon yuzu-feather-icon"><use xlink:href="#yuzu-feather-maximize-2"></use></svg><span class="yuzu-overlay__button__text yuzu-overlay__fullscreen__text">Fullscreen</span>'
+  },
+  dock: {
+    addButtonClass: true,
+    html: '<svg class="yuzu-overlay__button__icon yuzu-overlay__dock__icon yuzu-feather-icon"><use xlink:href="#yuzu-feather-sidebar"></use></svg><span class="yuzu-overlay__button__text yuzu-overlay__dock__text">Change dock position</span>'
+  },
+};
+
+function createButton(key) {
+  var button = document.createElement('BUTTON'),
+      settings = buttons[key];
+
+  if(settings.addButtonClass) {
+    button.classList.add('yuzu-overlay__button');
+  }
+  button.classList.add('yuzu-overlay__' + key);
+  button.innerHTML = settings.html;
+  return button;
+};
+
+var openButton = createButton('open'),
+    closeButton = createButton('close'),
+    settingsButton = createButton('settings'),
+    fullscreenButton = createButton('fullscreen'),
+    dockButton = createButton('dock');
 
 var defaultOverlayUserSettings= {
   isOpen: false,
@@ -49,10 +90,10 @@ var setupWs = function(wsId) {
       var block = document.querySelector("[data-yuzu='"+ response.data.path +"']");
 
       if(response.data.isActive === "true") {
-        block.style.border = "5px solid red";
+        block.style.boxShadow = boxShadowStyle;
       }
       else {
-        block.style.removeProperty('border');
+        block.style.removeProperty('box-shadow');
       }
     }
   }
@@ -132,7 +173,7 @@ var addResizeEvents = function() {
 };
 
 var addOverlayRepositionEvents = function() {
-  resizeHandle.addEventListener('dblclick', function (e) {
+  dockButton.addEventListener('click', function (e) {
     container.classList.toggle(alignRightClass);
     userSettings.isDockedRight = !userSettings.isDockedRight;
   });
@@ -150,6 +191,7 @@ var setupHTML = function() {
   
   container.classList.add('yuzu-overlay');
   container.style.width = userSettings.overlayWidth + 'px';
+  
   if(userSettings.isOpen) {
     container.classList.add(toggleClass);
   }
@@ -158,13 +200,10 @@ var setupHTML = function() {
   }
 
   resizeHandle.classList.add('yuzu-overlay__resize-handle');
-  resizeHandle.setAttribute('title', 'Double click to switch between left/right alignment');
 
-  openButton.classList.add('yuzu-overlay__open');
-  openButton.innerHTML = openButtonInnerHTML;
+  settingsArea.classList.add('yuzu-overlay__settings-area');
 
-  closeButton.classList.add('yuzu-overlay__close');
-  closeButton.innerHTML = closeButtonInnerHTML;
+  iconSprite.innerHTML = iconSpriteInnerHTML;
 
   iframe.classList.add('yuzu-overlay__content');
   iframe.setAttribute("frameborder", "0");
@@ -193,6 +232,11 @@ var addIframe = function(wsId) {
   container.appendChild(stylesheetLink);
   container.appendChild(closeButton);
   container.appendChild(openButton);
+  container.appendChild(settingsButton);
+  container.appendChild(settingsArea);
+  settingsArea.appendChild(dockButton);
+  settingsArea.appendChild(fullscreenButton);
+  container.appendChild(iconSprite);
   document.getElementsByTagName("body")[0].appendChild(container);
 
   addResizeEvents();

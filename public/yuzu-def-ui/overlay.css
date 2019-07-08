@@ -1,13 +1,20 @@
+.yuzu-feather-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .yuzu-overlay {
   bottom: 0; 
   left: 0; 
   font-family: 'Inconsolata', monospace;
   font-weight: 400;
   font-size: 0.9375rem;
-  line-height: 1.66667;
   height: 100%; 
-  min-width: 9.625rem; 
+  line-height: 1.66667;
   max-width: 100%; 
+  min-width: 9.625rem; 
   position: fixed;  
   transition: transform ease 0.2s;
   width: 40%; 
@@ -26,8 +33,8 @@
   opacity: 0;
   position: absolute;
   right: 0;
-  transition: all 0.3s ease;
   top: 0;
+  transition: all 0.3s ease;
   width: 12px;
 }
 .yuzu-overlay__resize-handle:active,
@@ -44,8 +51,8 @@
   height: 20px;
   left: 0;
   position: absolute;
-  width: 100%;
   top: calc(50% - 10px);
+  width: 100%;
 }
 .yuzu-overlay__content {
   box-shadow: rgba(0,0,0, 0.2) 0 2px 8px 0;
@@ -56,8 +63,7 @@
   user-select: none;
   width: calc(100% - 12px); 
 }
-.yuzu-overlay__open,
-.yuzu-overlay__close {
+.yuzu-overlay__button {
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
@@ -69,59 +75,71 @@
   display: -ms-flexbox;
   display: flex;
   font: inherit;
-  left: 100%;
   line-height: 1;
   overflow: visible;
   padding: 0;
+  user-select: none;
+}
+.yuzu-overlay__open,
+.yuzu-overlay__close {
+  left: 100%;
   position: absolute;
   top: calc(50% - 16px);
-  user-select: none;
+}
+.yuzu-overlay__settings {
+  left: 100%;
+  position: absolute;
+  top: calc(50% + 32px);
+}
+.yuzu-overlay__settings-area {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  left: 100%;
+  max-height: 0;
+  overflow: hidden;
+  position: absolute;
+  top: calc(50% + 64px);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.yuzu-overlay__settings:hover ~ .yuzu-overlay__settings-area,
+.yuzu-overlay__settings-area:hover {
+  max-height: 64px;
+  transition-delay: 0.15s;
 }
 .yuzu-overlay__open__icon,
 .yuzu-overlay__open__text {
   background-color: #1FBB7A;
 }
 .yuzu-overlay__open__icon {
-  /* Creates hamburger icon */
-  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0) 20%, white 20%, white 32%,rgba(255, 255, 255, 0) 32%), 
-                    linear-gradient(0deg, rgba(255, 255, 255, 0) 45%, white 45%, white 57%, rgba(255, 255, 255, 0) 57%), 
-                    linear-gradient(0deg, rgba(255, 255, 255, 0) 70%, white 70%, white 82%, rgba(255, 255, 255, 0) 82%);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 50% 50%;  
+  stroke-width: 3;
 }
 .yuzu-overlay__close__icon,
 .yuzu-overlay__close__text {
   background-color: #CD3131;
 }
-.yuzu-overlay__close__icon::before,
-.yuzu-overlay__close__icon::after {
-  border-top: 2px solid;
-  content: ''; 
-  position: absolute;
-  top: 8px; 
-  width: 22.64px; /* 16px * square root of two (4.414) */
+.yuzu-overlay__settings__icon,
+.yuzu-overlay__settings__text {
+  background-color: #007ACC;
 }
-.yuzu-overlay__close__icon::before {
-  left: 8px;
-  transform: rotate(45deg);
-  transform-origin: left center;
+.yuzu-overlay__dock__icon,
+.yuzu-overlay__dock__text {
+  background-color: #1FBB7A;
 }
-.yuzu-overlay__close__icon::after {
-  right: 8px;
-  transform: rotate(-45deg);
-  transform-origin: right center;
+.yuzu-overlay__fullscreen__icon,
+.yuzu-overlay__fullscreen__text {
+  background-color: #7647a2;
 }
-.yuzu-overlay__open__icon,
-.yuzu-overlay__close__icon {
+.yuzu-overlay__button__icon {
   display: block;
   height: 32px;
   padding: 8px;
   position: relative;
-  min-width: 32px;
+  min-width: 32px; /*IE fix*/
+  width: 32px;
 }
-.yuzu-overlay__open__text,
-.yuzu-overlay__close__text {
+.yuzu-overlay__button__text {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -131,6 +149,7 @@
   flex: 0;
   min-width: 0;
   overflow: hidden;
+  text-transform: uppercase;
   -webkit-transition: -webkit-box-flex 0.3s ease;
   transition: -webkit-box-flex 0.3s ease;
   transition: flex 0.3s ease;
@@ -138,14 +157,12 @@
   padding: 8px 0;
   white-space: nowrap;
 }
-.yuzu-overlay__open__text::after,
-.yuzu-overlay__close__text::after {
+.yuzu-overlay__button__text::after {
   content: '';
   display: inline-block;
   width: 8px;
 }
-.yuzu-overlay__open:hover >  .yuzu-overlay__open__text,
-.yuzu-overlay__close:hover > .yuzu-overlay__close__text {
+.yuzu-overlay__button:hover >  .yuzu-overlay__button__text {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -153,6 +170,8 @@
 
 
 
+.yuzu-overlay:not(.yuzu-overlay--is-open) > .yuzu-overlay__settings,
+.yuzu-overlay:not(.yuzu-overlay--is-open) > .yuzu-overlay__settings__area,
 .yuzu-overlay:not(.yuzu-overlay--is-open) > .yuzu-overlay__close,
 .yuzu-overlay:not(.yuzu-overlay--is-open) > .yuzu-overlay__resize-handle {
   display: none;
@@ -185,16 +204,22 @@
 .yuzu-overlay--dock-right > .yuzu-overlay__resize-handle {
   left: 0;
 }
-.yuzu-overlay--dock-right > .yuzu-overlay__open,
-.yuzu-overlay--dock-right > .yuzu-overlay__close {
+.yuzu-overlay--dock-right  .yuzu-overlay__button {
   flex-direction: row-reverse;
   left: auto;
   right: 100%;
 }
-.yuzu-overlay--dock-right > .yuzu-overlay__open > .yuzu-overlay__open__text,
-.yuzu-overlay--dock-right > .yuzu-overlay__close > .yuzu-overlay__close__text {
+.yuzu-overlay--dock-right > .yuzu-overlay__settings-area {
+  align-items: flex-end;
+  left: auto;
+  right: 100%;
+}
+.yuzu-overlay--dock-right .yuzu-overlay__button > .yuzu-overlay__button__text {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   flex-direction: row-reverse;
+}
+.yuzu-overlay:not(.yuzu-overlay--dock-right) .yuzu-overlay__dock__icon {
+  transform: scaleX(-1);
 }

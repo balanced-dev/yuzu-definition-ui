@@ -1,25 +1,36 @@
 <template>
   <div class="root-editor" v-if="data">
     <div class="root-editor__buttons">
-      <button @click="preview" class="root-editor__button root-editor__button--update">
+      <button class="root-editor__button root-editor__button--new" @click="toggleAddStateModal">
+        <svg class="root-editor__button__icon feather">
+          <use xlink:href="#copy"/>
+        </svg>
+        <span class="root-editor__button__text">Create new</span>
+      </button>
+      <!-- <button class="root-editor__button root-editor__button--update" @click="preview">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#refresh-cw"/>
         </svg>
         <span class="root-editor__button__text">Update Preview</span>
-      </button>
-      <button @click="toggleSaveModal" class="root-editor__button root-editor__button--save">
+      </button> -->
+      <button class="root-editor__button root-editor__button--save" @click="toggleSaveModal">
         <svg class="root-editor__button__icon feather">
           <use xlink:href="#save"/>
         </svg>
         <span class="root-editor__button__text">Save state</span>
       </button>
       <modal-root-add-state 
-        v-if="saveModal.isOpen" 
-        :isAsNew="saveModal.isAsNew"
-        :saveFunction="save"
-        :saveNewFunction="saveNew"
-        :cancelFunction="toggleSaveModal"
+        v-if="addStateModal.isOpen" 
+        :isValid="addStateModal.isValid"
+        :validateFunction="stateNameIsValid"
+        :addFunction="addNew"
+        :cancelFunction="toggleAddStateModal"
       ></modal-root-add-state>
+      <modal-root-save-state 
+        v-if="saveModal.isOpen" 
+        :saveFunction="save"
+        :cancelFunction="toggleSaveModal"
+      ></modal-root-save-state>
     </div>
     <json-data-property 
       :item="data" 
@@ -37,6 +48,7 @@
 import api from "../../api";
 import bootstrap from "../../bootstrap";
 import _ from "lodash";
+import ModalRootSaveState from "../Modal/ModalRootSaveState";
 import ModalRootAddState from "../Modal/ModalRootAddState";
 
 export default {
@@ -45,9 +57,12 @@ export default {
     return {
       initialPath: "",
       updateDisabled: true,
-      saveModal: {
+      addStateModal: {
         isOpen: false,
-        isAsNew: false
+        isValid: false
+      },
+      saveModal: {
+        isOpen: false
       }
     };
   },
@@ -86,9 +101,11 @@ export default {
     preview: function($index, $event) {
       api.preview(this.returnData);
     },
+    toggleAddStateModal() {
+      this.addStateModal.isOpen = !this.addStateModal.isOpen;
+    },
     toggleSaveModal() {
       this.saveModal.isOpen = !this.saveModal.isOpen;
-      this.saveModal.isAsNew = false;
     },
     save: function() {
       api.save(this.returnData).then(() => {
@@ -96,20 +113,28 @@ export default {
       }); 
       this.toggleSaveModal();
     },
-    saveNew(name) {
-      if (name.length > 0) {
-        let data = {...this.returnData};
-        let newStateName = this.block.name +"_"+ name;
+    stateNameIsValid(name) {
+      this.addStateModal.isValid = name.length > 0 && this.$store.state.blocks.current.states['/'+ this.block.name +"_"+ name] == undefined;
+      return this.addStateModal.isValid;
+    },
+    addNew(isDuplicate, name) {
+      if(this.stateNameIsValid(name)) {
+        if(isDuplicate) {
+          let data = {...this.returnData};
+          let newStateName = this.block.name +"_"+ name;
+  
+          data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
+          data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
 
-        data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
-        data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
-        
-        api.save(data).then(() => {
-          window.top.location.href = "/_templates/html/"+ data.previewPath;
-        });        
-      }
-      else {
-        this.saveModal.isAsNew = true;
+          api.save(data).then(() => {
+            window.top.location.href = "/_templates/html/"+ data.previewPath;
+          });   
+        }
+        else {
+          alert('Functionality needs adding');
+        }
+                
+        this.toggleAddStateModal();
       }
     },
     updated: function() {
@@ -135,6 +160,7 @@ export default {
     }
   },
   components: {
+    ModalRootSaveState,
     ModalRootAddState
   }
 };
@@ -179,6 +205,7 @@ export default {
       text-transform: uppercase;
     }
 
+    &--new,
     &--update {
       background-color: $colour-blue;
     }
