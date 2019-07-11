@@ -36,32 +36,27 @@ const getRoute = () => {
 }
 
 const addPrefix = function(blockName) {
-
   var firstChar = blockName.charAt(0);
   if (firstChar != "/") blockName = "/"+ blockName;
   return blockName;
 }
 
 const removePrefix = function(blockName) {
-
   var firstChar = blockName.charAt(0);
   if (firstChar == "/") blockName = blockName.substring(1);
   return blockName;
 }
 
 const blockFromState = function (state) {
-
   state = removePrefix(state);
   return state.split('_')[0];
 }
 
 const defaultFromState = function (state) {
-
   return state.split('_')[0];
 }
 
 const buildNewBlockPath = function (currentState, newState, path, extension) {
-
   currentState = removePrefix(currentState);
   return path.replace(currentState + extension, newState + extension);
 }

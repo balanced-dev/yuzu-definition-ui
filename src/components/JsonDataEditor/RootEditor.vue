@@ -98,10 +98,10 @@ export default {
     preview: function($index, $event) {
       api.preview(this.returnData);
     },
-    toggleAddStateModal() {
+    toggleAddStateModal: function() {
       this.addStateModal.isOpen = !this.addStateModal.isOpen;
     },
-    toggleSaveModal() {
+    toggleSaveModal: function() {
       this.saveModal.isOpen = !this.saveModal.isOpen;
     },
     save: function() {
@@ -110,29 +110,33 @@ export default {
       }); 
       this.toggleSaveModal();
     },
-    stateNameIsValid(name) {
+    stateNameIsValid: function(name) {
       this.addStateModal.isValid = name.length > 0 && this.$store.state.blocks.current.states['/'+ this.block.name +"_"+ name] == undefined;
       return this.addStateModal.isValid;
     },
-    addNew(isDuplicate, name) {
+    addNew: function(isDuplicate, name) {
       if(this.stateNameIsValid(name)) {
-        if(isDuplicate) {
-          let data = {...this.returnData};
-          let newStateName = this.block.name +"_"+ name;
-  
-          data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
-          data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
+        let data = {...this.returnData};
+        let newStateName = this.block.name +"_"+ name;
 
-          api.save(data).then(() => {
-            window.top.location.href = "/_templates/html/"+ data.previewPath;
-          });   
+        data.path = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.path, ".json");
+        data.previewPath = bootstrap.buildNewBlockPath(this.currentState.name, newStateName, data.previewPath, ".html");
+        
+        if(!isDuplicate) {
+          api.getEmpty(this.block.name).then(response => {
+            data.root = response.data;
+            this.createNewState(data);
+          });
         }
         else {
-          alert('Functionality needs adding');
+          this.createNewState(data);
         }
-                
-        this.toggleAddStateModal();
       }
+    },
+    createNewState: function(data) {
+      api.save(data).then(() => {
+        window.top.location.href = "/_templates/html/"+ data.previewPath;
+      });
     },
     updated: function() {
       this.$store.dispatch("data/save", this.data);
