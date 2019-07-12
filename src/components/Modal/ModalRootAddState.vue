@@ -8,7 +8,7 @@
       <p><strong>WARNING:</strong> Any changes within sub-blocks will cause their appropriate state to be overwritten with the content in this current state!</p>
       <template>
         <label class="modal-root-add-state__input">
-          <input class="modal-root-add-state__input__control modal-root-add-state__input__control--text" type="text" v-model="name" placeholder='e.g. "longDescription", "empty"' @input="validateFunction(name)" />
+          <input class="modal-root-add-state__input__control modal-root-add-state__input__control--text" type="text" v-model="name" placeholder='e.g. "longDescription", "empty"' @input="validateFunction(name)" v-on:keyup.enter="addFunction(true,name);"/>
           <span class="modal-root-add-state__input__label">New state name</span>
         </label>
       </template>
