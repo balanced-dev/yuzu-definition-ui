@@ -22,6 +22,15 @@
           :blockName="blockName"
         ></json-data-array>
       </div>
+      <div v-else-if="isBoolean(item[key])" class="property-editor__section property-editor__section--boolean" :style="{'padding-left': `${depth}rem`}">
+        <json-data-boolean
+          :label="key"
+          :item="item"
+          :depth="depth"
+          :absPath="buildPathAbs(key, absPath)"
+          :relPath="buildPathRel(key, relPath)"
+        ></json-data-boolean>
+      </div>
       <div v-else class="property-editor__section property-editor__section--property" :style="{'padding-left': `${depth}rem`}">
         <json-data-text
           :label="key"
@@ -31,10 +40,6 @@
           :relPath="buildPathRel(key, relPath)"
         ></json-data-text>
       </div>
-      <!--  
-          TODO: 
-          Checkbox for boolean? 
-      -->
     </div>
   </div>
 </template>
@@ -42,6 +47,7 @@
 <script>
 import _ from "lodash";
 import JsonDataArray from "./ArrayEditor.vue";
+import JsonDataBoolean from "./BooleanEditor.vue";
 import JsonDataText from "./TextEditor.vue";
 
 export default {
@@ -52,6 +58,9 @@ export default {
     },
     isArray: function(item) {
       return _.isArray(item);
+    },
+    isBoolean: function(item) {
+      return _.isBoolean(item);
     },
     buildPathAbs(key, path) {
         return path + "/" + key; 
@@ -68,6 +77,7 @@ export default {
   props: ["item", "depth", "absPath", "relPath", "blockName", "parentState"],
   components: {
     JsonDataArray,
+    JsonDataBoolean,
     JsonDataText
   }
 };
