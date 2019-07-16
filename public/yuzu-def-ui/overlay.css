@@ -7,6 +7,8 @@
 }
 .yuzu-overlay {
   bottom: 0; 
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   left: 0; 
   font-family: 'Inconsolata', monospace;
   font-weight: 400;
@@ -19,6 +21,10 @@
   transition: transform ease 0.2s;
   width: 40%; 
   z-index: 9999;
+}
+.yuzu-overlay *, .yuzu-overlay *:before, .yuzu-overlay *:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit; 
 }
 .yuzu-overlay--is-dragging {
   pointer-events: none;
