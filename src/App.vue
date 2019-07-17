@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="app">
     <tabs></tabs>
+    <div class="version-number">v1.0.1</div>
   </div>
 </template>
 
@@ -60,5 +61,13 @@ $app__toggle-button-icon-size: size(16px);
   right: 0;
   top: 0;
   bottom: 0;
+}
+.version-number {
+  @include default-font;
+  @include font-size($font-size-xsmall);
+  color: $colour-text-default;
+  position: absolute;
+  bottom: 0;
+  right: 10px;
 }
 </style>
