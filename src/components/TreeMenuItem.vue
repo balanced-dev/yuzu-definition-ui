@@ -41,6 +41,9 @@ export default {
       showChildren: true
     };
   },
+  mounted() {
+    this.showChildren = (this.depth == 0);
+  },
   methods: {
     isFolder: function(obj) {
       var firstChildProperty = Object.keys(obj)[0];

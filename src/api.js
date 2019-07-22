@@ -9,9 +9,7 @@ export default {
     return axios.get(rootUrl + "getPreviews");
   },
   get: (state) => {
-    return axios.post(rootUrl + "get", {
-      stateName: bootstrap.removePrefix(state)
-    })
+    return axios.get(rootUrl + "get/"+ bootstrap.removePrefix(state))
   },
   getChildStates: (state) => {
     return axios.get(rootUrl + "getChildStates/"+  bootstrap.removePrefix(state))
