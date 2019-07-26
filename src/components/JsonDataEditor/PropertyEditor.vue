@@ -1,6 +1,15 @@
 <template>
   <div class="property-editor" :class="`property-editor--depth-${depth}`">
-    <div v-for="key in Object.keys(item)" v-bind:key="key">
+    <div v-if="isArray(item)" class="property-editor__section property-editor__section--array">
+      <json-data-array
+        :items="item"
+        :depth="depth"
+        :absPath="absPath"
+        :relPath="relPath"
+        :blockName="blockName"
+      ></json-data-array>
+    </div>
+    <div v-else v-for="key in Object.keys(item)" v-bind:key="key">
       <div v-if="isObject(item[key])" class="property-editor__section property-editor__section--object">
         <json-data-object
           :label="key"
@@ -108,7 +117,7 @@ export default {
 
     &--object,
     &--array {
-      background-color: $colour-grey-mid-dark;
+      //background-color: $colour-grey-mid-dark;
       padding-bottom: $json-data-editor__v-spacing;
       padding-top: $json-data-editor__v-spacing;
     }

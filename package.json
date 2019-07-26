@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "inflector-js": "^1.0.1",
     "socket.io-p2p": "^2.2.0",
     "vue": "^2.6.10",
     "vuedraggable": "^2.21.0",

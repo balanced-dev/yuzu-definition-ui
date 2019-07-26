@@ -14,3 +14,9 @@ Vue.component('JsonDataCollapsibleProperty', require('./components/JsonDataEdito
 Vue.component('JsonDataBlockType', require('./components/JsonDataEditor/BlockTypeEditor.vue').default);
 Vue.component('JsonDataObject', require('./components/JsonDataEditor/ObjectEditor.vue').default);
 
+Vue.filter('striphtml', function (value) {
+  var div = document.createElement("div");
+  div.innerHTML = value;
+  var text = div.textContent || div.innerText || "";
+  return text;
+});

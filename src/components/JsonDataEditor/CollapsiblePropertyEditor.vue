@@ -24,6 +24,7 @@
 
 <script>
 import _ from "lodash";
+import inflector from "inflector-js";
 
 export default {
   name: "json-data-collapsible-property",
@@ -35,7 +36,7 @@ export default {
   },
   computed: {
     guessCollapsedTitle() {
-      var output = 'item '+ this.arrayIndex;
+      var output = inflector.singularize(this.label) +' '+ this.arrayIndex;
       this.$store.dispatch("itemTitle/get", {
         item: this.item,
         action: function(text, item) {
@@ -50,7 +51,7 @@ export default {
       this.$data.isOpen = !this.$data.isOpen;
     }
   },
-  props: ["item", "depth", "absPath", "relPath", "arrayIndex", "blockName"]
+  props: ["label", "item", "depth", "absPath", "relPath", "arrayIndex", "blockName"]
 };
 </script>
 

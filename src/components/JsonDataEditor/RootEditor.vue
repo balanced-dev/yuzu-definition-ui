@@ -106,7 +106,7 @@ export default {
     },
     save: function() {
       api.save(this.returnData).then(() => {
-        window.top.location.href = "/_templates/html/"+ this.currentState.url;
+        //window.top.location.href = "/_templates/html/"+ this.currentState.url;
       }); 
       this.toggleSaveModal();
     },
@@ -135,7 +135,7 @@ export default {
     },
     createNewState: function(data) {
       api.save(data).then(() => {
-        window.top.location.href = "/_templates/html/"+ data.previewPath;
+        //window.top.location.href = "/_templates/html/"+ data.previewPath;
       });
     },
     updated: function() {

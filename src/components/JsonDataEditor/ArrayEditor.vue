@@ -1,17 +1,14 @@
 <template>
   <div class="array-editor" :class="`array-editor--depth-${depth}`">
-    <label class="array-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
-      <svg class="array-editor__title__icon feather" :class="{'is-hidden': this.active}">
-        <use xlink:href="#plus-square"/>
-      </svg>
-      <svg class="array-editor__title__icon feather" :class="{'is-hidden': !this.active}">
-        <use xlink:href="#minus-square"/>
+    <label v-if="label" class="array-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
+      <svg class="array-editor__title__icon feather">
+        <use xlink:href="#folder"/>
       </svg>
       <span class="array-editor__title__text">
         {{ label }}
       </span>
     </label>
-    <div class="array-editor__section" v-if="active">
+    <div class="array-editor__section">
       <draggable
         :list="items"
         ghost-class="ghost"
@@ -35,6 +32,7 @@
           ></json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item)"
+            :label="label"
             :item="item"
             :depth="depth + 1"
             :absPath="buildPath(index, absPath)"
@@ -218,7 +216,9 @@ export default {
   @include json-data-editor__section($this);
   
   &__title {
-  
+    &__icon {
+      //opacity: 0;
+    }
   }  
 
   .object-editor.is-active ~ #{$this}__item__footer {

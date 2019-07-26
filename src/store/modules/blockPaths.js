@@ -20,7 +20,7 @@ export default {
     },
     has: (state) => (block, path) => {
       return _.find(state.paths, function(item) {
-        return item.block == block && item.paths.hasOwnProperty("/"+ path); 
+        return item.block == block && item.paths.hasOwnProperty(bootstrap.addPrefix(path)); 
       });
     },
     get: (state) => (block, path) => {

@@ -1,5 +1,6 @@
 import api from "../../api";
 import bootstrap from "../../bootstrap";
+import _ from "lodash";
 
 export default {
   namespaced: true,
@@ -23,7 +24,9 @@ export default {
         context.commit("load", items);
 
         var route = bootstrap.getRoute();
-        if(!route) route = "content";
+        if(!route && items.pages) {
+          route = _.first(Object.keys(items.pages));
+        }
   
         var appContext = {};
         bootstrap.getBlockAndState(items, route, appContext);

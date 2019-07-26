@@ -1,0 +1,7 @@
+@for $i from 1 through 10 {
+    $colour: lighten($colour-grey-mid-dark, $i * 2);
+
+    .depth-lighter-#{$i} {
+        background: $colour;
+    }
+}
