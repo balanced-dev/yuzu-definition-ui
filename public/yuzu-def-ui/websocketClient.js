@@ -85,6 +85,8 @@ var setupWs = function(wsId) {
 
     if(response.action == 'preview') {
       document.querySelector('.content-root').innerHTML = response.data;
+      var refreshEvent = new Event('YUZU:CONTENT-REFRESH');
+      document.dispatchEvent(refreshEvent);
     }
     if(response.action == 'setActive') {
       var block = document.querySelector("[data-yuzu='"+ response.data.path +"']");
