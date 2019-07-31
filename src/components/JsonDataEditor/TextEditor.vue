@@ -36,8 +36,8 @@ export default {
 
   @include form-input;
 
-  margin-bottom: $json-data-editor__v-spacing;
-  margin-top: $json-data-editor__v-spacing;
+  // margin-bottom: $json-data-editor__v-spacing;
+  // margin-top: $json-data-editor__v-spacing;
 
   &:hover:not(:focus-within) {
     #{$this}__icon {
@@ -59,7 +59,9 @@ export default {
   }
 
   &__label {
+    line-height: 1;
     margin-bottom: size(5px);
+    white-space: nowrap;
   }
 
   &__icon {

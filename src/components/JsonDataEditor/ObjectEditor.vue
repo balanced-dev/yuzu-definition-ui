@@ -1,5 +1,5 @@
 <template>
-  <div class="object-editor" :class="[{'is-active': this.active}, `object-editor--depth-${depth} depth-lighter-${depth}`]">
+  <div class="object-editor" :class="[{'is-active': this.active}, `object-editor--depth-${depth}`]">
     <label
       class="object-editor__title"
       @click="toggleActive"

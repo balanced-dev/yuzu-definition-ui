@@ -1,5 +1,5 @@
 <template>
-  <div class="collapse" :class="{'is-active': isOpen}">
+  <div class="collapse" :class="[{'is-active': isOpen}, `collapse--depth-${depth}`]">
     <span class="collapse__title" @click="open" :style="{'padding-left': `${depth}rem`}">
       <svg class="collapse__title__icon feather" :class="{'is-hidden': isOpen}">
         <use xlink:href="#plus-square"/>
@@ -11,14 +11,15 @@
         {{ guessCollapsedTitle }}
       </span>
     </span>
-    <json-data-property
-      v-if="isOpen"
-      :item="item"
-      :depth="depth+1"
-      :absPath="absPath"
-      :relPath="relPath"
-      :blockName="blockName"
-    ></json-data-property>
+    <div class="collapse__section" v-if="isOpen">
+      <json-data-property
+        :item="item"
+        :depth="depth+1"
+        :absPath="absPath"
+        :relPath="relPath"
+        :blockName="blockName"
+      ></json-data-property>
+    </div>
   </div>
 </template>
 
@@ -67,7 +68,7 @@ export default {
   }
 
   &.is-active {
-    padding-bottom: $json-data-editor__v-spacing;
+    // padding-bottom: $json-data-editor__v-spacing;
   }
 }
 </style>

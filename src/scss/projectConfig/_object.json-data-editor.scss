@@ -1,18 +1,49 @@
 @mixin json-data-editor__section($this, $title-v-padding: false) {
-    &__title {
-        @include accordion-button($includeDropShadow: false, $v-padding: $title-v-padding);
+    
+
+    &:not(&--depth-1) {
+        > #{$this}__title {
+            @include accordion-button(#{$this}__title, $includeDropShadow: false, $v-padding: false);
+            padding-top: $json-data-editor__v-spacing;
+        }
+
+        &.is-active {
+            > #{$this}__title {
+            }
+        }
     }
     
     &--depth {
+        @for $i from 1 through 10 {
+            $colour: lighten($colour-grey-mid-dark, $i * 2);
+        
+            &-#{$i} {
+                &.is-active {
+                    > #{$this}__title {
+                        background-color: $colour;
+                    }
+                }
+                > #{$this}__section {
+                    background-color: $colour;
+                }
+            }
+        }
+
         &-1 {
             > #{$this}__section {
-                @include column-gutter('padding', 'right');
+                // @include column-gutter('padding', 'right');
             }
             > #{$this}__title {
-                background-color: $colour-grey-light;
+                @include accordion-button(#{$this}__title, $includeDropShadow: false, $v-padding: $title-v-padding);
                 margin-bottom: 1px;
-                padding: $json-data-editor__v-spacing ($column-gutter-default)!important;
+                // padding: $json-data-editor__v-spacing ($column-gutter-default)!important;
             }
-        }    
+
+
+            > #{$this}__title,
+            &.is-active > #{$this}__title {
+                background-color: $colour-grey-light;
+            }
+        } 
     }
 }

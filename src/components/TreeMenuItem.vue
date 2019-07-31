@@ -85,7 +85,7 @@ export default {
 
     &__parent {
       @include tree-menu-item__list-item;
-      @include accordion-button;
+      @include accordion-button($this: #{$this}__parent);
       padding-right: $column-gutter-default;
       width: 100%;
 

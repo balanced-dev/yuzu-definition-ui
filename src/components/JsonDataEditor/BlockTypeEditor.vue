@@ -160,16 +160,11 @@ export default {
   align-items: center;
   display: flex;
   position: absolute;
-  right: 0;
-  top: 0;
-
-  &--depth-1 {
-    
-  }
+  right: $column-gutter-default;
+  top: size(3px);
 
   &--depth-2 {
-    right: $column-gutter-default;
-    top: size(3px);
+    top: size(6px);
   }
 
   &__button {
@@ -234,7 +229,7 @@ export default {
   }
 
   &__select {
-    @include form-select($this: &, $overlayLabel: true);
+    @include form-select($this: &, $overlayLabel: true, $height: size(26.75px));
     &__control {
 
       &__option {

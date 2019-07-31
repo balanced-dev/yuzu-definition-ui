@@ -8,7 +8,7 @@ $form-select__select-height: size(34px);
   @if $overlayLabel {
     background-color: $colour-grey-darker;
     border: 1px solid $colour-grey-mid-dark;
-    height: $form-select__select-height;
+    height: $height;
 
     &:focus-within {
       #{$this} {
@@ -33,7 +33,7 @@ $form-select__select-height: size(34px);
     @include default-font;
     align-items: center;
     display: flex;
-    height: $form-select__select-height;
+    height: $height;
     
   }
 
@@ -63,7 +63,7 @@ $form-select__select-height: size(34px);
 
     color: $colour-text-default;
     padding: 0 ($column-gutter-default / 2);
-    padding-right: ($column-gutter-default / 2)*2 + $form-select__icon-size;
+    padding-right: ($column-gutter-default / 2)*2 + $iconSize;
     width: 100%;    
 
     &__option {
@@ -74,10 +74,10 @@ $form-select__select-height: size(34px);
 
   &__label {
     @if $overlayLabel {
-      margin-top: -$form-select__select-height;
+      margin-top: -$height;
       opacity: 1;
       padding: 0 ($column-gutter-default / 2);
-      padding-right: ($column-gutter-default / 2)*2 + $form-select__icon-size;
+      padding-right: ($column-gutter-default / 2)*2 + $iconSize;
       pointer-events: none;
       transform: translateY(0);
       transition: all 0.3s ease;
@@ -90,7 +90,7 @@ $form-select__select-height: size(34px);
     right: ($column-gutter-default / 2);
     bottom: 0;
     display: block;
-    height: $form-select__select-height;
-    width: $form-select__icon-size;
+    height: $height;
+    width: $iconSize;
   }
 }

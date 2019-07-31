@@ -99,35 +99,31 @@ export default {
   $this: &;
 
   @include json-data-editor__section($this);
+  padding-top: $json-data-editor__v-spacing;
+  overflow: hidden;
 
   &--root {
-    > div > #{$this}__section {
-      padding-bottom: 0;
-      padding-top: 0;
-      overflow: hidden;
+    padding-top: 0;
 
-      &--property {
-        @include column-gutter('padding', 'right');
-      }
+    > div > #{$this}__section--property {
+      margin-bottom: $json-data-editor__v-spacing;
+    }
+  }
+
+  &:not(&--root){
+    #{$this}__section {
+      margin-bottom: $json-data-editor__v-spacing;
     }
   }
 
   &__section {
     position: relative;
-
-    &--object,
-    &--array {
-      //background-color: $colour-grey-mid-dark;
-      padding-bottom: $json-data-editor__v-spacing;
-      padding-top: $json-data-editor__v-spacing;
-    }
     
     &--object {}
     &--array {}
 
     &--property {
-      margin-bottom: $json-data-editor__v-spacing;
-      margin-top: $json-data-editor__v-spacing;
+      @include column-gutter('padding', 'right');
     }
   }
 }

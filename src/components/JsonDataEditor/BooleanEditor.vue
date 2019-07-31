@@ -36,7 +36,7 @@ export default {
   flex-wrap: wrap;
   position: relative;
   margin-bottom: $json-data-editor__v-spacing;
-  margin-top: $json-data-editor__v-spacing;
+  // margin-top: $json-data-editor__v-spacing;
 
   &:hover {
     cursor: pointer;

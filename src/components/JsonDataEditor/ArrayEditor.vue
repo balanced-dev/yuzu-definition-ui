@@ -1,6 +1,6 @@
 <template>
-  <div class="array-editor" :class="`array-editor--depth-${depth}`">
-    <label v-if="label" class="array-editor__title" @click="toggleActive" :style="{'padding-left': `${depth}rem`}">
+  <div class="array-editor is-active" :class="`array-editor--depth-${depth}`">
+    <label v-if="label" class="array-editor__title" :style="{'padding-left': `${depth}rem`}">
       <svg class="array-editor__title__icon feather">
         <use xlink:href="#folder"/>
       </svg>
@@ -106,7 +106,6 @@ export default {
   name: "json-data-array",
   data() {
     return {
-      active: false,
       toDelete: undefined,
       addBlockModal: {
         isOpen: false,
@@ -129,9 +128,6 @@ export default {
     }
   },
   methods: {
-    toggleActive() {
-      this.active = !this.active;
-    },
     isRef(item) {
       return item.hasOwnProperty('$ref');
     },
@@ -216,6 +212,7 @@ export default {
   @include json-data-editor__section($this);
   
   &__title {
+    padding-top: $json-data-editor__v-spacing;
     &__icon {
       //opacity: 0;
     }
@@ -226,6 +223,8 @@ export default {
   }
 
   &__section {
+    padding-top: $json-data-editor__v-spacing;
+    
     &__add {
       @include u-reset-button;
       @include array-editor__button;
@@ -242,18 +241,19 @@ export default {
 
     &__footer {
       border-top: 1px solid $colour-grey-light;
-      margin-top: $json-data-editor__v-spacing;
       padding-top: $json-data-editor__v-spacing * 1.5;
-      margin-bottom: $json-data-editor__v-spacing;
+      padding-bottom: $json-data-editor__v-spacing;
     }
   }
 
   &__item {
+    margin-bottom: $json-data-editor__v-spacing;
     position: relative;
 
     &__footer {
-      top: $json-data-editor__v-spacing;
-      right: 0;
+      display: flex;
+      top: size(2px);
+      right: $column-gutter-default;
       position: absolute;
     }
 

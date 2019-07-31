@@ -1,7 +1,7 @@
 $accordion-button__icon-size: size(17px);
 $accordion-button__label-spacing: size(6px);
 
-@mixin accordion-button($includeDropShadow: true, $v-padding: false) {
+@mixin accordion-button($this: '', $includeDropShadow: true, $v-padding: false) {
     align-items: center;
     cursor: pointer;
     display: flex;
@@ -18,12 +18,12 @@ $accordion-button__label-spacing: size(6px);
         }
     }
 
-    &__icon,
-    &__text {
+    #{$this}__icon,
+    #{$this}__text {
         display: block;
     }
 
-    &__icon {
+    #{$this}__icon {
         height: $accordion-button__icon-size;
         margin-right: $column-gutter-default - $accordion-button__icon-size;
         stroke-width: 2;
@@ -34,7 +34,7 @@ $accordion-button__label-spacing: size(6px);
         }
     }
 
-    &__text {
+    #{$this}__text {
         margin-left: $accordion-button__label-spacing;
     }
 }
