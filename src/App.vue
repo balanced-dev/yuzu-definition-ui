@@ -63,11 +63,17 @@ $app__toggle-button-icon-size: size(16px);
   bottom: 0;
 }
 .version-number {
+  @include column-gutters;
   @include default-font;
   @include font-size($font-size-xsmall);
-  color: $colour-text-default;
-  position: absolute;
+  background-color: $colour-grey-darker;
   bottom: 0;
-  right: 10px;
+  color: $colour-text-default;
+  height: $version-number-height;
+  left: 0;
+  line-height: $version-number-height;
+  position: absolute;
+  right: 0;
+  text-align: right;
 }
 </style>
