@@ -1,0 +1,16 @@
+
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+
+////
+/// @group -Project-
+////
+
+///
+/// Z-index map
+///
+$z-indexes: (
+    menu        : 5,
+    modal       : 4,
+    data-buttons: 3,
+    form-input  : 2,
+) !default;

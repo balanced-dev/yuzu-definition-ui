@@ -53,6 +53,7 @@ export default {
 }
 
 .modal {
+  @include z-index(modal);
   align-items: center;
   bottom: 0;
   display: flex;
@@ -61,7 +62,6 @@ export default {
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 3;
 
   &::before {
     background-color: $content-darken;
@@ -80,6 +80,7 @@ export default {
     min-width: 50%;
     max-width: 80%;
     position: relative;
+    z-index: 1;
   }
 
   &__header {

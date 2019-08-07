@@ -1,13 +1,13 @@
 <template>
   <div class="array-editor is-active" :class="`array-editor--depth-${depth}`">
-    <label v-if="label" class="array-editor__title" :style="{'padding-left': `${depth}rem`}">
+    <div v-if="label" class="array-editor__title" :style="{'padding-left': `${depth}rem`}">
       <svg class="array-editor__title__icon feather">
         <use xlink:href="#folder"/>
       </svg>
       <span class="array-editor__title__text">
         {{ label }}
       </span>
-    </label>
+    </div>
     <div class="array-editor__section">
       <draggable
         :list="items"
@@ -288,10 +288,13 @@ export default {
     }
 
     &.ghost {
+      $horizontal-shift: size(5px);
+
       color: $colour-body-bgnd-dark-grey;
       background-color: $colour-grey-xlight;
-      margin-right: -$column-gutter-default;
-      padding-left: size(5px);
+      margin-right: -$horizontal-shift;
+      padding-bottom: $json-data-editor__v-spacing;
+      padding-left: $horizontal-shift;
       padding-right: $column-gutter-default;
 
       #{$this}__item__footer {

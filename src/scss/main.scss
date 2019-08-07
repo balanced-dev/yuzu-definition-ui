@@ -7,6 +7,7 @@
 @import 'library/_tools.media-queries';
 @import 'library/_tools.sizing';
 @import 'library/_tools.typography';
+@import 'library/_tools.z-index';
 
 @import 'library/_utility.ellipsis';
 @import 'library/_utility.reset-button';
@@ -23,6 +24,7 @@
 @import 'projectConfig/settings.layout';
 @import 'projectConfig/settings.media-queries';
 @import 'projectConfig/settings.typography';
+@import 'projectConfig/settings.z-indexes';
 
 @import 'projectConfig/_object.accordion-button';
 @import 'projectConfig/_object.json-data-editor';

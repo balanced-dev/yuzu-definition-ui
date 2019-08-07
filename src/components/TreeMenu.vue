@@ -173,7 +173,6 @@ $tree-menu__search-icon-symbol-size: size(16px);
       top: 0;
       transition: all 0.2s ease;
       width: $tree-menu__search-icon-total-size;
-      z-index: 2;
 
       &:hover {
         @include tree-menu__active-icon-styles;

@@ -3,7 +3,7 @@
 } */
 
 .yuzu-highlighted-block {
-  box-shadow: rgb(255, 0, 0) 0px 0px 0px 3px inset!important;
+  box-shadow: inset 0px 0px 10px 8px rgba(255,0,0,0.8)!important;
 }
 .yuzu-feather-icon {
   fill: none;

@@ -8,7 +8,7 @@
       :cancelFunction="toggleAddModal"
       v-if="addModal.isOpen"
     ></modal-block-add-state>
-    <label class="block-type-editor__select">
+    <div class="block-type-editor__select">
       <select
         class="block-type-editor__select__control"
         v-model="subBlock.state"
@@ -25,7 +25,7 @@
       <svg class="block-type-editor__select__icon feather" :class="{'is-hidden': this.active}">
         <use xlink:href="#chevron-down"></use>
       </svg>
-    </label>
+    </div>
     <a href="" class="block-type-editor__button block-type-editor__button--link">
       <svg class="block-type-editor__button__icon feather">
         <use xlink:href="#link"/>

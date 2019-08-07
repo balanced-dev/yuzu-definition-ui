@@ -5,7 +5,7 @@
     </template>
     <template slot="content">
       <p>Select block type to add to array</p>
-      <label class="modal-array-editor-add__select">
+      <div class="modal-array-editor-add__select">
         <select
           class="modal-array-editor-add__select__control"
           v-model="selected"
@@ -21,7 +21,7 @@
         <svg class="modal-array-editor-add__select__icon feather">
           <use xlink:href="#chevron-down"></use>
         </svg>
-      </label>
+      </div>
     </template>
     <template slot="footer">
       <button class="modal__button modal__button--green" @click="addFunction(selected)">Add block</button>

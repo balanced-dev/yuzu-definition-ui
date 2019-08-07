@@ -1,15 +1,15 @@
 <template>
-    <label class="boolean-editor">
-      <input class="boolean-editor__control" type="checkbox" v-model="item[label]" />
-      <span class="boolean-editor__label">
-        {{ label }}
-      </span>
-      <span class="boolean-editor__faux">
-        <svg class="boolean-editor__faux__icon feather">
-          <use xlink:href="#check"/>
-        </svg>
-      </span>
-    </label>
+  <div class="boolean-editor">
+    <input class="boolean-editor__control" type="checkbox" v-model="item[label]" />
+    <span class="boolean-editor__label">
+      {{ label }}
+    </span>
+    <span class="boolean-editor__faux">
+      <svg class="boolean-editor__faux__icon feather">
+        <use xlink:href="#check"/>
+      </svg>
+    </span>
+  </div>
 </template>
 
 <script>

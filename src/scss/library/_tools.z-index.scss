@@ -1,0 +1,30 @@
+// [Settings,][Tools,][Generic,][Base,][Objects,][Utilities,]
+@import '../projectConfig/_settings.z-indexes';
+
+////
+/// @group -Library-
+////
+
+//*------------------------------------
+//  Tools: Z-index
+//  ------------------------------------*/
+
+///
+/// Returns z-index property with value from z-indexes map
+///
+/// @param {String} $key - Key to be used in the $z-index-map
+/// @param {Map} $z-index-map - Map of z-index values
+///
+@mixin z-index($key, $z-index-map: $z-indexes) {
+    z-index: z-index($key, $z-index-map);
+}
+
+///
+/// Fetches z-index value from z-index map
+///
+/// @param {String} $key - Key to be used in the $z-index-map
+/// @param {Map} $z-index-map - Map of z-index values
+///
+@function z-index($key, $z-index-map: $z-indexes) {
+    @return map-get($z-index-map, $key);
+}  

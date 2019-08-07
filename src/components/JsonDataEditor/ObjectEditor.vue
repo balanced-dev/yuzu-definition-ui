@@ -1,6 +1,6 @@
 <template>
   <div class="object-editor" :class="[{'is-active': this.active}, `object-editor--depth-${depth}`]">
-    <label
+    <div
       class="object-editor__title"
       @click="toggleActive"
       :style="{'padding-left': `${depth}rem`}"
@@ -12,8 +12,19 @@
         <use xlink:href="#minus-square"></use>
       </svg>
       <span class="object-editor__title__text">{{ resolvedLabel | striphtml }}</span>
-    </label>
+    </div>
     <div class="object-editor__section" v-if="active">
+      <div class="object-editor__section__menu" :style="{'padding-left': `${depth+1}rem`}">
+        <button class="object-editor__target" :class="[{'is-active': this.highlighted}]" @click="highlight" v-if="isSubBlock">
+          <svg class="object-editor__target__icon feather">
+            <use xlink:href="#crosshair"/>
+          </svg>
+          <span class="object-editor__target__text">
+            <template v-if="!this.highlighted">Apply</template>
+            <template v-else>Remove</template> 
+            element highlighting in-page</span>
+        </button>
+      </div>
       <json-data-property
         v-if="isSubBlock"
         :item="subBlockState"
@@ -41,7 +52,12 @@
         :blockName="inlineBlockMeta.name"
         :parentState="parentState"
       ></json-data-property>
-      <json-data-block-type v-if="isSubBlock" :item="item" :depth="depth+1" :subBlock="subBlockMeta"></json-data-block-type>
+      <json-data-block-type 
+        v-if="isSubBlock" 
+        :item="item" 
+        :depth="depth+1" 
+        :subBlock="subBlockMeta"
+        ></json-data-block-type>
     </div>
   </div>
 </template>
@@ -55,6 +71,7 @@ export default {
   data() {
     return {
       active: false,
+      highlighted: false,
       subBlockMeta: {
         name: "",
         defaultState: "",
@@ -116,9 +133,10 @@ export default {
   methods: {
     toggleActive() {
       this.active = !this.active;
-      if (this.isSubBlock) {
-        api.setActive(this.absPath, this.active);
-      }
+    },
+    highlight() {
+      this.highlighted = !this.highlighted;
+      api.setActive(this.absPath, this.highlighted);
     },
     setAnyOfLabel: function() {
       if(this.subBlockState) {
@@ -168,5 +186,43 @@ export default {
   $this: &;
 
   @include json-data-editor__section($this, $title-v-padding: true);
+
+  &__section {
+    &__menu {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: $column-gutter-default;
+    }
+  }
+
+  &__target {
+    @include u-reset-button;
+    @include font-size($font-size-xsmall);
+    @include default-font;
+    align-items: center;
+    background-color: $colour-green;
+    color: $colour-white;
+    display: inline-flex;
+    line-height: 1;
+    margin-top: $json-data-editor__v-spacing;
+    padding: $column-gutter-default / 2;
+    text-decoration: none;
+
+    &.is-active {
+      background-color: $colour-red;
+    }
+
+    &__icon {
+      display: block;
+      height: size(16px);
+      margin-right: 0.5em;
+      width: size(16px);
+    }
+
+    &__text {
+      @include bold-font;
+      text-transform: uppercase;
+    }
+  }
 }
 </style>

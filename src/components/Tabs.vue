@@ -90,6 +90,8 @@ $tabs__tab-stack-breakpoint: size(246px, $unit-em);
     position: absolute;
     right: 0;
     top: 0;
+    
+      @include z-index(menu);
 
     &__item {
       @include column-gutters('padding', ($column-gutter-default / 2));

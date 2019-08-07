@@ -4,10 +4,10 @@
       <h2>Add new state</h2>                
     </template>
     <template slot="content">
-      <label class="modal-block-add-state__input">
+      <div class="modal-block-add-state__input">
         <input class="modal-block-add-state__input__control modal-block-add-state__input__control--text" type="text" v-model="name" placeholder='e.g. "longDescription", "empty"' @input="validateFunction(name)" v-on:keyup.enter="addFunction(true,name);reset();"/>
         <span class="modal-block-add-state__input__label">New state name</span>
-      </label>
+      </div>
     </template>
     <template slot="footer">
       <button class="modal__button modal__button--green" @click="addFunction(true,name);reset();" :disabled="!isValid">Create duplicate</button>

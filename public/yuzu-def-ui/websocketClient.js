@@ -56,7 +56,7 @@
       fullscreenButton = createButton('fullscreen'),
       dockButton = createButton('dock');
 
-  var defaultOverlayUserSettings= {
+  var defaultOverlayUserSettings = {
     isOpen: false,
     overlayWidth: 300,
     isDockedRight: false
@@ -66,7 +66,7 @@
 
   var randomIntFromInterval = function(min,max) // min and max included
   {
-      return Math.floor(Math.random()*(max-min+1)+min);
+    return Math.floor(Math.random()*(max-min+1)+min);
   }
 
   var setupWs = function(wsId) {
@@ -93,16 +93,20 @@
       if(response.action == 'setActive') {
         var block = document.querySelector("[data-yuzu='"+ response.data.path +"']");
 
-        if(response.data.isActive === "true") {
+        if(block && response.data.isActive === "true") {
+          block.scrollIntoView(top);
           block.classList.add(highlightBlockClass);
           document.body.classList.add(highlightBodyClass);
         }
-        else {
+        else if(block) {
           block.classList.remove(highlightBlockClass);
 
-          if(document.querySelector(highlightBlockClass).length === 0) {
+          if(!document.querySelector(highlightBlockClass)) {
             document.body.classList.remove(highlightBodyClass);
           }
+        }
+        else {
+          console.error('Yuzu-Def-UI: Unable to find block in markup');
         }
       }
     }
@@ -244,14 +248,14 @@
     container.appendChild(settingsButton);
     container.appendChild(settingsArea);
     settingsArea.appendChild(dockButton);
-    settingsArea.appendChild(fullscreenButton);
+    // settingsArea.appendChild(fullscreenButton);
     container.appendChild(iconSprite);
     document.getElementsByTagName("body")[0].appendChild(container);
 
     addResizeEvents();
     addOverlayToggleEvents();
     addOverlayRepositionEvents();
-  }
+  };
 
   var wsId = randomIntFromInterval(100000, 999999);
   setupWs(wsId);
