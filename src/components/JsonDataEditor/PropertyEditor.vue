@@ -10,6 +10,7 @@
       ></json-data-array>
     </div>
     <div v-else v-for="key in Object.keys(item)" v-bind:key="key">
+      <template v-if="!toIgnore(key)">
       <div v-if="isObject(item[key])" class="property-editor__section property-editor__section--object">
         <json-data-object
           :label="key"
@@ -51,6 +52,7 @@
           :relPath="buildPathRel(key, relPath)"
         ></json-data-text>
       </div>
+      </template>
     </div>
   </div>
 </template>
@@ -63,6 +65,11 @@ import JsonDataText from "./TextEditor.vue";
 
 export default {
   name: "json-data-property",
+  data() {
+    return {
+      ignoreProperties: ['_ref']
+    };
+  },
   methods: {
     isObject: function(item) {
       return _.isPlainObject(item);
@@ -72,6 +79,9 @@ export default {
     },
     isBoolean: function(item) {
       return _.isBoolean(item);
+    },
+    toIgnore: function(key) {
+      return _.includes(this.ignoreProperties, key);
     },
     buildPathAbs(key, path) {
         return path + "/" + key; 

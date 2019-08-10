@@ -1,5 +1,5 @@
 <template>
-  <div class="boolean-editor">
+  <label class="boolean-editor">
     <input class="boolean-editor__control" type="checkbox" v-model="item[label]" />
     <span class="boolean-editor__label">
       {{ label }}
@@ -9,7 +9,7 @@
         <use xlink:href="#check"/>
       </svg>
     </span>
-  </div>
+  </label>
 </template>
 
 <script>
