@@ -19,6 +19,7 @@
           :relPath="buildPathRel(key, relPath)"
           :parentState="parentState"
           :blockName="blockName"
+          :ofType="ofType"
         ></json-data-object>
       </div>
       <div v-else-if="isArray(item[key])" class="property-editor__section property-editor__section--array">
@@ -29,6 +30,7 @@
           :absPath="buildPathAbs(key, absPath)"
           :relPath="buildPathRel(key, relPath)"
           :blockName="blockName"
+          :ofType="ofType"
         ></json-data-array>
       </div>
       <div v-else-if="isBoolean(item[key])" class="property-editor__section property-editor__section--boolean" :style="{'padding-left': `${depth}rem`}">
@@ -83,7 +85,7 @@ export default {
       }
     }
   },
-  props: ["item", "depth", "absPath", "relPath", "blockName", "parentState"],
+  props: ["item", "depth", "absPath", "relPath", "blockName", "parentState", "ofType"],
   components: {
     JsonDataArray,
     JsonDataBoolean,

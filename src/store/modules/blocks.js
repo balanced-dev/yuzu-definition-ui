@@ -32,6 +32,9 @@ export default {
         bootstrap.getBlockAndState(items, route, appContext);
         context.commit("setCurrent", appContext.block);
         context.commit("state/setCurrent", appContext.state, { root: true });
+        context.dispatch("data/load", appContext.state.name, { root: true });
+        context.dispatch("blockPaths/load", appContext.block.name, { root: true });
+        context.dispatch("state/loadAll", appContext.state.name, { root: true });
       });
     }
   }

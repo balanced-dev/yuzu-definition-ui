@@ -47,6 +47,10 @@ const removePrefix = function(blockName) {
   return blockName;
 }
 
+const removeOfType = function (ref) {
+  return ref.split('^')[0];
+}
+
 const blockFromState = function (state) {
   state = removePrefix(state);
   return state.split('_')[0];
@@ -76,6 +80,7 @@ export default {
   getBlockAndState,
   getRoute,
   addPrefix,
+  removeOfType,
   removePrefix,
   blockFromState,
   defaultFromState,

@@ -16,8 +16,7 @@ export default {
     }
   },
   actions: {
-    load(context) {
-      var state = context.rootState.state.current.name;
+    load(context, state) {
       if(state) {
         api.get(state)
         .then(response => {

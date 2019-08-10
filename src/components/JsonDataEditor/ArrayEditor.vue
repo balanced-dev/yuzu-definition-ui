@@ -29,6 +29,7 @@
             :absPath="buildPath(index, absPath)"
             :relPath="relPath"
             :isAnyOf="isAnyOf"
+            :ofType="ofType"
           ></json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item)"
@@ -39,6 +40,7 @@
             :relPath="relPath"
             :arrayIndex="index + 1"
             :blockName="blockName"
+            :ofType="ofType"
           ></json-data-collapsible-property>
           <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
             <a class="array-editor__item__sort">
@@ -119,10 +121,10 @@ export default {
       return this.$store.state.data.paths;
     },
     isAnyOf() {
-      if(this.$store.getters['blockPaths/has'](this.blockName, this.relPath)) {
-        this.addBlockModal.options = this.$store.getters['blockPaths/get'](this.blockName, this.relPath);
+      if(this.$store.getters['blockPaths/has'](this.blockName, this.relPath, this.ofType)) {
+        this.addBlockModal.options = this.$store.getters['blockPaths/get'](this.blockName, this.relPath, this.ofType);
         this.addBlockModal.selected = this.addBlockModal.options[0];
-        return this.addBlockModal.options.length > 1
+        return this.addBlockModal.options.length > 0
       }
       return false;
     }
@@ -166,7 +168,7 @@ export default {
       this.$props.items.push(item);
     }
   },
-  props: ["label", "items", "depth", "absPath", "relPath", "blockName"],
+  props: ["label", "items", "depth", "absPath", "relPath", "blockName", "ofType"],
   components: {
     draggable,
     ModalArrayEditorAdd,

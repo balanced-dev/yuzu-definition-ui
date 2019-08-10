@@ -21,7 +21,7 @@
           :value="state.value"
         >{{ state.name }}</option>
       </select>
-      <span class="block-type-editor__select__label">{{subBlock.name}}</span>
+      <span class="block-type-editor__select__label">{{blockName}}</span>
       <svg class="block-type-editor__select__icon feather" :class="{'is-hidden': this.active}">
         <use xlink:href="#chevron-down"></use>
       </svg>
@@ -67,12 +67,12 @@ export default {
   },
   computed: {
     states() {
-      return this.$store.getters["blockStates/get"](this.subBlock.name);
+      return this.$store.getters["blockStates/get"](this.blockName);
     }
   },
   mounted() {
     this.$store.dispatch("blockStates/loadStates", { 
-      block: this.subBlock.name,
+      block: this.blockName,
       state: this.subBlock.state
     });
   },
@@ -85,7 +85,7 @@ export default {
         { 
           name: this.addModal.name,
           value: state,
-          block: this.subBlock.name
+          block: this.blockName
       });
       this.subBlock.state = state;
     },
@@ -117,7 +117,7 @@ export default {
         this.addModal.isOpen = false;
 
         if(!isDuplicate) {
-          api.getEmpty(this.subBlock.name)
+          api.getEmpty(this.blockName)
           .then(response => {
             this.saveNewState(state, response.data);
           });
@@ -144,7 +144,7 @@ export default {
       this.$store.dispatch("state/add", payload);
     }
   },
-  props: ["item", "depth", "subBlock"],
+  props: ["item", "depth", "subBlock", "blockName"],
   components: {
     ModalBlockAddState
   }

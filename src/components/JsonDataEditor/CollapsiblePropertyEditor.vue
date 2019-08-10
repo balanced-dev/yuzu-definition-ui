@@ -18,6 +18,7 @@
         :absPath="absPath"
         :relPath="relPath"
         :blockName="blockName"
+        :ofType="ofType"
       ></json-data-property>
     </div>
   </div>
@@ -52,7 +53,7 @@ export default {
       this.$data.isOpen = !this.$data.isOpen;
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath", "arrayIndex", "blockName"]
+  props: ["label", "item", "depth", "absPath", "relPath", "arrayIndex", "blockName", "ofType"]
 };
 </script>
 

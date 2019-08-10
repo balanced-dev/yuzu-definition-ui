@@ -89,11 +89,6 @@ export default {
       };
     }
   },
-  mounted: function() {
-    this.$store.dispatch("data/load");
-    this.$store.dispatch("blockPaths/load", this.block.name);
-    this.$store.dispatch("state/loadAll", this.currentState.name);
-  },
   methods: {
     preview: function($index, $event) {
       api.preview(this.returnData);

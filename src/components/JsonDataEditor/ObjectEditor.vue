@@ -31,8 +31,9 @@
         :depth="depth+1"
         :absPath="absPath"
         :relPath="''"
-        :blockName="subBlockMeta.name"
+        :blockName="newBlockName"
         :parentState="subBlockRef"
+        :ofType="newOfType"
       ></json-data-property>
       <json-data-property
         v-if="!isSubBlock && !isInlineBlock"
@@ -40,8 +41,9 @@
         :depth="depth+1"
         :absPath="absPath"
         :relPath="relPath"
-        :blockName="blockName"
+        :blockName="newBlockName"
         :parentState="parentState"
+        :ofType="newOfType"
       ></json-data-property>
       <json-data-property
         v-if="!isSubBlock && isInlineBlock"
@@ -49,13 +51,15 @@
         :depth="depth+1"
         :absPath="absPath"
         :relPath="''"
-        :blockName="inlineBlockMeta.name"
+        :blockName="newBlockName"
         :parentState="parentState"
+        :ofType="newOfType"
       ></json-data-property>
       <json-data-block-type 
         v-if="isSubBlock" 
         :item="item" 
         :depth="depth+1" 
+        :blockName="newBlockName"
         :subBlock="subBlockMeta"
         ></json-data-block-type>
     </div>
@@ -80,7 +84,9 @@ export default {
       inlineBlockMeta: {
         name: ""
       }, 
-      resolvedLabel: ""
+      resolvedLabel: "",
+      newOfType: "",
+      newBlockName: ""
     };
   },
   computed: {
@@ -94,12 +100,11 @@ export default {
       return this.$store.getters["state/get"](this.subBlockRef);
     },
     isInlineBlock() {
-      var f= this.$store.getters['blockPaths/has'](this.blockName, this.relPath);
-      return f;
+      return this.$store.getters['blockPaths/has'](this.blockName, this.relPath);
     },
     inlineBlockRef() {
-      var f= this.$store.getters['blockPaths/get'](this.blockName, this.relPath)[0];
-      return f;
+      var f = this.$store.getters['blockPaths/get'](this.blockName, this.relPath)[0];
+      return bootstrap.removeOfType(f);
     },
     inlineBlockState() {
       if(this.item) {
@@ -111,18 +116,25 @@ export default {
     },
   },
   mounted() {
+
+    this.newBlockName = this.blockName;
+    this.newOfType = this.ofType;
+
     if (this.isSubBlock) {
-      this.subBlockMeta.name = bootstrap.blockFromState(this.subBlockRef);
+      this.newBlockName = bootstrap.blockFromState(this.subBlockRef);
       this.subBlockMeta.defaultState = bootstrap.defaultFromState(this.subBlockRef);
       this.subBlockMeta.state = this.subBlockRef;
-      this.$store.dispatch("blockPaths/load", this.subBlockMeta.name);
+      this.$store.dispatch("blockPaths/load", this.newBlockName);
       this.$store.dispatch("state/load", this.subBlockRef);
     }
 
     if (this.isInlineBlock) {
-      this.inlineBlockMeta.name = bootstrap.blockFromState(this.inlineBlockRef);
+      this.newBlockName = bootstrap.blockFromState(this.inlineBlockRef);
       this.$store.dispatch("blockPaths/load", this.inlineBlockRef);
       this.$store.dispatch("state/load", this.inlineBlockRef);
+      
+      var newBlockOfType = this.$store.getters['blockPaths/getOfType']({ block: this.blockName, path: this.relPath });
+      if(newBlockOfType) this.newOfType = newBlockOfType;
     }
 
     this.resolvedLabel = this.label;
@@ -175,7 +187,7 @@ export default {
       }
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath", "blockName", "isAnyOf", "parentState"]
+  props: ["label", "item", "depth", "absPath", "relPath", "blockName", "isAnyOf", "parentState", "ofType"]
 };
 </script>
 
