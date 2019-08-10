@@ -137,15 +137,19 @@ export default {
       this.$store.dispatch("data/save", this.data);
       api.preview(this.returnData);
     },
+    previewReset: function() {
+      this.$store.commit('resetPreview');
+    }
   },
   created: function() {
     this.debouncedUpdate = _.debounce(this.updated, 500);
+    this.debouncedPreview = _.debounce(this.previewReset, 500);
   },
   watch: {
     toPreview: function(val) {
       if(val) {
         this.preview();
-        this.$store.commit('resetPreview');
+        this.debouncedPreview();
       }
     },
     data: {
