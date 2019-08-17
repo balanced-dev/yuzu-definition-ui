@@ -39,9 +39,16 @@
           :label="key"
           :item="item"
           :depth="depth"
-          :absPath="buildPathAbs(key, absPath)"
-          :relPath="buildPathRel(key, relPath)"
         ></json-data-boolean>
+      </div>
+      <div v-else-if="isEnum(key)" class="property-editor__section property-editor__section--property" :style="{'padding-left': `${depth}rem`}">
+        <json-data-enum
+          :label="key"
+          :item="item"
+          :depth="depth"
+          :path="buildPathRel(key, relPath)"
+          :blockName="blockName"
+        ></json-data-enum>
       </div>
       <div v-else class="property-editor__section property-editor__section--property" :style="{'padding-left': `${depth}rem`}">
         <json-data-text
@@ -61,6 +68,7 @@
 import _ from "lodash";
 import JsonDataArray from "./ArrayEditor.vue";
 import JsonDataBoolean from "./BooleanEditor.vue";
+import JsonDataEnum from "./EnumEditor.vue";
 import JsonDataText from "./TextEditor.vue";
 
 export default {
@@ -70,6 +78,7 @@ export default {
       ignoreProperties: ['_ref']
     };
   },
+
   methods: {
     isObject: function(item) {
       return _.isPlainObject(item);
@@ -79,6 +88,10 @@ export default {
     },
     isBoolean: function(item) {
       return _.isBoolean(item);
+    },
+    isEnum(key) {
+      var path = this.buildPathRel(key, this.relPath)
+      return this.$store.getters['schema/has'](this.blockName, 'enums', path);
     },
     toIgnore: function(key) {
       return _.includes(this.ignoreProperties, key);
@@ -99,6 +112,7 @@ export default {
   components: {
     JsonDataArray,
     JsonDataBoolean,
+    JsonDataEnum,
     JsonDataText
   }
 };

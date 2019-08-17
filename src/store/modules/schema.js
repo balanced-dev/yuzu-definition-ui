@@ -5,12 +5,12 @@ import bootstrap from "../../bootstrap";
 export default {
   namespaced: true,
   state: {
-    paths: [],
+    data: [],
     areLoading: []
   },
   mutations: {
     load: function(state, payload) {
-      state.paths.push(payload);
+      state.data.push(payload);
     },
     addIsLoading: function(state, block) {
       state.areLoading.push(block);
@@ -21,41 +21,40 @@ export default {
   },
   getters: {
     hasForBlock: (state) => (block) => {
-      var is = _.some(state.paths, (item) => { return item.block == block; });
+      var is = _.some(state.data, (item) => { return item.block == block; });
       if(is) return true;
       var isLoading = _.some(state.areLoading, (i) => { return i == block; });
       return isLoading;
     },
-    has: (state) => (block, path, ofType) => {
+    has: (state) => (block, area, path, ofType) => {
       path = bootstrap.addPrefix(path);
       if(ofType) {
-        return _.some(state.paths, (i) => { 
-          return i.block == block && i.paths.hasOwnProperty(ofType) && i.paths[ofType].hasOwnProperty(path); 
+        return _.some(state.data, (i) => { 
+          return i.block == block && i.data[ofType] && i.data[ofType][area].hasOwnProperty(path); 
         });
       }
       else {
-        return _.some(state.paths, (i) => { 
-          return i.block == block && i.paths.hasOwnProperty(path); 
+        return _.some(state.data, (i) => { 
+          return i.block == block && i.data[area] && i.data[area].hasOwnProperty(path); 
         });
       }
     },
-    get: (state) => (block, path, ofType) => {
+    get: (state) => (block, area, path, ofType) => {
 
-      var d = _.find(state.paths, (item) => { return item.block == block; });
-      if(d) {
+      var block = _.find(state.data, (item) => { return item.block == block; });
+      if(block) {
         if(ofType) {
-          return d.paths[ofType]["/"+ path];
+          return block.data[ofType][area]["/"+ path];
         }
-        else {
-          return d.paths["/"+ path];
+        else if(block.data[area]) {
+          return block.data[area]["/"+ path];
         }
       }
       else
         return [];
-
     },
     getOfType: (state, getters) => (p) => {
-      var path = getters.get(p.block, p.path);
+      var path = getters.get(p.block, 'refs', p.path);
       if(path && path.length > 0) {
         var sp = path[0].split('^');
         return sp.length > 1 ? sp[1] : ''; 
@@ -70,7 +69,7 @@ export default {
         context.commit("addIsLoading", block);
         api.getRefPaths(block)
         .then(response => {
-          context.commit("load", { block: block, paths: response.data });
+          context.commit("load", { block: block, data: response.data });
           context.commit("removeIsLoading", block);
         });
       }

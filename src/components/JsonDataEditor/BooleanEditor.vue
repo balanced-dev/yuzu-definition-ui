@@ -21,7 +21,7 @@ export default {
   },
   methods: {
   },
-  props: ["label", "item", "depth", "path"]
+  props: ["label", "item", "depth"]
 };
 </script>
 

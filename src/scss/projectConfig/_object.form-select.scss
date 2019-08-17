@@ -1,7 +1,9 @@
 $form-select__icon-size: size(14px);
 $form-select__select-height: size(34px);
 
-@mixin form-select($this, $height: $form-select__select-height, $iconSize: $form-select__icon-size, $overlayLabel: false) {
+@mixin form-select($this, $height: $form-select__select-height, 
+$iconSize: $form-select__icon-size, $overlayLabel: false,
+$bgColour: $colour-grey-light, $borderColour: $colour-grey-mid-dark) {
   overflow: hidden;
   position: relative;
   
@@ -57,8 +59,8 @@ $form-select__select-height: size(34px);
       }
     }
     @else {
-      background-color: $colour-grey-darker;
-      border: 1px solid $colour-grey-mid-dark;
+      background-color: $bgColour;
+      border: 1px solid $borderColour;
     }
 
     color: $colour-text-default;
@@ -69,6 +71,7 @@ $form-select__select-height: size(34px);
     &__option {
       background-color: $colour-white;
       color: $colour-grey-dark;
+      height: $height;
     }
   }
 

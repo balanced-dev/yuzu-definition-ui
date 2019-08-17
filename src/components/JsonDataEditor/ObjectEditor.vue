@@ -14,17 +14,6 @@
       <span class="object-editor__title__text">{{ resolvedLabel | striphtml }}</span>
     </div>
     <div class="object-editor__section" v-if="active">
-      <div class="object-editor__section__menu" :style="{'padding-left': `${depth+1}rem`}">
-        <button class="object-editor__target" :class="[{'is-active': this.highlighted}]" @click="highlight" v-if="isSubBlock">
-          <svg class="object-editor__target__icon feather">
-            <use xlink:href="#crosshair"/>
-          </svg>
-          <span class="object-editor__target__text">
-            <template v-if="!this.highlighted">Apply</template>
-            <template v-else>Remove</template> 
-            element highlighting in-page</span>
-        </button>
-      </div>
       <json-data-property
         v-if="isSubBlock"
         :item="subBlockState"
@@ -61,6 +50,7 @@
         :depth="depth+1" 
         :blockName="newBlockName"
         :subBlock="subBlockMeta"
+        :absPath="absPath"
         ></json-data-block-type>
     </div>
   </div>
@@ -100,10 +90,10 @@ export default {
       return this.$store.getters["state/get"](this.subBlockRef);
     },
     isInlineBlock() {
-      return this.$store.getters['blockPaths/has'](this.blockName, this.relPath);
+      return this.$store.getters['schema/has'](this.blockName, 'refs', this.relPath, this.ofType);
     },
     inlineBlockRef() {
-      var f = this.$store.getters['blockPaths/get'](this.blockName, this.relPath)[0];
+      var f = this.$store.getters['schema/get'](this.blockName, 'refs', this.relPath, this.ofType)[0];
       return bootstrap.removeOfType(f);
     },
     inlineBlockState() {
@@ -124,16 +114,16 @@ export default {
       this.newBlockName = bootstrap.blockFromState(this.subBlockRef);
       this.subBlockMeta.defaultState = bootstrap.defaultFromState(this.subBlockRef);
       this.subBlockMeta.state = this.subBlockRef;
-      this.$store.dispatch("blockPaths/load", this.newBlockName);
+      this.$store.dispatch("schema/load", this.newBlockName);
       this.$store.dispatch("state/load", this.subBlockRef);
     }
 
     if (this.isInlineBlock) {
       this.newBlockName = bootstrap.blockFromState(this.inlineBlockRef);
-      this.$store.dispatch("blockPaths/load", this.inlineBlockRef);
+      this.$store.dispatch("schema/load", this.inlineBlockRef);
       this.$store.dispatch("state/load", this.inlineBlockRef);
       
-      var newBlockOfType = this.$store.getters['blockPaths/getOfType']({ block: this.blockName, path: this.relPath });
+      var newBlockOfType = this.$store.getters['schema/getOfType']({ block: this.blockName, path: this.relPath });
       if(newBlockOfType) this.newOfType = newBlockOfType;
     }
 
@@ -145,10 +135,6 @@ export default {
   methods: {
     toggleActive() {
       this.active = !this.active;
-    },
-    highlight() {
-      this.highlighted = !this.highlighted;
-      api.setActive(this.absPath, this.highlighted);
     },
     setAnyOfLabel: function() {
       if(this.subBlockState) {
@@ -199,42 +185,5 @@ export default {
 
   @include json-data-editor__section($this, $title-v-padding: true);
 
-  &__section {
-    &__menu {
-      display: flex;
-      justify-content: flex-end;
-      padding-right: $column-gutter-default;
-    }
-  }
-
-  &__target {
-    @include u-reset-button;
-    @include font-size($font-size-xsmall);
-    @include default-font;
-    align-items: center;
-    background-color: $colour-green;
-    color: $colour-white;
-    display: inline-flex;
-    line-height: 1;
-    margin-top: $json-data-editor__v-spacing;
-    padding: $column-gutter-default / 2;
-    text-decoration: none;
-
-    &.is-active {
-      background-color: $colour-red;
-    }
-
-    &__icon {
-      display: block;
-      height: size(16px);
-      margin-right: 0.5em;
-      width: size(16px);
-    }
-
-    &__text {
-      @include bold-font;
-      text-transform: uppercase;
-    }
-  }
 }
 </style>

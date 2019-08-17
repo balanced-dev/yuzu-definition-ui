@@ -94,7 +94,12 @@
         var block = document.querySelector("[data-yuzu='"+ response.data.path +"']");
 
         if(block && response.data.isActive === "true") {
-          block.scrollIntoView(top);
+          block.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'});
+          setTimeout(() => {
+            window.scrollBy(0, -50);
+            }, 500);
           block.classList.add(highlightBlockClass);
           document.body.classList.add(highlightBodyClass);
         }

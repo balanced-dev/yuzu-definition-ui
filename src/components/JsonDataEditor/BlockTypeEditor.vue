@@ -38,12 +38,13 @@
       </svg>
       <span class="block-type-editor__button__text">Add new state</span>
     </button>
-    <!-- <button class="block-type-editor__button block-type-editor__button--save">
+    <button class="block-type-editor__button block-type-editor__button--highlight" @click="highlight" :class="[{'is-active': this.highlighted}]">
       <svg class="block-type-editor__button__icon feather">
-        <use xlink:href="#save"/>
+        <use xlink:href="#crosshair"/>
       </svg>
-      <span class="block-type-editor__button__text">Save state</span>
-    </button> -->
+      <span class="block-type-editor__button__text"><template v-if="!this.highlighted">Highlight block</template>
+            <template v-else>Remove highlighting</template></span>
+    </button>
   </div>
 </template>
 
@@ -58,6 +59,7 @@ export default {
   data() {
     return {
       active: true,
+      highlighted: false,
       addModal: {
         isOpen: false,
         name: "",
@@ -76,9 +78,19 @@ export default {
       state: this.subBlock.state
     });
   },
+  beforeDestroy() {
+    if(this.highlighted) {
+      this.highlighted = false;
+      api.setActive(this.absPath, this.highlighted);  
+    }
+  },
   methods: {
     toggleAddModal: function() {
       this.addModal.isOpen = !this.addModal.isOpen;
+    },
+    highlight() {
+      this.highlighted = !this.highlighted;
+      api.setActive(this.absPath, this.highlighted);
     },
     addNewStateOption: function(state) {
       this.$store.dispatch("blockStates/addNewState", 
@@ -144,7 +156,7 @@ export default {
       this.$store.dispatch("state/add", payload);
     }
   },
-  props: ["item", "depth", "subBlock", "blockName"],
+  props: ["item", "depth", "subBlock", "blockName", "absPath"],
   components: {
     ModalBlockAddState
   }
@@ -180,8 +192,10 @@ export default {
     &--add {
       background-color: $colour-green;
     }
-    &--save {
-      background-color: $colour-green;
+    &--highlight {
+      &.is-active {
+        background-color: $colour-red;
+      }
     }
 
     &__icon {
@@ -229,7 +243,7 @@ export default {
   }
 
   &__select {
-    @include form-select($this: &, $overlayLabel: true, $height: size(26.75px));
+    @include form-select($this: &, $overlayLabel: true, $height: size(26.75px), $bgColour: $colour-grey-darker, $borderColour: $colour-grey-mid-dark);
     &__control {
 
       &__option {
