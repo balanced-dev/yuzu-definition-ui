@@ -28,22 +28,23 @@ export default {
     },
     has: (state) => (block, area, path, ofType) => {
       path = bootstrap.addPrefix(path);
+      
       if(ofType) {
-        return _.some(state.data, (i) => { 
+        var hasOfType = _.some(state.data, (i) => { 
           return i.block == block && i.data[ofType] && i.data[ofType][area].hasOwnProperty(path); 
         });
+        if(hasOfType) return true;
       }
-      else {
-        return _.some(state.data, (i) => { 
-          return i.block == block && i.data[area] && i.data[area].hasOwnProperty(path); 
-        });
-      }
+
+      return _.some(state.data, (i) => { 
+        return i.block == block && i.data[area] && i.data[area].hasOwnProperty(path); 
+      });
     },
     get: (state) => (block, area, path, ofType) => {
 
       var block = _.find(state.data, (item) => { return item.block == block; });
       if(block) {
-        if(ofType) {
+        if(ofType && block.data[ofType]) {
           return block.data[ofType][area]["/"+ path];
         }
         else if(block.data[area]) {
