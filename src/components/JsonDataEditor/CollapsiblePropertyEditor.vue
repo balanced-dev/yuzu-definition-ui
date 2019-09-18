@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     guessCollapsedTitle() {
-      var output = inflector.singularize(this.label) +' '+ this.arrayIndex;
+      var output = inflector.singularize(this.label) +' '+ this.originalIndex;
       this.$store.dispatch("itemTitle/get", {
         item: this.item,
         action: function(text, item) {
@@ -53,7 +53,7 @@ export default {
       this.$data.isOpen = !this.$data.isOpen;
     }
   },
-  props: ["label", "item", "depth", "absPath", "relPath", "arrayIndex", "blockName", "ofType"]
+  props: ["label", "item", "depth", "absPath", "relPath", "arrayIndex", "originalIndex", "blockName", "ofType"]
 };
 </script>
 

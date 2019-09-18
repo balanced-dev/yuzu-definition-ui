@@ -11,10 +11,9 @@
     <div class="array-editor__section">
       <draggable
         :list="items"
+        @end="handleMove"
         ghost-class="ghost"
         handle=".array-editor__item__sort"
-        @start="drag = true"
-        @end="drag = false"
       >
         <div
           v-for="(item, index) in items"
@@ -39,6 +38,7 @@
             :absPath="buildPath(index, absPath)"
             :relPath="relPath"
             :arrayIndex="index + 1"
+            :originalIndex="originalIndexesArray.get(index) + 1"
             :blockName="blockName"
             :ofType="ofType"
           ></json-data-collapsible-property>
@@ -103,6 +103,7 @@ import api from '../../api';
 import bootstrap from "../../bootstrap";
 import ModalArrayEditorAdd from "../Modal/ModalArrayEditorAdd";
 import ModalArrayEditorDelete from "../Modal/ModalArrayEditorDelete";
+import OriginalIndexes from "../../services/originalIndexes";
 
 export default {
   name: "json-data-array",
@@ -113,7 +114,8 @@ export default {
         isOpen: false,
         options: [],
         selected: ''
-      }
+      },
+      originalIndexesArray: new OriginalIndexes(this.items)
     };
   },
   computed: {
@@ -130,6 +132,9 @@ export default {
     }
   },
   methods: {
+    handleMove(e) {
+      this.originalIndexesArray.reorder(e.oldIndex, e.newIndex);
+    },
     isRef(item) {
       return item.hasOwnProperty('$ref');
     },
@@ -146,6 +151,7 @@ export default {
       var index = this.$props.items.indexOf(this.toDelete.item);
       if (index !== -1) this.$props.items.splice(index, 1);
       this.resetToBeDeleted();
+      this.originalIndexesArray.deleteElement(index);
     },
     buildPath(index, path) {
       return path +"["+ index +"]";
@@ -160,12 +166,17 @@ export default {
       .then(response => {
         that.$props.items.push(response.data);
       });
+      this.addNewIndex();
     },
     addBlockItem(block) {
       this.addBlockModal.isOpen = false;
       var item = {};
       item['$ref'] = block;
       this.$props.items.push(item);
+      this.addNewIndex();
+    },
+    addNewIndex() {
+      this.originalIndexesArray.pushNewElement();
     }
   },
   props: ["label", "items", "depth", "absPath", "relPath", "blockName", "ofType"],

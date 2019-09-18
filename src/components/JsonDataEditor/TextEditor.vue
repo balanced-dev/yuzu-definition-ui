@@ -1,7 +1,7 @@
 <template>
   <div class="text-editor">
-    <input class="text-editor__control text-editor__control--text" v-if="!this.isTextArea" v-on:blur="evaluateLength(item[label])" type="text" v-model="item[label]" />
-    <textarea class="text-editor__control text-editor__control--textarea" v-if="this.isTextArea" v-on:blur="evaluateLength(item[label])" v-model="item[label]"></textarea>
+    <input class="text-editor__control text-editor__control--text" v-model="item[label]" v-on:blur="evaluateLength()" v-if="!isTextArea" type="text"/>
+    <textarea class="text-editor__control text-editor__control--textarea" v-model="item[label]" v-on:blur="evaluateLength()" v-if="isTextArea"></textarea>
     <span class="text-editor__label">
       {{ label }}
     </span>
@@ -16,13 +16,18 @@ export default {
   name: "json-data-text",
   data() {
     return {
-      isTextArea: this.evaluateLength(this.item[this.label])
-    };
+      isTextArea: false
+    }
+  },
+  mounted() {
+    this.evaluateLength();
   },
   methods: {
-    evaluateLength(value) {
-      let wordCount = value.split(" ").length;
-      return this.isTextArea = wordCount >= 25;
+    evaluateLength() {
+      let value = String(this.item[this.label]), 
+          charCount = value.length,
+          wordCount = value.split(" ").length;
+      this.isTextArea = wordCount >= 25 || charCount >= 150;
     }
   },
   props: ["label", "item", "depth", "path"]
