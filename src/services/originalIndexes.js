@@ -29,6 +29,5 @@ export default class OriginalIndexes {
   pushNewElement() {
     this.originalIndexesArray.push(this.nextOriginalIndex);
     this.nextOriginalIndex++;
-    this.originalIndexesArray;
   };
 };
