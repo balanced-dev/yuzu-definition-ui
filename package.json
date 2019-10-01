@@ -1,6 +1,6 @@
 {
   "name": "yuzu-definition-ui",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Pattern library and state management overlay for Yuzu Definition",
   "author": "Phil Whittaker",
   "license": "MIT",
@@ -10,16 +10,20 @@
     "prepublishOnly": "vue-cli-service build",
     "postinstall": "node ./post-install.js"
   },
+  "files": [
+    "post-install.js",
+    "/dist"
+  ],
   "dependencies": {
+  },
+  "devDependencies": {
     "core-js": "^2.6.5",
     "gently-copy": "^3.2.0",
     "inflector-js": "^1.0.1",
     "socket.io-p2p": "^2.2.0",
     "vue": "^2.6.10",
     "vuedraggable": "^2.21.0",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
+    "vuex": "^3.0.1",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
     "@vue/cli-service": "^3.8.0",
