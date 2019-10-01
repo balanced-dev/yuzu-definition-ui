@@ -9,7 +9,7 @@
         :blockName="blockName"
       ></json-data-array>
     </div>
-    <div v-else v-for="key in Object.keys(item)" v-bind:key="key">
+    <div v-else-if="isObject(item)" v-for="key in Object.keys(item)" v-bind:key="key">
       <template v-if="!toIgnore(key)">
       <div v-if="isObject(item[key])" class="property-editor__section property-editor__section--object">
         <json-data-object
@@ -69,7 +69,6 @@ import _ from "lodash";
 import JsonDataArray from "./ArrayEditor.vue";
 import JsonDataBoolean from "./BooleanEditor.vue";
 import JsonDataEnum from "./EnumEditor.vue";
-import JsonDataText from "./TextEditor.vue";
 
 export default {
   name: "json-data-property",
@@ -112,8 +111,7 @@ export default {
   components: {
     JsonDataArray,
     JsonDataBoolean,
-    JsonDataEnum,
-    JsonDataText
+    JsonDataEnum
   }
 };
 </script>
