@@ -1,6 +1,6 @@
 {
   "name": "yuzu-definition-ui",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Pattern library and state management overlay for Yuzu Definition",
   "author": "Phil Whittaker",
   "license": "MIT",
@@ -15,10 +15,10 @@
     "/dist"
   ],
   "dependencies": {
+    "gently-copy": "^3.2.0"
   },
   "devDependencies": {
     "core-js": "^2.6.5",
-    "gently-copy": "^3.2.0",
     "inflector-js": "^1.0.1",
     "socket.io-p2p": "^2.2.0",
     "vue": "^2.6.10",
