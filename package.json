@@ -1,14 +1,16 @@
 {
-  "name": "yuzu-def-ui",
-  "version": "1.0.1",
+  "name": "yuzu-definition-ui",
+  "version": "1.0.6",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "prepublishOnly": "vue-cli-service build",
+    "postinstall": "node ./post-install.js"
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "gently-copy": "^3.2.0",
     "inflector-js": "^1.0.1",
     "socket.io-p2p": "^2.2.0",
     "vue": "^2.6.10",

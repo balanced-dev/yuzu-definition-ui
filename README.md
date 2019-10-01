@@ -1,4 +1,9 @@
-# yuzu-def-ui
+# Yuzu Definition UI
+
+Copyright (C) HiFi Ltd 2019
+Distributed under the MIT license  
+
+UI overlay for Yuzu Definition, allows easy management of patterns and state 
 
 ## Project setup
 ```
@@ -14,16 +19,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
