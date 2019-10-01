@@ -11,10 +11,10 @@
 var gentlyCopy = require('gently-copy');
 var path = require('path');
 
-var filesToCopy = ['dist'];
+var filesToCopy = ['./dist/yuzu-def-ui'];
 
 // User's local directory
-var userPath = path.join(process.env.INIT_CWD, '_dev', 'yuzu-def-ui');
+var userPath = process.env.INIT_CWD + '/_dev';
 
 // Moving files to user's local directory
 gentlyCopy(filesToCopy, userPath, {overwrite: true});
