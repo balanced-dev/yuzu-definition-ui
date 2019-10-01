@@ -22,13 +22,18 @@ export default {
   name: "json-data-text",
   data() {
     return {
-      isTextArea: this.evaluateLength(this.item[this.label])
-    };
+      isTextArea: false
+    }
+  },
+  mounted() {
+    this.evaluateLength();
   },
   methods: {
-    evaluateLength(value) {
-      let wordCount = value.split(" ").length;
-      return this.isTextArea = wordCount >= 25;
+    evaluateLength() {
+      let value = String(this.item[this.label]), 
+          charCount = value.length,
+          wordCount = value.split(" ").length;
+      this.isTextArea = wordCount >= 25 || charCount >= 150;
     }
   },
   props: ["label", "index", "item", "depth", "path"]
