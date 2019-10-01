@@ -1,7 +1,9 @@
 {
   "name": "yuzu-definition-ui",
   "version": "1.0.6",
-  "private": true,
+  "description": "Pattern library and state management overlay for Yuzu Definition",
+  "author": "Phil Whittaker",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
