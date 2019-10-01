@@ -25,7 +25,7 @@ var deleteFolderRecursive = function(path) {
     }
   };
 
-deleteFolderRecursive(process.env.INIT_CWD + '/_dev');
+deleteFolderRecursive(process.env.INIT_CWD + '/_dev/yuzu-def-ui');
 
 var filesToCopy = ['./dist/yuzu-def-ui'];
 
