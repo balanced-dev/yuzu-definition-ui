@@ -9,6 +9,7 @@
 'use strict'
 
 var gentlyCopy = require('gently-copy');
+var fs = require('fs');
 
 var deleteFolderRecursive = function(path) {
     if (fs.existsSync(path)) {
