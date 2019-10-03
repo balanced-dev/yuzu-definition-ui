@@ -31,7 +31,7 @@
             :ofType="ofType"
           ></json-data-object>
           <json-data-collapsible-property
-            v-if="!isRef(item)"
+            v-if="!isRef(item) && isObject(item)"
             :label="label"
             :item="item"
             :depth="depth + 1"
@@ -42,6 +42,15 @@
             :blockName="blockName"
             :ofType="ofType"
           ></json-data-collapsible-property>
+          <div v-if="!isRef(item) && !isObject(item)" class="array-editor__section--property" :style="{'padding-left': `${depth + 1}rem`}">
+            <json-data-text
+              :index="index"
+              :item="items"
+              :depth="depth + 1"
+              :absPath="buildPath(index, absPath)"
+              :relPath="relPath"
+            ></json-data-text>
+          </div>
           <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
             <a class="array-editor__item__sort">
               <svg class="array-editor__item__sort__icon feather">
@@ -140,6 +149,9 @@ export default {
     },
     refLabel(item) {
       return item["$ref"];
+    },
+    isObject: function(item) {
+      return _.isPlainObject(item);
     },
     setToDelete(value) {
       this.toDelete = value;
@@ -250,6 +262,10 @@ export default {
       &__text {
 
       } 
+    }
+
+    &--property {
+      @include column-gutter('padding', 'right');
     }
 
     &__footer {

@@ -1,10 +1,16 @@
 <template>
   <div class="text-editor">
-    <input class="text-editor__control text-editor__control--text" v-model="item[label]" v-on:blur="evaluateLength()" v-if="!isTextArea" type="text"/>
-    <textarea class="text-editor__control text-editor__control--textarea" v-model="item[label]" v-on:blur="evaluateLength()" v-if="isTextArea"></textarea>
-    <span class="text-editor__label">
-      {{ label }}
-    </span>
+    <template v-if="label">
+      <input class="text-editor__control text-editor__control--text" v-if="!this.isTextArea" v-on:blur="evaluateLength(item[label])" type="text" v-model="item[label]" />
+      <textarea class="text-editor__control text-editor__control--textarea" v-if="this.isTextArea" v-on:blur="evaluateLength(item[label])" v-model="item[label]"></textarea>
+      <span class="text-editor__label">
+        {{ label }}
+      </span>
+    </template>
+    <template v-else>
+      <input class="text-editor__control text-editor__control--text" type="text" v-model="item[index]" />
+    </template>
+
     <svg class="text-editor__icon feather">
       <use xlink:href="#edit-2"/>
     </svg>
@@ -30,7 +36,7 @@ export default {
       this.isTextArea = wordCount >= 25 || charCount >= 150;
     }
   },
-  props: ["label", "item", "depth", "path"]
+  props: ["label", "index", "item", "depth", "path"]
 };
 </script>
 

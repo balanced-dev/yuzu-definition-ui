@@ -22,7 +22,9 @@ const getBlockAndState = (items, state, output, parent) => {
 };
 
 const convertPreviewToDataPath = function (strPath) {
-  var arrPath = strPath.split("\\");
+  var separator = strPath.indexOf('\\') > -1 ? '\\' : '/';
+  var arrPath = strPath.split(separator);
+
   var lastIndex = arrPath.length - 1;
   arrPath[lastIndex] = arrPath[lastIndex].replace(".html", ".json");
   arrPath.splice(lastIndex, 0, "data");
