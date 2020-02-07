@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     href: state => {
-      return "/_templates/html/" + state;
+      return "/_client/html/" + state;
     }
   }
 };
