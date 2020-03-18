@@ -135,7 +135,7 @@ export default {
       if(this.$store.getters['schema/has'](this.blockName, 'refs', this.relPath, this.ofType)) {
         this.addBlockModal.options = this.$store.getters['schema/get'](this.blockName, 'refs', this.relPath, this.ofType);
         this.addBlockModal.selected = this.addBlockModal.options[0];
-        return this.addBlockModal.options.length > 0
+        return this.addBlockModal.options.length > 1;
       }
       return false;
     }
