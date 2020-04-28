@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
     <tabs></tabs>
-    <div class="version-number">v1.1.0</div>
+    <div class="version-number">v1.1.1</div>
   </div>
 </template>
 
