@@ -50,6 +50,8 @@
   }
 
   &__label {
+    @include font-size($font-size-small);
+    @include default-font;
     display: block;
     pointer-events: none;
     order: 1;

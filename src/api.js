@@ -2,11 +2,17 @@ import axios from "axios";
 import store from "./store/store";
 import bootstrap from "./bootstrap";
 
-let rootUrl = "http://localhost:3000/api/"
+let rootUrl = "http://localhost:3000/api/";
+let externalRootUrl = "http://" + location.host + "/_client/templatePaths.json";
 
 export default {
   getPreviews: () => {
-    return axios.get(rootUrl + "getPreviews");
+    if(location.hostname === "localhost") {
+      return axios.get(rootUrl + "getPreviews");
+    }
+    else {
+      return axios.get(externalRootUrl);
+    }
   },
   get: (state) => {
     return axios.get(rootUrl + "get/"+ bootstrap.removePrefix(state))
@@ -40,6 +46,9 @@ export default {
   },
   save: (data) => {
     return axios.post(rootUrl + "save", data);
+  },
+  getImages: () => {
+    return axios.get(rootUrl + "getImages/");
   }
 };
 

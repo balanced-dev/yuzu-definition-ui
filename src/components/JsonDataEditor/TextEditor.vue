@@ -1,11 +1,14 @@
 <template>
-  <div class="text-editor">
+  <label class="text-editor">
     <template v-if="label">
-      <input class="text-editor__control text-editor__control--text" v-if="!this.isTextArea" v-on:blur="evaluateLength(item[label])" type="text" v-model="item[label]" />
-      <textarea class="text-editor__control text-editor__control--textarea" v-if="this.isTextArea" v-on:blur="evaluateLength(item[label])" v-model="item[label]"></textarea>
+      <input class="text-editor__control text-editor__control--text" v-if="!isTextArea" v-on:focus="populateImages" v-on:blur="evaluateLength(item[label])" type="text" v-model="item[label]"  :list="isImageSrc ? uId : ''"/>
+      <textarea class="text-editor__control text-editor__control--textarea" v-if="isTextArea" v-on:focus="populateImages" v-on:blur="evaluateLength(item[label])" v-model="item[label]" :list="isImageSrc ? uId : ''"></textarea>
       <span class="text-editor__label">
         {{ label }}
       </span>
+      <datalist v-if="isImageSrc" :id="uId">
+        <option :value="option" v-for="option in images" v-bind:key="option"></option>
+      </datalist>
     </template>
     <template v-else>
       <input class="text-editor__control text-editor__control--text" type="text" v-model="item[index]" />
@@ -14,26 +17,45 @@
     <svg class="text-editor__icon feather">
       <use xlink:href="#edit-2"/>
     </svg>
-  </div>
+    <slot name="arrayActions"></slot>
+  </label>
 </template>
 
 <script>
+import api from '../../api';
 export default {
   name: "json-data-text",
   data() {
     return {
-      isTextArea: false
+      isImageSrc: false,
+      uId: this.generateId(),
+      isTextArea: false,
+      images: []
     }
   },
   mounted() {
     this.evaluateLength();
+    this.checkIfImageSrc();
   },
   methods: {
+    checkIfImageSrc() {
+      this.isImageSrc = this.label === 'src';
+    },
+    generateId() {
+      return Math.random();
+    },
     evaluateLength() {
       let value = String(this.item[this.label]), 
           charCount = value.length,
           wordCount = value.split(" ").length;
       this.isTextArea = wordCount >= 25 || charCount >= 150;
+    },
+    populateImages() {
+      if(this.isImageSrc) {
+        this.images = api.getImages().then((response) =>  {
+          this.images = response.data;
+        });
+      }
     }
   },
   props: ["label", "index", "item", "depth", "path"]
@@ -48,9 +70,6 @@ export default {
 
   @include form-input;
 
-  // margin-bottom: $json-data-editor__v-spacing;
-  // margin-top: $json-data-editor__v-spacing;
-
   &:hover:not(:focus-within) {
     #{$this}__icon {
       display: block;
@@ -59,8 +78,8 @@ export default {
 
   &__control {
 
-    &--text {
-      line-height: 1;
+    &--text {      
+      min-height: size(50px);
       text-overflow: ellipsis;
       white-space: nowrap;
     }

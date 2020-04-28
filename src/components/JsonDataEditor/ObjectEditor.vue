@@ -13,6 +13,15 @@
       </svg>
       <span class="object-editor__title__text">{{ resolvedLabel | striphtml }}</span>
     </div>
+    <json-data-block-type 
+      v-if="active && isSubBlock" 
+      :item="item" 
+      :depth="depth+1" 
+      :blockName="newBlockName"
+      :subBlock="subBlockMeta"
+      :absPath="absPath"
+      ></json-data-block-type>
+    <slot name="arrayActions" v-if="!isSubBlock || !active"></slot>
     <div class="object-editor__section" v-if="active">
       <json-data-property
         v-if="isSubBlock"
@@ -44,14 +53,6 @@
         :parentState="parentState"
         :ofType="newOfType"
       ></json-data-property>
-      <json-data-block-type 
-        v-if="isSubBlock" 
-        :item="item" 
-        :depth="depth+1" 
-        :blockName="newBlockName"
-        :subBlock="subBlockMeta"
-        :absPath="absPath"
-        ></json-data-block-type>
     </div>
   </div>
 </template>
@@ -185,5 +186,27 @@ export default {
 
   @include json-data-editor__section($this, $title-v-padding: true);
 
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  &__title {
+    flex: 1 1 auto;
+
+    &__icon {
+      flex-shrink: 0;
+    }
+
+    &__text {      
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__section {
+    width: 100%;
+  }
 }
 </style>

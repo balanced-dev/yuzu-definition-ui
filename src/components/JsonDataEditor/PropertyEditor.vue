@@ -123,25 +123,22 @@ export default {
   $this: &;
 
   @include json-data-editor__section($this);
-  padding-top: $json-data-editor__v-spacing;
-  overflow: hidden;
+  overflow: hidden;  
 
   &--root {
     padding-top: 0;
-
-    > div > #{$this}__section--property {
-      margin-bottom: $json-data-editor__v-spacing;
-    }
   }
 
   &:not(&--root){
-    #{$this}__section {
-      margin-bottom: $json-data-editor__v-spacing;
+    #{$this}__section--boolean,
+    #{$this}__section--property {
+      padding-top: $json-data-editor__v-spacing;
+      padding-bottom: $json-data-editor__v-spacing;
     }
   }
 
   &__section {
-    position: relative;
+    position: relative;    
     
     &--object {}
     &--array {}

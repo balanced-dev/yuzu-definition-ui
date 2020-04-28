@@ -171,13 +171,8 @@ export default {
 
   align-items: center;
   display: flex;
-  position: absolute;
-  right: $column-gutter-default;
-  top: size(3px);
-
-  &--depth-2 {
-    top: size(6px);
-  }
+  margin-left: auto;
+  padding-right: $column-gutter-default / 2;
 
   &__button {
     @include u-reset-button;

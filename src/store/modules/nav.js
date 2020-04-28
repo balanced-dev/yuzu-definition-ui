@@ -1,11 +1,20 @@
+const getNavItems = function() {
+    let items = [
+        'Blocks',
+        'Context'
+    ];
+
+    if(location.hostname === "localhost") {
+        items.push('Data');
+    }
+
+    return items;
+};
+
 export default {
     namespaced: true,
     state: {
-        items: [
-            'Blocks',
-            'Context',
-            'Data'
-        ],
+        items: getNavItems(),
         context: 'Context'
     },
     mutations: {

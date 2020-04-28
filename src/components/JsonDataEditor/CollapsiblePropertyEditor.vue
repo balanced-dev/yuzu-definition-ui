@@ -11,6 +11,7 @@
         {{ guessCollapsedTitle }}
       </span>
     </span>
+    <slot name="arrayActions"></slot>
     <div class="collapse__section" v-if="isOpen">
       <json-data-property
         :item="item"
@@ -63,9 +64,28 @@ export default {
   $this: &;
 
   @include json-data-editor__section($this, $title-v-padding: true);
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   
   &__title {
-    
+    flex: 1 1 auto;
+    max-width: calc(100% - #{size(160px)});
+
+    &__icon {
+      flex-shrink: 0;
+    }
+
+    &__text {      
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__section {
+    width: 100%;
   }
 
   &.is-active {

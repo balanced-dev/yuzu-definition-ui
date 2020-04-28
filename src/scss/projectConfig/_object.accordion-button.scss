@@ -2,7 +2,7 @@ $accordion-button__icon-size: size(17px);
 $accordion-button__label-spacing: size(6px);
 
 @mixin accordion-button($this: '', $includeDropShadow: true, $v-padding: false) {
-    align-items: center;
+    align-items: baseline;
     cursor: pointer;
     display: flex;
     user-select: none;
@@ -24,6 +24,7 @@ $accordion-button__label-spacing: size(6px);
     }
 
     #{$this}__icon {
+        align-self: center;
         height: $accordion-button__icon-size;
         margin-right: $column-gutter-default - $accordion-button__icon-size;
         stroke-width: 2;

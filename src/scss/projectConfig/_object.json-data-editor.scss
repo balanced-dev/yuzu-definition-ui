@@ -1,14 +1,15 @@
 @mixin json-data-editor__section($this, $title-v-padding: false) {
     
-
     &:not(&--depth-1) {
         > #{$this}__title {
             @include accordion-button(#{$this}__title, $includeDropShadow: false, $v-padding: false);
-            padding-top: $json-data-editor__v-spacing;
+            padding-top: $json-data-editor__v-spacing / 2;
+            padding-bottom: $json-data-editor__v-spacing / 2;
         }
-
+        
         &.is-active {
             > #{$this}__title {
+                // padding-top: $json-data-editor__v-spacing;
             }
         }
     }
@@ -19,7 +20,10 @@
         
             &-#{$i} {
                 &.is-active {
-                    > #{$this}__title {
+                    > #{$this}__title,
+                    > .block-type-editor,
+                    > .array-editor-actions,
+                    > .array-editor__item__footer {
                         background-color: $colour;
                     }
                 }
@@ -34,15 +38,16 @@
                 // @include column-gutter('padding', 'right');
             }
             > #{$this}__title {
-                @include accordion-button(#{$this}__title, $includeDropShadow: false, $v-padding: $title-v-padding);
-                margin-bottom: 1px;
+                @include accordion-button(#{$this}__title, $includeDropShadow: false, $v-padding: $title-v-padding);                
                 // padding: $json-data-editor__v-spacing ($column-gutter-default)!important;
             }
-
-
+            
             > #{$this}__title,
-            &.is-active > #{$this}__title {
-                background-color: $colour-grey-light;
+            > .block-type-editor,
+            > .array-editor-actions,
+            > .array-editor__item__footer {
+                background-color: $colour-grey-light!important;
+                margin-bottom: 1px;
             }
         } 
     }

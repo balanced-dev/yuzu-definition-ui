@@ -13,7 +13,7 @@
         :list="items"
         @end="handleMove"
         ghost-class="ghost"
-        handle=".array-editor__item__sort"
+        handle=".array-editor-actions__sort"
       >
         <div
           v-for="(item, index) in items"
@@ -29,7 +29,14 @@
             :relPath="relPath"
             :isAnyOf="isAnyOf"
             :ofType="ofType"
-          ></json-data-object>
+          >
+            <json-data-array-actions slot="arrayActions"
+              :item="item"
+              :relPath="relPath"
+              :deleteFunction="setToDelete"
+            >
+            </json-data-array-actions>
+          </json-data-object>
           <json-data-collapsible-property
             v-if="!isRef(item) && isObject(item)"
             :label="label"
@@ -41,7 +48,14 @@
             :originalIndex="originalIndexesArray.get(index) + 1"
             :blockName="blockName"
             :ofType="ofType"
-          ></json-data-collapsible-property>
+          >
+            <json-data-array-actions slot="arrayActions"
+              :item="item"
+              :relPath="relPath"
+              :deleteFunction="setToDelete"
+            >
+            </json-data-array-actions>
+          </json-data-collapsible-property>
           <div v-if="!isRef(item) && !isObject(item)" class="array-editor__section--property" :style="{'padding-left': `${depth + 1}rem`}">
             <json-data-text
               :index="index"
@@ -49,26 +63,15 @@
               :depth="depth + 1"
               :absPath="buildPath(index, absPath)"
               :relPath="relPath"
-            ></json-data-text>
-          </div>
-          <div class="array-editor__item__footer" :style="{'padding-left': `${depth+1}rem`}">
-            <a class="array-editor__item__sort">
-              <svg class="array-editor__item__sort__icon feather">
-                <use xlink:href="#more-vertical"/>
-              </svg>
-              <span class="array-editor__item__sort__text">
-                Sort
-              </span>
-            </a>            
-            <a class="array-editor__item__delete" @click="setToDelete({item: item, path: relPath})">            
-              <svg class="array-editor__item__delete__icon feather">
-                <use xlink:href="#x-square"/>
-              </svg>
-              <span class="array-editor__item__delete__text">
-                Delete
-              </span>
-            </a>
-          </div>
+            >
+              <json-data-array-actions slot="arrayActions"
+                :item="item"
+                :relPath="relPath"
+                :deleteFunction="setToDelete"
+              >
+              </json-data-array-actions>
+            </json-data-text>
+          </div>         
         </div>
       </draggable>
       <modal-array-editor-delete 
@@ -110,6 +113,7 @@
 import draggable from "vuedraggable";
 import api from '../../api';
 import bootstrap from "../../bootstrap";
+import JsonDataArrayActions from "./ArrayEditorActions";
 import ModalArrayEditorAdd from "../Modal/ModalArrayEditorAdd";
 import ModalArrayEditorDelete from "../Modal/ModalArrayEditorDelete";
 import OriginalIndexes from "../../services/originalIndexes";
@@ -195,7 +199,8 @@ export default {
   components: {
     draggable,
     ModalArrayEditorAdd,
-    ModalArrayEditorDelete
+    ModalArrayEditorDelete,
+    JsonDataArrayActions
   }
 };
 </script>
@@ -203,41 +208,12 @@ export default {
 <style scoped lang="scss">
 @import '../../scss/main';
 
-@mixin array-editor__button {
-  @include bold-font;
-  @include font-size($font-size-xsmall);
-  align-items: center;
-  cursor: pointer;
-  color: $colour-white;
-  display: inline-flex;
-  padding: ($column-gutter-default / 4) ($column-gutter-default / 2);
-  text-transform: uppercase;
-
-  &:not(:only-child) {
-    margin-left: $column-gutter-default / 2;
-  }
-
-  &__icon {
-    height: 1em;
-    margin-right: size(2px);
-    width: 1em;
-  }
-
-  &__text {
-    line-height: 1;
-  }
-
-  &:hover {
-    box-shadow: $drop-shadow;
-  }
-}
 .array-editor {
   $this: &;
 
   @include json-data-editor__section($this);
   
   &__title {
-    padding-top: $json-data-editor__v-spacing;
     &__icon {
       //opacity: 0;
     }
@@ -248,11 +224,10 @@ export default {
   }
 
   &__section {
-    padding-top: $json-data-editor__v-spacing;
     
     &__add {
       @include u-reset-button;
-      @include array-editor__button;
+      @include array-editor-button;
       background-color: $colour-green;
       color: $colour-body-bgnd-dark-grey;
 
@@ -276,45 +251,7 @@ export default {
   }
 
   &__item {
-    margin-bottom: $json-data-editor__v-spacing;
     position: relative;
-
-    &__footer {
-      display: flex;
-      top: size(2px);
-      right: $column-gutter-default;
-      position: absolute;
-    }
-
-    &__sort {
-      @include array-editor__button;
-      background-color: $colour-blue;
-      cursor: move; /* Fallback if grab cursor is unsupported */
-      cursor: grab;
-
-      &:active {
-        cursor: grabbing;
-      }
-
-      &__icon {
-      }
-
-      &__text {
-
-      }      
-    }
-
-    &__delete {
-      @include array-editor__button;
-      background-color: $colour-red;
-
-      &__icon {
-      }
-
-      &__text {
-
-      }      
-    }
 
     &.ghost {
       $horizontal-shift: size(5px);
@@ -322,7 +259,7 @@ export default {
       color: $colour-body-bgnd-dark-grey;
       background-color: $colour-grey-xlight;
       margin-right: -$horizontal-shift;
-      padding-bottom: $json-data-editor__v-spacing;
+      // padding-bottom: $json-data-editor__v-spacing;
       padding-left: $horizontal-shift;
       padding-right: $column-gutter-default;
 

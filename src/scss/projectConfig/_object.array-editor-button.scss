@@ -1,0 +1,28 @@
+@mixin array-editor-button {
+    @include bold-font;
+    @include font-size($font-size-xsmall);
+    align-items: center;
+    cursor: pointer;
+    color: $colour-white;
+    display: inline-flex;
+    padding: ($column-gutter-default / 4) ($column-gutter-default / 2);
+    text-transform: uppercase;
+  
+    &:not(:only-child) {
+      margin-left: $column-gutter-default / 2;
+    }
+  
+    &__icon {
+      height: 1em;
+      margin-right: size(2px);
+      width: 1em;
+    }
+  
+    &__text {
+      line-height: 1;
+    }
+  
+    &:hover {
+      box-shadow: $drop-shadow;
+    }
+  }
