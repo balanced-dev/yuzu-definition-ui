@@ -41,6 +41,12 @@
       :class="'property-editor--root'"
     >
     </json-data-property>
+    <div class="root-editor__help">
+      <svg class="root-editor__help__icon feather">
+        <use xlink:href="#help-circle"/>
+      </svg>
+      <p class="root-editor__help__text">Is there a missing property that's in the schema but not editable here? Add it to the JSON state manually and it will appear.</p>
+    </div>
   </div>
 </template>
 
@@ -170,7 +176,12 @@ export default {
 @import "../../scss/main";
 
 .root-editor {
-  padding-bottom: $json-data-editor__v-spacing;
+  $this: &;
+  
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow-x: hidden;
 
   &__buttons {
     display: flex;
@@ -212,6 +223,27 @@ export default {
 
     &--save {
       background-color: $colour-green;
+    }
+  }
+
+  &__help {
+    align-items: center;
+    background-color: $colour-grey-mid-dark;
+    display: inline-flex;
+    margin: auto 0 1px;
+    padding: ($column-gutter-default / 4) $column-gutter-default;
+
+    &__icon {
+      color: $colour-green-dark;
+      flex-shrink: 0;
+      display: block;
+      height: size(16px);
+      margin-right: 0.5em;
+      width: size(16px);
+    }
+
+    &__text {
+      @include font-size($font-size-xsmall);
     }
   }
 }

@@ -268,5 +268,12 @@ export default {
       }
     }
   }
+
+  &--depth-1 {
+    #{$this}__title {
+      padding-top: $json-data-editor__v-spacing;
+      padding-bottom: $json-data-editor__v-spacing;
+    }
+  }
 }
 </style>

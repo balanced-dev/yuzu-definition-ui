@@ -1,5 +1,5 @@
 <template>
-  <label class="boolean-editor">
+  <label class="boolean-editor" :class="`boolean-editor--depth-${depth}`">
     <input class="boolean-editor__control" type="checkbox" v-model="item[label]" />
     <span class="boolean-editor__label">
       {{ label }}

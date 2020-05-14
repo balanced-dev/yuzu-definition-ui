@@ -1,5 +1,5 @@
 <template>
-  <label class="enum-editor__select">
+  <label class="enum-editor__select" :class="`enum-editor--depth-${depth}`">
     <select
         class="enum-editor__select__control"
         v-model="item[label]"

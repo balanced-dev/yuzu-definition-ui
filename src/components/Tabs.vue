@@ -159,7 +159,7 @@ $tabs__tab-stack-breakpoint: size(246px, $unit-em);
   
   &__section {
     margin-top: $app-bar-height;
-    max-height: calc(100vh - #{$app-bar-height + $version-number-height});
+    height: calc(100vh - #{$app-bar-height + $version-number-height});
     overflow-y: auto;
   }
 }

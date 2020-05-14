@@ -129,12 +129,10 @@ export default {
     padding-top: 0;
   }
 
-  &:not(&--root){
-    #{$this}__section--boolean,
-    #{$this}__section--property {
-      padding-top: $json-data-editor__v-spacing;
-      padding-bottom: $json-data-editor__v-spacing;
-    }
+  #{$this}__section--boolean,
+  #{$this}__section--property {
+    padding-top: $json-data-editor__v-spacing;
+    padding-bottom: $json-data-editor__v-spacing;
   }
 
   &__section {

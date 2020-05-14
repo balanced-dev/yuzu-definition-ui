@@ -14,7 +14,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: { 
-    toPreview: false
+    toPreview: false,
+    packageVersion: process.env.PACKAGE_VERSION || '0'
   },
   mutations: { 
     triggerPreview: function(state) {
@@ -22,6 +23,11 @@ export default new Vuex.Store({
     },
     resetPreview: function(state) {
       state.toPreview = false;
+    }
+  },
+  getters: {
+    appVersion: (state) => {
+      return state.packageVersion
     }
   },
   actions: {

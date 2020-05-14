@@ -1,5 +1,5 @@
 <template>
-  <label class="text-editor">
+  <label class="text-editor" :class="`text-editor--depth-${depth}`">
     <template v-if="label">
       <input class="text-editor__control text-editor__control--text" v-if="!isTextArea" v-on:focus="populateImages" v-on:blur="evaluateLength(item[label])" type="text" v-model="item[label]"  :list="isImageSrc ? uId : ''"/>
       <textarea class="text-editor__control text-editor__control--textarea" v-if="isTextArea" v-on:focus="populateImages" v-on:blur="evaluateLength(item[label])" v-model="item[label]" :list="isImageSrc ? uId : ''"></textarea>
