@@ -24,7 +24,7 @@ export default {
         context.commit("load", items);
 
         var route = bootstrap.getRoute();
-        if(!route && items.pages) {
+        if(items.pages && !items.pages.hasOwnProperty(route)) {
           route = _.first(Object.keys(items.pages));
         }
   
