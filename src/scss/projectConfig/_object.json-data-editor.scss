@@ -1,4 +1,18 @@
 @mixin json-data-editor__section($this, $title-v-padding: false) {
+
+    #{$this}__title {
+        max-width: 100%;
+
+        &__icon {
+            flex-shrink: 0;
+        }
+    
+        &__text {      
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
     
     &:not(&--depth-1) {
         > #{$this}__title {

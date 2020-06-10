@@ -215,7 +215,6 @@ export default {
   
   &__title {
     &__icon {
-      //opacity: 0;
     }
   }  
 

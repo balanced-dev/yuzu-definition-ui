@@ -195,13 +195,9 @@ export default {
     flex: 1 1 auto;
 
     &__icon {
-      flex-shrink: 0;
     }
 
     &__text {      
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
   }
 

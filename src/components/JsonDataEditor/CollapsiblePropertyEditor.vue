@@ -74,13 +74,9 @@ export default {
     max-width: calc(100% - #{size(160px)});
 
     &__icon {
-      flex-shrink: 0;
     }
 
-    &__text {      
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    &__text {
     }
   }
 
