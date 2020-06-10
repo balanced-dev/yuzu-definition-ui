@@ -24,12 +24,15 @@ export default {
         context.commit("load", items);
 
         var route = bootstrap.getRoute();
-        if(items.pages && !items.pages.hasOwnProperty(route)) {
+        var appContext = {};
+
+        bootstrap.getBlockAndState(items, route, appContext);
+
+        if(!appContext.state && items.pages) {
           route = _.first(Object.keys(items.pages));
+          bootstrap.getBlockAndState(items, route, appContext);
         }
   
-        var appContext = {};
-        bootstrap.getBlockAndState(items, route, appContext);
         context.commit("setCurrent", appContext.block);
         context.commit("state/setCurrent", appContext.state, { root: true });
         context.dispatch("data/load", appContext.state.name, { root: true });
