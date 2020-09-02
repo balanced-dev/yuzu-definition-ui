@@ -10,7 +10,10 @@ export default {
   },
   getters: {
     previewUrlToDataPath: state => {
-      return bootstrap.convertPreviewToDataPath(state.current.url);
+
+      var d = bootstrap.convertPreviewToDataPath(state.current.url);
+
+      return d;
     },
     convertToRefs: state => {
       var output = {};

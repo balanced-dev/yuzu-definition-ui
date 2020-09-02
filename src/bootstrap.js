@@ -1,5 +1,6 @@
 import _ from "lodash";
 import path from "path";
+import { fdatasync } from "fs";
 
 const getBlockAndState = (items, state, output, parent) => {
   Object.keys(items).forEach((key) => {
@@ -22,19 +23,15 @@ const getBlockAndState = (items, state, output, parent) => {
 };
 
 const convertPreviewToDataPath = function (strPath) {
-  var separator = strPath.indexOf('\\') > -1 ? '\\' : '/';
-  var arrPath = strPath.split(separator);
-
-  var lastIndex = arrPath.length - 1;
-  arrPath[lastIndex] = arrPath[lastIndex].replace(".html", ".json");
-  arrPath.splice(lastIndex, 0, "data");
-  return arrPath.join(path.sep);
+  
+  const data = getBlockUrlData(strPath);
+  return `${data.type}/${data.area}${data.area ? '/' : ''}${data.name}/data/${data.prefix}${data.name}${data.state}.json`;
 }
 
 const getRoute = () => {
-  var url = window.parent.location.pathname;
-  var filename = url.substring(url.lastIndexOf("/") + 1);
-  return filename.substring(0, filename.lastIndexOf("."));
+
+  const data = getBlockUrlData(window.parent.location.search);
+  return data.prefix + data.name + data.state;
 }
 
 const addPrefix = function(blockName) {
@@ -75,6 +72,20 @@ const getStateSuffix = function(state) {
 const createNewStateName = function(state, stateSuffix) {
   var defaultState = defaultFromState(state);
   return defaultState +"_"+ stateSuffix;
+}
+
+const getBlockUrlData = function(url)
+{
+  const urlParams = new URLSearchParams(url);
+
+  var o = {};
+  o.type = urlParams.get('type');
+  o.area = urlParams.has('area') ? urlParams.get('area') : '';
+  o.prefix = o.type == 'blocks' ? 'par' : '';
+  o.name = urlParams.get('name');
+  o.state = urlParams.has('state') ? '_'+ urlParams.get('state') : '';
+
+  return o;
 }
 
 export default {
