@@ -3,7 +3,7 @@ import store from "./store/store";
 import bootstrap from "./bootstrap";
 
 let rootUrl = "http://localhost:3000/api/";
-let externalRootUrl = "http://localhost:3000/_client/templatePaths.json";
+let externalRootUrl = "/_client/templatePaths.json";
 
 export default {
   getPreviews: () => {
