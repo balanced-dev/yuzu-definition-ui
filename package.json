@@ -1,6 +1,6 @@
 {
   "name": "yuzu-definition-ui",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0",
   "description": "Pattern library and state management overlay for Yuzu Definition",
   "author": "Phil Whittaker",
   "license": "MIT",
